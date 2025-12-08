@@ -1,0 +1,15 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+IMPORTANT: DO NOT START A NEW SERVER!
+- DO NOT RUN 'npm run dev'
+- THE VITE SERVER IS ALREADY RUNNING AT http://localhost:8888/
+
+PROJECT
+Make sure you have read @README.md files before making changes to any code.
+DO not duplicate code or css. check if it already exists first.
+
+Keep the code lean - don't overengineer. always suggest simple solutions first.
+Prefer minimal code, streamlined, simplified solutions.

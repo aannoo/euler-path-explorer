@@ -1,0 +1,379 @@
+/* EULER - Logo and Branding Styles */
+
+/* Orbital animations have been moved to index.html */
+
+/* ========== EULER TITLE STYLES ========== */
+.title-area {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  flex: 0 0 auto;
+  height: 80px;
+  position: relative;
+  padding: 0;
+  background-color: rgba(201, 100, 67, 0.25); /* Translucent background */
+  z-index: 2;
+  cursor: pointer;
+  
+  /* Use CSS custom property for transition duration */
+  --bg-transition-duration: 0.8s;
+  transition: background-color var(--bg-transition-duration) ease;
+  
+  /* make sure no text is highlighted when clicking on this button */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  /* Allow notifications to be positioned relative to this */
+  overflow: visible;
+  width: 100%; /* Allow natural width based on content */
+  will-change: background-color; /* Optimize for background color animations */
+}
+
+/* Allow notifications to be positioned relative to this */
+.title-notification-container {
+  position: relative;
+  width: auto; /* Allow natural width based on content */
+  will-change: background-color; /* Optimize for background color animations */
+}
+
+/* Hover styling */
+.title-area:hover {
+  background-color: rgba(201, 100, 67, 0.5);
+}
+
+/* Notification states using data attributes */
+.title-area[data-notification-state="showing"] {
+  --bg-transition-duration: 0.1s; /* Fast transition in */
+  background-color: var(--primary-color);
+}
+
+.title-area[data-notification-state="hiding"] {
+  --bg-transition-duration: 0.3s; /* Slow transition out */
+}
+
+/* Hover styling for notification states */
+.title-area[data-notification-state="showing"]:hover,
+.title-area[data-notification-state="hiding"]:hover {
+  background-color: var(--primary-color);
+}
+
+/* Enhance click feedback with immediate response */
+.title-area:active {
+  background-color: var(--primary-color);
+  transition: none; /* Instant background change */
+}
+
+/* Make the triangle instantly turn yellow on mousedown */
+.title-area:active::before {
+  opacity: 1;
+  border-top-color: var(--focus-outline-color);
+  transition: none;
+}
+
+/* Make the bottom triangle instantly appear yellow on mousedown */
+.title-area:active::after {
+  opacity: 1;
+  transform: scale(1.5);
+  border-bottom-color: var(--focus-outline-color);
+  transition: none;
+}
+
+/* Add graceful retraction animation on mouseup using transitionend */
+.title-area.retracting::before,
+.title-area.retracting::after {
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity var(--transition-slow), transform var(--transition-slow), border-color var(--transition-slow);
+}
+
+/* Title area with notification active that's also being hovered */
+.title-area.notification-active:hover {
+  background-color: var(--primary-color);
+}
+
+/* Replace with more visible triangle effects */
+.title-area::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  background: none;
+  border-top: 40px solid rgba(255, 255, 255, 0.6);
+  border-right: 40px solid transparent;
+  z-index: 0; /* Place behind the Euler image */
+  opacity: 0;
+  transition: opacity var(--transition-gentle);
+  pointer-events: none; /* Ensure it doesn't interfere with clicks */
+}
+
+/* Add a distinctive bottom corner triangle */
+.title-area::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  border-bottom: 20px solid white;
+  border-right: 20px solid transparent;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity var(--transition-gentle), transform var(--transition-slow);
+  transform-origin: bottom left;
+  transform: scale(0);
+}
+
+/* Show triangles on hover with distinct appearance */
+.title-area:hover::before {
+  opacity: 0.9;
+}
+
+.title-area:hover::after {
+  opacity: 0.9;
+  transform: scale(1);
+}
+
+/* When sidebar is collapsed, make the triangles larger */
+.sidebar.collapsed ~ .main-content .title-area::before {
+  border-top-width: 60px;
+  border-right-width: 60px;
+  left: 0;
+  top: 0;
+}
+
+.sidebar.collapsed ~ .main-content .title-area::after {
+  border-bottom-width: 35px;
+  border-right-width: 35px;
+}
+
+/* When sidebar is collapsed and hovered, show the triangles */
+.sidebar.collapsed ~ .main-content .title-area:hover::before {
+  opacity: 0.9;
+}
+
+.sidebar.collapsed ~ .main-content .title-area:hover::after {
+  opacity: 0.9;
+  transform: scale(1);
+}
+
+/* When sidebar is collapsed but expanded, return to normal size */
+.sidebar.collapsed.expanded ~ .main-content .title-area::before {
+  border-top-width: 40px;
+  border-right-width: 40px;
+}
+
+.sidebar.collapsed.expanded ~ .main-content .title-area::after {
+  border-bottom-width: 20px;
+  border-right-width: 20px;
+}
+
+/* Create striking triangle effect during transitions */
+.title-area.transitioning::before {
+  opacity: 1;
+  animation: triangle-move 0.7s infinite alternate;
+  z-index: 0; /* Keep it behind the Euler image */
+}
+
+.title-area.transitioning::after {
+  opacity: 1;
+  transform: scale(1.5);
+  border-bottom-color: var(--focus-outline-color); /* Using yellow focus color */
+  animation: triangle-pulse 0.7s infinite alternate;
+}
+
+/* Add a third triangle effect during transition */
+.title-area.transitioning {
+  background-color: var(--primary-color);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Fix the overlay pattern during transition */
+.title-area.transitioning .overlay-pattern {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(45deg, transparent 48%, white 49%, white 51%, transparent 52%),
+    linear-gradient(-45deg, transparent 48%, white 49%, white 51%, transparent 52%);
+  background-size: 20px 20px;
+  background-position: 0 0;
+  animation: move-stripes 1s linear infinite;
+  opacity: 0.3;
+  z-index: 0; /* Keep behind content */
+  pointer-events: none;
+}
+
+@keyframes move-stripes {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 20px 20px;
+  }
+}
+
+@keyframes triangle-move {
+  0% {
+    border-top-color: rgba(255, 255, 255, 0.7);
+  }
+  100% {
+    border-top-color: rgba(255, 221, 0, 0.7); /* Yellow */
+  }
+}
+
+@keyframes triangle-pulse {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.8);
+  }
+}
+
+/* When sidebar is collapsed and transitioning */
+.sidebar.collapsed ~ .main-content .title-area.transitioning::before {
+  border-top-width: 60px;
+  border-right-width: 60px;
+}
+
+.sidebar.collapsed ~ .main-content .title-area.transitioning::after {
+  border-bottom-width: 35px;
+  border-right-width: 35px;
+}
+
+/* When sidebar is expanded and transitioning */
+.sidebar:not(.collapsed) ~ .main-content .title-area.transitioning::before {
+  border-top-width: 40px;
+  border-right-width: 40px;
+}
+
+.sidebar:not(.collapsed) ~ .main-content .title-area.transitioning::after {
+  border-bottom-width: 20px;
+  border-right-width: 20px;
+}
+
+/* Add transitioning-fade class for the final fade-out animation */
+.title-area.transitioning-fade::before,
+.title-area.transitioning-fade::after {
+  opacity: 0;
+  transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+}
+
+/* Euler portrait with flip transition */
+.euler-portrait {
+  width: auto;
+  height: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  transition: transform 0.2s ease;
+  position: relative;
+  z-index: 1;
+  will-change: transform; /* Optimize for transform animations */
+}
+
+/* Flip image when sidebar is collapsed */
+.sidebar.collapsed ~ .main-content .euler-portrait {
+  transform: scaleX(-1);
+}
+
+/* Flip back when expanded again */
+.sidebar.collapsed.expanded ~ .main-content .euler-portrait {
+  transform: scaleX(1);
+}
+
+/* Add active state styling for portrait */
+.title-area:active .euler-portrait {
+}
+
+/* Make background of title area primary color during sidebar transition */
+.title-area.transitioning {
+  background-color: var(--primary-color);
+}
+
+/* Title regular styling - white gradient */
+.title-area h1 {
+  font-size: 60px;
+  line-height: 1;
+  font-weight: 800;
+  margin: 0;
+  padding: 0;
+  letter-spacing: -1px;
+  color: var(--text-color);
+  background: linear-gradient(to bottom, var(--light-color) 20%, #e8e4dc 85%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-fill-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  position: relative;
+  text-shadow: 2px 4px 6px rgba(0, 0, 0, 0.1);
+  transform-origin: center;
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+}
+
+/* Direct color change on active state */
+.title-area:active h1 {
+  background: none;
+  -webkit-background-clip: initial;
+  background-clip: initial;
+  -webkit-text-fill-color: white;
+  text-fill-color: white;
+  color: white;
+  transition: none; /* Instant color change */
+}
+
+/* Title area with notification active styling */
+.title-area.notification-active h1 {
+  background: none;
+  -webkit-background-clip: initial;
+  background-clip: initial;
+  -webkit-text-fill-color: white;
+  text-fill-color: white;
+  color: white;
+}  
+
+/* Euler background in circle */
+.circle-euler-background {
+  position: absolute;
+  width: 90%;
+  height: 90%;
+  border-radius: var(--border-radius-circle);
+  overflow: hidden;
+  z-index: 0;
+}
+
+.circle-euler-background .euler-bg-img {
+  position: absolute;
+  width: 120%;
+  height: 120%;
+  left: -10%;
+  top: -10%;
+  opacity: 0.1;
+  object-fit: cover;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+  .title-area h1 {
+    font-size: 35px;
+    letter-spacing: -0.5px;
+    text-shadow: 1px 2px 3px rgba(0, 0, 0, 0.2);
+  }
+  
+  .euler-portrait {
+    width: auto;
+    height: 100%;
+    margin-right: 5px;
+  }
+}

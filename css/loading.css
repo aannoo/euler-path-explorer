@@ -1,0 +1,41 @@
+/* Simple page loader - shows immediately */
+.page-loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--dark-color-1);
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.page-loader.fade-out {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.simple-spinner {
+  width: 60px;
+  height: 60px;
+  border: 3px solid #333;
+  border-top: 3px solid var(--primary-color);
+  border-radius: 50%;
+  animation: simple-spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+.loading-text {
+  color: var(--text-primary);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 2px;
+}
+
+@keyframes simple-spin {
+  to { transform: rotate(360deg); }
+} 

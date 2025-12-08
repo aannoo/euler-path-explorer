@@ -1,0 +1,341 @@
+/* EULER - Icons / SVGs / Images / loaders */
+
+/* Common variables for loaders */
+:root {
+  /* Animation speeds - adjust these to control rotation/pulse speeds */
+  --loader-anim-speed-slow: 14s;    /* Portrait rotation speed */
+  --loader-anim-speed-medium: 4s;   /* Spinner rotation speed */
+  --loader-anim-speed-fast: 3s;     /* Fast rotation elements */
+  --loader-anim-speed-pulse: 2s;    /* Pulse animation speed */
+  
+  /* Border widths - controls thickness of loader elements */
+  --loader-border-thin: 2px;
+  --loader-border-medium: 3px;
+  --loader-border-thick: 4px;
+  
+  /* Transition speeds - controls appearance/disappearance */
+  --loader-transition-speed: 0.5s;  /* Fade in/out speed */
+  
+  /* Loader z-index should be higher than all other elements */
+  --loader-z-index: 1000;           /* Ensures loader is on top */
+}
+
+/* Euler icon */
+.icon-euler {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.4em;
+  height: 1.4em;
+  position: relative;
+  font-size: inherit;
+  vertical-align: middle;
+}
+
+.icon-euler::before {
+  content: '●─●─●\A│ ╲ │\A●─●─●';
+  white-space: pre;
+  line-height: 0.9;
+  font-size: 0.55em;
+  font-family: monospace;
+  display: block;
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+} 
+
+/* ========== GLOBAL LOADER ========== */
+
+/* Global loader and transitions */
+.global-loader-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: var(--loader-z-index);
+  background-color: rgba(15, 23, 42, 0.8);
+  opacity: 0;
+  pointer-events: none; /* Don't block interaction unless visible */
+  transition: opacity 0.7s ease; /* Slower fade-out for smoother transition */
+  will-change: opacity; /* Hint for browser to optimize */
+}
+
+.global-loader-container.show {
+  opacity: 1;
+  pointer-events: auto; /* Block interaction when visible */
+}
+
+/* Progress indicator text for loader */
+.loader-progress {
+  font-family: 'Inter', sans-serif;
+  color: #f5f0e6;
+  margin-top: 30px;
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+/* Specific transitions for animated elements */
+.orbit-sigma {
+  transition: opacity 0.8s ease-in-out; /* Slower fade-in for smoother appearance */
+  will-change: opacity; /* Performance optimization */
+}
+
+.orbit-paths {
+  transition: opacity 0.8s ease-in-out; /* Match the cy container timing */
+  will-change: opacity; /* Performance optimization */
+}
+
+/* Individual path elements */
+path {
+  transition: opacity 0.8s ease-in-out, stroke-width 0.3s ease-in-out;
+}
+
+/* Glow effect when loading */
+.orbit-graph-circle.loading {
+  box-shadow: 0 0 20px rgba(var(--primary-color-rgb), 0.01), 
+              0 0 40px rgba(var(--primary-color-rgb), 0.01);
+  transition: box-shadow 0.4s ease-in-out;
+  will-change: box-shadow; /* Performance optimization */
+}
+
+/* ========== LOADER ANIMATIONS ========== */
+
+/* Base animations for all loaders */
+@keyframes spin-euler {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes spin-euler-reverse {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(-360deg); }
+}
+
+@keyframes pulse-spinner {
+  0% { transform: scale(0.8); opacity: 0.8; }
+  100% { transform: scale(1.2); opacity: 0; }
+}
+
+@keyframes fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes fade-out {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* ========== EULER LOADERS - BASE STYLES ========== */
+/* These styles apply to all loaders */
+
+[class*="euler-"] {
+  position: relative;
+}
+
+[class*="-loader"] .euler-circle {
+  position: absolute;
+  border-radius: var(--border-radius-circle);
+  overflow: hidden;
+  border: var(--loader-border-medium) solid var(--primary-color);
+  z-index: 1;
+}
+
+[class*="-loader"] .euler-circle img {
+  width: 100%;
+  height: 100%;
+  animation: spin-euler-reverse var(--loader-anim-speed-slow) linear infinite;
+}
+
+[class*="-loader"] .euler-spinner {
+  position: absolute;
+  border-radius: var(--border-radius-circle);
+  border: var(--loader-border-medium) dashed var(--secondary-color);
+  animation: spin-euler var(--loader-anim-speed-fast) linear infinite;
+  opacity: 0.7;
+  left: 0;
+  top: 0;
+}
+
+[class*="-loader"] .euler-pulse {
+  position: absolute;
+  border-radius: var(--border-radius-circle);
+  border: var(--loader-border-thin) solid var(--primary-color);
+  animation: pulse-spinner var(--loader-anim-speed-pulse) ease-out infinite;
+  opacity: 0;
+  left: 0;
+  top: 0;
+}
+
+/* ========== EULER LOADERS - VARIATIONS ========== */
+/* To use a loader, add the appropriate div structure:
+   <div class="euler-large-loader">
+     <div class="euler-circle">
+       <img src="euler-face.jpg" alt="Euler">
+     </div>
+     <div class="euler-spinner"></div>
+     <div class="euler-pulse"></div>
+   </div>
+*/
+
+/* Standard Euler Circle Pulse Loader */
+.euler-circle-loader {
+  width: 100px;
+  height: 100px;
+}
+
+.euler-circle-loader .euler-circle {
+  width: 80px;
+  height: 80px;
+  left: 10px;
+  top: 10px;
+}
+
+.euler-circle-loader .euler-spinner,
+.euler-circle-loader .euler-pulse {
+  width: 100px;
+  height: 100px;
+}
+
+/* Mini version (60px) */
+.euler-mini-loader {
+  width: 60px;
+  height: 60px;
+}
+
+.euler-mini-loader .euler-circle {
+  width: 48px;
+  height: 48px;
+  left: 6px;
+  top: 6px;
+  border-width: var(--loader-border-thin);
+}
+
+.euler-mini-loader .euler-spinner,
+.euler-mini-loader .euler-pulse {
+  width: 60px;
+  height: 60px;
+  border-width: var(--loader-border-thin);
+}
+
+/* Large version (160px) - used in the global loader */
+.euler-large-loader {
+  width: 160px;
+  height: 160px;
+}
+
+.euler-large-loader .euler-circle {
+  width: 130px;
+  height: 130px;
+  left: 15px;
+  top: 15px;
+  border-width: var(--loader-border-thick);
+}
+
+.euler-large-loader .euler-spinner,
+.euler-large-loader .euler-pulse {
+  width: 160px;
+  height: 160px;
+  border-width: var(--loader-border-thick);
+}
+
+/* Multi-layered version with additional spinner elements */
+.euler-multi-loader {
+  width: 130px;
+  height: 130px;
+}
+
+.euler-multi-loader .euler-circle {
+  width: 90px;
+  height: 90px;
+  left: 20px;
+  top: 20px;
+}
+
+.euler-multi-loader .euler-spinner,
+.euler-multi-loader .euler-pulse {
+  width: 130px;
+  height: 130px;
+}
+
+.euler-multi-loader .euler-spinner-2 {
+  position: absolute;
+  width: 110px;
+  height: 110px;
+  border: var(--loader-border-thin) solid var(--primary-color);
+  border-radius: var(--border-radius-circle);
+  animation: spin-euler-reverse 5s linear infinite;
+  opacity: 0.7;
+  left: 10px;
+  top: 10px;
+}
+
+.euler-multi-loader .euler-spinner-3 {
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  border: var(--loader-border-thin) dotted var(--secondary-color);
+  border-radius: var(--border-radius-circle);
+  animation: spin-euler 7s linear infinite;
+  opacity: 0.5;
+  left: 30px;
+  top: 30px;
+}
+
+.euler-multi-loader .euler-pulse-2 {
+  position: absolute;
+  width: 110px;
+  height: 110px;
+  border-radius: var(--border-radius-circle);
+  border: var(--loader-border-thin) solid var(--secondary-color);
+  animation: pulse-spinner 3s ease-out infinite 1s;
+  opacity: 0;
+  left: 10px;
+  top: 10px;
+}
+
+/* Portrait variation with rotating Euler image */
+.euler-portrait-loader {
+  width: 120px;
+  height: 120px;
+}
+
+.euler-portrait-loader .euler-circle {
+  width: 90px;
+  height: 90px;
+  left: 15px;
+  top: 15px;
+  z-index: 2;
+}
+
+.euler-portrait-loader .euler-spinner {
+  animation: spin-euler-reverse var(--loader-anim-speed-medium) linear infinite;
+}
+
+.euler-portrait-loader .euler-spinner,
+.euler-portrait-loader .euler-pulse {
+  width: 120px;
+  height: 120px;
+}
+
+.euler-portrait-loader .euler-spinner-alt {
+  position: absolute;
+  width: 105px;
+  height: 105px;
+  border: var(--loader-border-thin) dotted var(--primary-color);
+  border-radius: var(--border-radius-circle);
+  animation: spin-euler-reverse 6s linear infinite;
+  opacity: 0.6;
+  left: 7.5px;
+  top: 7.5px;
+}

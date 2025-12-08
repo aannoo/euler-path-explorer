@@ -1,0 +1,26 @@
+---
+description: Playwright testing
+globs: 
+alwaysApply: false
+---
+DO NOT START A NEW SERVER!
+- vite server is avaliable and already running at http://localhost:8888/
+- DO NOT start a new server.
+- you have to wait a few seconds if using playwright for it to load
+- always close playwright browser and restart
+
+- don't implement things you weren't asked to implement.
+
+- don't test playwright just for fun, make sure you are trying to get somerhing useful out of it.
+- justify WHY you are using it
+- After using a tool, explicitly state what you learned
+
+# playwright
+- Whenever playwright is mention is refers to the playwright mcp tool that's built in. Do not manually install playwright from npm as it is already avaliable as playwright mcp server.
+- always wait a few seconds for the page to load
+- if youre going to use playwright use dom analysis or check console logs to actually find out whats wrong.
+
+## Troubleshooting
+- If you hit an issue where you say "it looks like x isn't working..." or similar DO NOT say "I'll take an alternate approach..." or similar. Continue trying at least 5 times to solve the root cause of the issue. Use Perplexity (1st) to research or Playwright (2nd) to debug or regular internet search (3rd).
+
+

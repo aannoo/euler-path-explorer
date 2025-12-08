@@ -1,0 +1,156 @@
+/* EULER - Edge List CSS */
+
+/* Visual Editor Styles */
+.visual-editor-container {
+  margin-bottom: 0;
+  width: 100%;
+}
+
+.edge-list-tools {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0;
+  padding: 10px;
+  background-color: var(--dark-color-3);
+  border-left: 3px solid var(--secondary-color); /* Base 3px secondary color */
+}
+
+#add-edge {
+  width: 100%;
+}
+
+.edge-list {
+  background-color: var(--dark-color-4);
+}
+
+.edge-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  border-bottom: 1px solid var(--dark-color-1);
+  flex-wrap: wrap;
+  position: relative;
+  transition: background-color var(--transition-gentle);
+}
+
+.edge-item:hover {
+  background-color: rgba(var(--primary-color-rgb), 0.05);
+}
+
+/* Focus state uses 6px yellow border that replaces the parent's 3px border */
+.edge-item:focus-within {
+  background-color: rgba(var(--primary-color-rgb), 0.08);
+  border-left: 6px solid var(--focus-outline-color); /* 6px yellow */
+  padding-left: 15px;
+}
+
+/* Valid state overrides focus state */
+.edge-item.valid {
+  background-color: rgba(var(--success-color-rgb), 0.08);
+  padding-left: 12px;
+}
+
+/* Error state overrides both */
+.edge-item.error {
+  background-color: rgba(var(--error-color-rgb), 0.08);
+  border-left: 6px solid var(--error-color); /* 6px red */
+  padding-left: 12px;
+}
+
+.edge-item:last-child {
+  border-bottom: none;
+}
+
+.source-label, .target-label, .weight-label {
+  font-size: 14px;
+  font-weight: 600;
+  margin-right: 10px;
+  color: var(--text-secondary);
+  flex: 0 0 50px;
+}
+
+.bracket {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0 5px;
+  color: var(--accent-primary);
+}
+
+.edge-vertex {
+  background: none;
+  border: none;
+  width: 40px;
+  color: var(--text-primary);
+  font-size: 16px;
+  font-family: var(--font-family-mono);
+  padding: 3px;
+  text-align: center;
+  outline: none;
+  border-bottom: 2px solid var(--accent-primary);
+}
+
+.edge-vertex:focus {
+  outline: none;
+  background-color: var(--dark-color-2);
+}
+
+.remove-edge {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--border-radius-circle);
+  background-color: var(--dark-color-3);
+  border: none;
+  color: var(--text-secondary);
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  transition: all var(--transition-slow);
+  position: relative;
+}
+
+.remove-edge:hover {
+  background-color: rgba(var(--error-color-rgb), 0.8);
+  color: var(--light-color);
+}
+
+/* Action Buttons */
+.action-buttons {
+  margin-top: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .edge-vertex {
+    min-height: 48px; /* Ensure minimum touch target size */
+    min-width: 48px; /* Ensure minimum touch target size */
+  }
+}
+
+@media (max-width: 576px) {
+  .action-buttons, .button-group {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .action-buttons .btn, .button-group .btn {
+    width: 100%;
+    margin-bottom: 0;
+    border-bottom: 0; /* Remove any potential gaps */
+    min-height: 48px; /* Ensure minimum touch target size */
+  }
+  
+  .edge-item {
+    padding: 12px 10px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 5px;
+  }
+  
+  .edge-vertex {
+    width: 48px; /* Ensure minimum touch target size */
+    height: 48px; /* Ensure minimum touch target size */
+  }
+} 

@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#FF9800">
+  <title>EULER - Euler Path Explorer | Visualize Graph Theory</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/buttons.css">
+  <link rel="stylesheet" href="css/branding.css">
+  <link rel="stylesheet" href="css/graph-controls.css">
+  <link rel="stylesheet" href="css/notifications.css">
+  <link rel="stylesheet" href="css/saved-graphs.css">
+  <link rel="stylesheet" href="css/custom-icons.css">
+  <link rel="stylesheet" href="css/euler-toggles.css">
+  <link rel="stylesheet" href="css/loading.css">
+  <link rel="stylesheet" href="css/orbital-animation.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  <!-- Anybody - Variable Width Font (copied from p2.html) -->
+  <link href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@50..150,100..900&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/jpeg" href="euler-face.jpg">
+</head>
+<body>
+  <!-- Simple loader - shows immediately -->
+  <div class="page-loader" id="page-loader">
+    <div class="simple-spinner"></div>
+    <div class="loading-text">LOADING EULER...</div>
+  </div>
+
+  <!-- Layered Interface: Graph Background + Sliding Content Foreground -->
+  <div class="main-container">
+    
+    <!-- Desktop Resize Handle (only visible on desktop) -->
+    <div class="desktop-resize-handle" id="desktop-resize-handle"></div>
+    
+    <!-- GRAPH LAYER (Background - Always Rendered) -->
+    <div class="graph-layer" id="graph-layer">
+      <!-- Euler background image for all devices with distinctive graph background -->
+      <div class="euler-background">
+        <img src="euler-face.jpg" alt="">
+      </div>
+      
+      <!-- Graph visualization area -->
+      <div id="cy">
+      </div>
+      
+      <!-- Simple graph container (replaces orbital layout) -->
+      <div class="graph-container">
+        <!-- Orbital Welcome State - shows when app is ready -->
+        <div class="orbital-welcome hidden" id="orbital-welcome">
+          <div class="orbital-ring"></div>
+          <div class="orbital-ring"></div>
+          <div class="orbital-ring"></div>
+          <div class="orbital-ring"></div>
+          <div class="orbital-euler-center">
+            <img src="euler-face.jpg" alt="Leonhard Euler">
+          </div>
+        </div>
+      </div>
+      
+      <!-- Simple desktop graph controls - bottom right corner -->
+      <div id="desktop-graph-controls" class="desktop-graph-controls">
+        <button class="btn btn-secondary desktop-control-btn" id="desktop-zoom-in" title="Zoom In">
+          <i class="fas fa-search-plus"></i>
+        </button>
+        <button class="btn btn-secondary desktop-control-btn" id="desktop-zoom-out" title="Zoom Out">
+          <i class="fas fa-search-minus"></i>
+        </button>
+        <button class="btn btn-secondary desktop-control-btn" id="desktop-fit" title="Fit to Screen">
+          <i class="fas fa-expand-arrows-alt"></i>
+        </button>
+        <button class="btn btn-secondary desktop-control-btn" id="desktop-layout-circle" title="Circle Layout">
+          <i class="fas fa-circle"></i>
+        </button>
+        <button class="btn btn-secondary desktop-control-btn" id="desktop-layout-grid" title="Grid Layout">
+          <i class="fas fa-th"></i>
+        </button>
+        <button class="btn btn-secondary desktop-control-btn" id="desktop-layout-random" title="Random Layout">
+          <i class="fas fa-random"></i>
+        </button>
+        <button class="btn btn-secondary desktop-control-btn" id="desktop-reset" title="Reset View">
+          <i class="fas fa-undo"></i>
+        </button>
+        <button class="btn btn-secondary desktop-control-btn" id="desktop-animate" title="Animate Path">
+          <i class="fas fa-play"></i>
+        </button>
+      </div>
+      <!-- Mobile Graph Controls (shown when content is retracted) -->
+      <div class="graph-controls" id="graph-controls" style="display: none;">
+        <button class="graph-control-btn" id="graph-zoom-in">
+          <i class="fas fa-search-plus"></i>
+          <span class="btn-label">Zoom In</span>
+        </button>
+        <button class="graph-control-btn" id="graph-zoom-out">
+          <i class="fas fa-search-minus"></i>
+          <span class="btn-label">Zoom Out</span>
+        </button>
+        <button class="graph-control-btn" id="graph-fit">
+          <i class="fas fa-expand-arrows-alt"></i>
+          <span class="btn-label">Fit</span>
+        </button>
+        <button class="graph-control-btn" id="graph-layout-circle">
+          <i class="fas fa-circle"></i>
+          <span class="btn-label">Circle</span>
+        </button>
+        <button class="graph-control-btn" id="graph-layout-random">
+          <i class="fas fa-random"></i>
+          <span class="btn-label">Random</span>
+        </button>
+        <button class="graph-control-btn" id="graph-export">
+          <i class="fas fa-download"></i>
+          <span class="btn-label">Export</span>
+        </button>
+      </div>
+    </div>
+    
+    <!-- CONTENT LAYER (Foreground - Slides Up/Down) -->
+    <div class="content-layer" id="content-layer">
+      <!-- Mobile Notification Banner -->
+      <div id="mobile-notification-banner" class="notification-banner mobile-notification">
+        <!-- Mobile notification content will be set via JavaScript -->
+      </div>
+      
+      <!-- EULER TITLE AREA WITH CTF (Desktop Only) -->
+      <div class="title-notification-container">
+        <div class="title-area" id="euler-logo">
+          <img src="euler-face.jpg" alt="Leonhard Euler" class="euler-portrait">
+          <div id="eulerTextContainer">
+            <div id="eulerText">EULER</div>
+          </div>
+        </div>
+        <!-- Desktop Notification Banner -->
+        <div id="desktop-notification-banner" class="notification-banner desktop-notification">
+          <div class="notification-content">
+            <i class="notification-icon"></i>
+            <span class="notification-text"></span>
+          </div>
+        </div>
+      </div>
+      
+      <style>
+        .euler-portrait {
+          flex: 0 0 auto;
+        }
+        
+        #eulerTextContainer {
+          flex: 1;
+          min-width: 0;
+          height: 80px;
+          display: flex;
+          align-items: center;
+        }
+        
+        #eulerText {
+          color: #ffffff; 
+          font-weight: 700; 
+          text-transform: uppercase; 
+          font-family: 'Anybody', sans-serif;
+          line-height: 1;
+          /* CTF will handle sizing, spacing, and transforms */
+        }
+      </style>
+      
+      
+      <!-- INPUT SECTION -->
+      <section class="content-section" id="input-section">
+        <div class="section-header sticky-header" data-section="input">
+          <div class="section-icon">
+            <i class="fas fa-edit"></i>
+          </div>
+          <h2 class="section-title">INPUT</h2>
+          <div class="section-actions">
+            <!-- Optional section-specific actions -->
+          </div>
+        </div>
+        
+        <div class="section-content">
+          <!-- Editor Mode Switch -->
+          <div class="editor-mode-switch" id="editor-mode-container">
+            <button id="text-mode-btn" class="mode-btn active" data-mode="text">
+              <i class="fas fa-keyboard mode-icon"></i>
+              <span class="mode-text">TEXT</span>
+            </button>
+            <button id="visual-mode-btn" class="mode-btn" data-mode="visual">
+              <i class="fas fa-project-diagram mode-icon"></i>
+              <span class="mode-text">VISUAL</span>
+            </button>
+          </div>
+          
+          <!-- Text Editor Mode -->
+          <div id="text-editor-mode" class="editor-mode active">
+            <div class="form-group">
+              <label for="edges" class="form-label">EDGE LIST</label>
+              <div class="input-container">
+                <textarea id="edges" class="form-input edge-input" placeholder="Format: [a,b],[c,d],[c,e],[f,e],[b,d]">[a,b],[b,c],[c,d],[d,e],[e,a]</textarea>
+              </div>
+              <div id="weighted-hint" class="hint-box hidden">
+                <i class="fas fa-info-circle"></i> 
+                <span>Weighted format: [a,b,2],[c,d,5] - Third value is weight. The Chinese Postman algorithm finds minimum-weight tour. <span class="hint-flag">🇨🇳</span></span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Visual Editor Mode -->
+          <div id="visual-editor-mode" class="editor-mode">
+            <div class="visual-editor-container">
+              <div class="edge-list-tools">
+                <button id="add-edge" class="btn btn-primary btn-edge-action"><i class="fas fa-plus"></i> ADD EDGE</button>
+              </div>
+              <div id="edge-list" class="edge-list">
+                <!-- Edge items will be added here dynamically -->
+              </div>
+            </div>
+          </div>
+          
+          <!-- Graph Properties -->
+          <div class="form-group">
+            <label class="form-label">GRAPH PROPERTIES</label>
+            
+            <!-- Desktop toggles -->
+            <div class="euler-toggles-container" id="graph-properties">
+              <!-- Directed/Undirected Toggle -->
+              <div class="euler-custom-toggle" id="directed-toggle">
+                <input type="checkbox" id="direction-input">
+                <div class="status-display status-left">UNDIRECTED</div>
+                <div class="status-display status-right">DIRECTED</div>
+                <div class="toggle-slider-container">
+                  <div class="toggle-slider">
+                    <i class="fas fa-exchange-alt toggle-icon left-icon"></i>
+                    <i class="fas fa-long-arrow-alt-right toggle-icon right-icon"></i>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Weighted/Unweighted Toggle -->
+              <div class="euler-custom-toggle" id="weighted-toggle">
+                <input type="checkbox" id="weight-input">
+                <div class="status-display status-left">UNWEIGHTED</div>
+                <div class="status-display status-right">WEIGHTED</div>
+                <div class="toggle-slider-container">
+                  <div class="toggle-slider">
+                    <i class="fas fa-feather toggle-icon left-icon"></i>
+                    <i class="fas fa-weight-hanging toggle-icon right-icon"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Mobile simple controls -->
+            <div class="mobile-simple-controls" style="display: none;">
+              <div class="mobile-checkbox-group">
+                <label for="mobile-directed">Directed Graph</label>
+                <input type="checkbox" id="mobile-directed">
+              </div>
+              <div class="mobile-checkbox-group">
+                <label for="mobile-weighted">Weighted Graph</label>
+                <input type="checkbox" id="mobile-weighted">
+              </div>
+            </div>
+            
+            <!-- Hidden inputs to store the actual values -->
+            <input type="hidden" id="directed" value="false">
+            <input type="hidden" id="weighted" value="false">
+          </div>
+          
+          <div class="action-buttons no-gap">
+            <button id="calculate" class="btn-start"><i class="icon-euler"></i> CALCULATE EULER</button>
+          </div>
+        </div>
+      </section>
+      
+      <!-- RESULTS SECTION -->
+      <section class="content-section" id="results-section">
+        <div class="section-header sticky-header" data-section="results">
+          <div class="section-icon">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <h2 class="section-title">RESULTS</h2>
+          <div class="section-actions">
+            <!-- Optional section-specific actions -->
+          </div>
+        </div>
+        
+        <div class="section-content">
+          <div id="result" class="hidden">
+            <h3 id="result-title"></h3>
+            <p id="result-path" class="path-display"></p>
+            <p id="result-summary"></p>
+            <div class="button-group">
+              <button id="show-more" class="btn btn-secondary"><i class="fas fa-info-circle"></i> Show explanation</button>
+              <button id="reset" class="btn btn-secondary"><i class="fas fa-undo"></i> Reset</button>
+            </div>
+          </div>
+          
+          <div id="no-results-hint" class="hint-box">
+            <i class="fas fa-info-circle"></i> Run a calculation to see results here. You can use the "CALCULATE EULER" button in the Input section.
+          </div>
+          
+          <div id="explanation" class="hidden">
+            <h3>Explanation</h3>
+            <div id="explanation-content"></div>
+          </div>
+          
+          <div id="controls" class="hidden">
+            <button id="animate" class="btn btn-primary"><i class="fas fa-play"></i> Animate Path</button>
+            <button id="export" class="btn btn-secondary"><i class="fas fa-download"></i> Export Image</button>
+          </div>
+        </div>
+      </section>
+      
+      <!-- SAVED SECTION -->
+      <section class="content-section" id="saved-section">
+        <div class="section-header sticky-header" data-section="saved">
+          <div class="section-icon">
+            <i class="fas fa-save"></i>
+          </div>
+          <h2 class="section-title">SAVED</h2>
+          <div class="section-actions">
+            <!-- Optional section-specific actions -->
+          </div>
+        </div>
+        
+        <div class="section-content">
+          <div class="save-form">
+            <h3><i class="fas fa-save"></i>Current Graph</h3>
+            <button id="save" class="btn btn-primary btn-edge-action"><i class="fas fa-save"></i> Save</button>
+          </div>
+          
+          <div id="save-hint" class="hint-box hidden">
+            <i class="fas fa-info-circle"></i> Create a graph first to enable saving
+          </div>
+          
+          <div class="saved-graphs-container">
+            <div id="saved-graphs-list">
+              <!-- Examples and user-saved graphs will be loaded dynamically -->
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- GRAPH VIEW TAB - back inside content-layer to move with content -->
+      <div class="graph-view-tab" id="graph-view-tab">
+        <i class="fas fa-arrow-up"></i> GRAPH VIEW <i class="fas fa-arrow-up"></i>
+      </div>
+      
+    </div>
+    <!-- End content-layer -->
+    
+  </div>
+  <!-- End main-container -->
+
+  <!-- Global Loader -->
+  <div id="global-loader" class="global-loader-container">
+    <div class="euler-large-loader">
+      <div class="euler-circle">
+        <img src="euler-face.jpg" alt="Euler">
+      </div>
+      <div class="euler-spinner"></div>
+      <div class="euler-pulse"></div>
+    </div>
+    <div id="loader-progress" class="loader-progress">Processing Graph...</div>
+  </div>
+  
+  <!-- Application Entry Point (ES Module) -->
+  <script type="module" src="js/main.js"></script>
+
+
+</body>
+</html>

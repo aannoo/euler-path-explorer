@@ -1,0 +1,316 @@
+/* CSS Variables for orbital animation */
+:root {
+  --primary-color: #ff5a1f;
+  --primary-color-rgb: 255, 90, 31;
+  --secondary-color: #ff8f29;
+}
+
+/* Orbital Welcome Animation - shows when app is ready */
+.orbital-welcome {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 85%;
+  height: 85%;
+  max-width: 85vh;
+  max-height: 85vh;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  z-index: 50;
+  pointer-events: none;
+  transform-origin: center;
+  animation: orbital-entrance 6s cubic-bezier(0.4, 0.0, 0.2, 1) forwards;
+  will-change: transform, opacity;
+  opacity: 0;
+}
+
+.orbital-welcome.show {
+  opacity: 1;
+}
+
+/* Graph loaded state - smooth expansion and fade */
+.orbital-welcome.graph-loaded {
+  animation: 
+    euler-morph-to-oval 0.8s ease-out forwards,
+    euler-scale-to-fill 1.2s ease-in-out 0.6s forwards,
+    euler-border-morph-dynamic 2s ease-out forwards,
+    euler-fade-out 0.8s ease-out 2.5s forwards;
+}
+
+.orbital-welcome.hidden {
+  display: none;
+}
+
+/* Central Euler face - perfect 300px circle initially */
+.orbital-euler-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  height: 300px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 3px solid var(--primary-color);
+  overflow: hidden;
+  z-index: 10;
+  animation: orbital-pulse 4s infinite ease-in-out, fade-center 8s cubic-bezier(0.4, 0.0, 0.2, 1) forwards;
+  transform-origin: center;
+  will-change: transform, box-shadow, border-radius, width, height;
+}
+
+/* Face expansion animation with faster sequential morphing */
+.orbital-welcome.graph-loaded .orbital-euler-center {
+  animation: 
+    orbital-pulse 4s infinite ease-in-out,
+    euler-morph-to-oval 0.4s ease-out forwards,
+    euler-scale-to-fill 0.6s ease-in-out 0.3s forwards,
+    euler-border-morph-dynamic 1s ease-out forwards,
+    euler-fade-out 0.4s ease-out 1.2s forwards;
+}
+
+.orbital-euler-center img {
+  width: 120%;
+  height: 120%;
+  left: -10%;
+  top: -10%;
+  position: absolute;
+  object-fit: cover;
+  opacity: 0.8;
+  filter: grayscale(50%);
+  transform-origin: center;
+  will-change: transform;
+  animation: fade-euler-image 8s cubic-bezier(0.4, 0.0, 0.2, 1) forwards;
+}
+
+.orbital-welcome.graph-loaded .orbital-euler-center img {
+  animation: 
+    euler-image-fade 1.5s cubic-bezier(0.4, 0.0, 0.2, 1) forwards;
+}
+
+/* Orbital rings - perfect circles with absolute pixel sizes */
+.orbital-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border: 2px dashed var(--primary-color);
+  border-radius: 50%;
+  transform-origin: center;
+  will-change: transform, opacity;
+}
+
+.orbital-ring:nth-child(1) {
+  width: 400px;
+  height: 400px;
+  transform: translate(-50%, -50%);
+  animation: orbital-spin 45s linear infinite;
+  border-style: solid;
+  opacity: 0.5;
+  border-width: 1px;
+}
+
+.orbital-ring:nth-child(2) {
+  width: 500px;
+  height: 500px;
+  transform: translate(-50%, -50%);
+  animation: orbital-spin 60s linear infinite reverse;
+  opacity: 0.4;
+  border-color: var(--secondary-color);
+  border-width: 1px;
+}
+
+.orbital-ring:nth-child(3) {
+  width: 600px;
+  height: 600px;
+  transform: translate(-50%, -50%);
+  animation: orbital-spin 90s linear infinite;
+  border-color: var(--secondary-color);
+  opacity: 0.3;
+  border-style: dotted;
+}
+
+.orbital-ring:nth-child(4) {
+  width: 700px;
+  height: 700px;
+  transform: translate(-50%, -50%);
+  animation: orbital-spin 120s linear infinite reverse;
+  border-style: dotted;
+  opacity: 0.2;
+}
+
+/* Ring expansion with faster, optimized morphing and scaling */
+.orbital-welcome.graph-loaded .orbital-ring:nth-child(1) {
+  animation: 
+    ring-scale-and-fade 0.3s ease-in-out 0.15s forwards;
+}
+
+.orbital-welcome.graph-loaded .orbital-ring:nth-child(2) {
+  animation: 
+    ring-scale-and-fade 0.3s ease-in-out 0.2s forwards;
+}
+
+.orbital-welcome.graph-loaded .orbital-ring:nth-child(3) {
+  animation: 
+    ring-scale-and-fade 0.3s ease-in-out 0.25s forwards;
+}
+
+.orbital-welcome.graph-loaded .orbital-ring:nth-child(4) {
+  animation: 
+    ring-scale-and-fade 0.3s ease-in-out 0.3s forwards;
+}
+
+/* Animation Keyframes */
+@keyframes orbital-entrance {
+  0% { 
+    transform: translate(-50%, -50%) scale(0.1);
+    opacity: 0;
+  }
+  30% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  70% { 
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+/* Fade Euler center and image after entrance animation */
+@keyframes fade-center {
+  0% { 
+    opacity: 0.8;
+  }
+  70% {
+    opacity: 0.8; 
+  }
+  100% { 
+    opacity: 0.35;
+  }
+}
+
+@keyframes fade-euler-image {
+  0% { 
+    opacity: 0.8;
+  }
+  70% {
+    opacity: 1; 
+    filter: grayscale(20%);
+  }
+  100% { 
+    opacity: 0.3;
+    filter: grayscale(70%);
+  }
+}
+
+/* Step 1: Morph circle to oval */
+@keyframes euler-morph-to-oval {
+  0% {
+    width: 300px;
+    height: 300px;
+  }
+  100% {
+    width: calc(300px * var(--target-aspect-ratio));
+    height: 300px;
+  }
+}
+
+/* Step 2: Scale the oval up to fill container */
+@keyframes euler-scale-to-fill {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(var(--final-scale));
+  }
+}
+
+@keyframes ring-scale-and-fade {
+  0% {
+    opacity: inherit;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 0.2;
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.6);
+  }
+}
+
+@keyframes euler-border-morph-dynamic {
+  0% {
+    border-width: 3px;
+    border-color: var(--primary-color);
+    border-radius: 50%;
+  }
+  50% {
+    border-width: 4px;
+    border-color: var(--primary-color);
+    border-radius: 20%;
+  }
+  100% {
+    border-width: 0px;
+    border-color: transparent;
+    border-radius: 0;
+  }
+}
+
+@keyframes euler-fade-out {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes euler-image-fade {
+  0% {
+    opacity: 0.3;
+  }
+  60% {
+    opacity: 0.2;
+  }
+  100% {
+    opacity: 0.1;
+  }
+}
+
+@keyframes orbital-spin {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes orbital-pulse {
+  0%, 100% { 
+    box-shadow: 0 0 10px rgba(var(--primary-color-rgb), 0.2); 
+  }
+  50% { 
+    box-shadow: 0 0 15px rgba(var(--primary-color-rgb), 0.3), 
+                0 0 35px rgba(var(--primary-color-rgb), 0.15); 
+  }
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .orbital-welcome {
+    width: min(90vh, 90vw);
+    height: min(90vh, 90vw);
+  }
+  
+  .orbital-euler-center {
+    width: 250px;
+    height: 250px;
+  }
+
+  .orbital-ring:nth-child(4) {
+    display: none;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .orbital-welcome *,
+  .orbital-welcome {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+} 

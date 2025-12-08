@@ -1,0 +1,271 @@
+/* EULER - Graph Controls CSS */
+
+/* Radial Controls */
+.radial-controls {
+  position: absolute;
+  right: -70px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+  z-index: 10;
+}
+
+.radial-control {
+  width: 50px;
+  height: 50px;
+  border-radius: var(--border-radius-circle);
+  background: rgba(48, 48, 46, 0.5);
+  border: 1px solid rgba(201, 100, 67, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.radial-control:hover {
+  background: rgba(201, 100, 67, 0.3);
+}
+
+.radial-control:active {
+  top: 2px;
+}
+
+.radial-icon {
+  font-size: 20px;
+  color: var(--text-color);
+}
+
+.path-control-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.circular-graph-container::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--border-radius-circle);
+  border: 1px dashed rgba(201, 100, 67, 0.2);
+  pointer-events: none;
+}
+
+/* Graph Controls */
+.graph-controls {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 20;
+}
+
+.graph-controls button {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--border-radius-circle);
+  background: rgba(48, 48, 46, 0.5);
+  border: 1px solid rgba(201, 100, 67, 0.5);
+  color: var(--text-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 0;
+  position: relative;
+}
+
+.graph-controls button:hover {
+  background: rgba(201, 100, 67, 0.3);
+}
+
+.graph-controls button:active {
+  top: 2px;
+}
+
+/* Animation counter */
+#animation-counter {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--dark-color-4);
+  padding: 12px 15px;
+  border-radius: var(--border-radius);
+  font-size: 16px;
+  font-weight: 500;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--button-height);
+  min-width: 150px;
+}
+
+#animation-counter::before {
+  content: "\f04b";
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  margin-right: 8px;
+  color: rgba(201, 100, 67, 0.8);
+}
+
+/* Instant Tooltip Styles */
+.radial-control::after {
+  content: attr(title); /* Use the title attribute text */
+  position: absolute;
+  left: 110%; /* Position to the right of the button */
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: var(--dark-color-3);
+  color: var(--text-color);
+  padding: 5px 10px;
+  border-radius: var(--border-radius);
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0; /* Hidden by default */
+  visibility: hidden;
+  transition: opacity 0.1s ease, visibility 0.1s ease; /* Smooth transition */
+  pointer-events: none; /* Prevent tooltip from blocking hover */
+  z-index: 100;
+  border: 1px solid var(--dark-color-4);
+}
+
+.radial-control:hover::after {
+  opacity: 1; /* Show on hover */
+  visibility: visible;
+  transition-delay: 0s; /* Ensure immediate appearance */
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .radial-controls {
+    position: absolute;
+    bottom: -70px;
+    right: auto;
+    left: 0;
+    top: auto;
+    transform: none;
+    width: 100%;
+    flex-direction: row;
+    justify-content: center;
+  }
+  
+  .radial-control {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .graph-controls {
+    right: 10px;
+    top: 10px;
+    transform: none;
+    flex-direction: row;
+  }
+  
+  .graph-controls button {
+    width: 40px;
+    height: 40px;
+  }
+  
+  #animation-counter {
+    height: 40px;
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+}
+
+/* Mobile specific adjustments */
+@media (max-width: 768px) {
+  /* Hide sigma reset button on mobile */
+  .sigma-reset-btn {
+    display: none !important;
+  }
+  
+  /* Mobile graph controls - bottom bar */
+  .graph-controls {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    top: auto !important; /* Override any top positioning */
+    transform: none !important; /* Remove any transforms */
+    z-index: 1000 !important; /* Lower than tab's 2000 */
+    background: rgba(var(--dark-color-2-rgb), 0.95) !important;
+    border-top: 1px solid var(--primary-color);
+    padding: 12px;
+    display: flex;
+    flex-direction: row !important;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    height: 80px !important;
+    width: 100vw !important;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
+  }
+  
+  .graph-controls button {
+    width: 60px !important;
+    height: 50px !important;
+    border-radius: 4px !important; /* Rectangular, not circular */
+    background: var(--dark-color-3) !important;
+    border: 1px solid var(--primary-color) !important;
+    color: var(--text-primary) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    font-size: 12px !important;
+    padding: 4px !important;
+    position: relative !important;
+  }
+}
+
+/* ========== DESKTOP GRAPH CONTROLS ========== */
+
+/* Desktop graph controls - bottom right corner */
+.desktop-graph-controls {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  z-index: 10;
+  padding: var(--spacing-2);
+  background-color: rgba(30, 34, 53, 0.9);
+  border-top: solid var(--dark-color-3) 2px;
+  border-left: solid var(--dark-color-3) 2px;
+  display: flex;
+  gap: 0;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Desktop control buttons */
+.desktop-control-btn {
+  flex: 1;
+  border-radius: 0;
+  border-bottom: solid var(--dark-color-3) 1px;
+}
+
+/* Desktop control icons with proper spacing */
+.desktop-control-btn i {
+  margin-left: 5px !important;
+  margin-right: 5px !important;
+}
+
+/* Hide desktop controls on mobile */
+@media (max-width: 768px) {
+  .desktop-graph-controls {
+    display: none !important;
+  }
+}

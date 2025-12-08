@@ -1,0 +1,461 @@
+/* EULER - Utility CSS */
+
+/* ========== Layout Utilities ========== */
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+}
+
+.flex-around {
+  display: flex;
+  justify-content: space-around;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.flex-grow {
+  flex-grow: 1;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.h-100 {
+  height: 100%;
+}
+
+.position-relative {
+  position: relative;
+}
+
+.position-absolute {
+  position: absolute;
+}
+
+/* ========== Spacing Utilities ========== */
+.m-0 {
+  margin: 0;
+}
+
+.mt-0 {
+  margin-top: 0;
+}
+
+.mb-0 {
+  margin-bottom: 0;
+}
+
+.ml-0 {
+  margin-left: 0;
+}
+
+.mr-0 {
+  margin-right: 0;
+}
+
+.p-0 {
+  padding: 0;
+}
+
+.pt-0 {
+  padding-top: 0;
+}
+
+.pb-0 {
+  padding-bottom: 0;
+}
+
+.pl-0 {
+  padding-left: 0;
+}
+
+.pr-0 {
+  padding-right: 0;
+}
+
+.gap-sm {
+  gap: var(--spacing-2);
+}
+
+.gap-md {
+  gap: var(--spacing-3);
+}
+
+.gap-lg {
+  gap: var(--spacing-4);
+}
+
+/* ========== Typography Utilities ========== */
+.text-uppercase {
+  text-transform: uppercase;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.font-mono {
+  font-family: var(--font-family-mono);
+}
+
+.font-bold {
+  font-weight: var(--font-weight-bold);
+}
+
+.font-semibold {
+  font-weight: var(--font-weight-semibold);
+}
+
+.font-normal {
+  font-weight: var(--font-weight-normal);
+}
+
+.letter-spacing-wide {
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.letter-spacing-wider {
+  letter-spacing: var(--letter-spacing-wider);
+}
+
+/* ========== Color Utilities ========== */
+.text-primary {
+  color: var(--text-primary);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.text-accent {
+  color: var(--accent-primary);
+}
+
+.text-error {
+  color: var(--error-color);
+}
+
+.text-success {
+  color: var(--success-color);
+}
+
+.bg-dark-1 {
+  background-color: var(--dark-color-1);
+}
+
+.bg-dark-2 {
+  background-color: var(--dark-color-2);
+}
+
+.bg-dark-3 {
+  background-color: var(--dark-color-3);
+}
+
+.bg-dark-4 {
+  background-color: var(--dark-color-4);
+}
+
+.bg-primary-light {
+  background-color: rgba(var(--primary-color-rgb), 0.08);
+}
+
+.bg-primary-medium {
+  background-color: rgba(var(--primary-color-rgb), 0.12);
+}
+
+.bg-error-light {
+  background-color: rgba(var(--error-color-rgb), 0.08);
+}
+
+.bg-success-light {
+  background-color: rgba(var(--success-color-rgb), 0.08);
+}
+
+/* ========== Border Utilities ========== */
+.border-left-primary {
+  border-left: var(--section-border-width) solid var(--border-primary);
+}
+
+.border-left-secondary {
+  border-left: var(--section-border-width) solid var(--border-secondary);
+}
+
+.border-left-focus {
+  border-left: calc(var(--section-border-width) + 3px) solid var(--focus-outline-color);
+}
+
+.border-left-error {
+  border-left: calc(var(--section-border-width) + 3px) solid var(--error-color);
+}
+
+.border-left-success {
+  border-left: calc(var(--section-border-width) + 3px) solid var(--success-color);
+}
+
+.border-bottom-thin {
+  border-bottom: 1px solid var(--dark-color-1);
+}
+
+/* Add standardized border width utilities */
+.border-width-normal {
+  border-width: var(--section-border-width); /* 3px */
+}
+
+.border-width-focus {
+  border-width: calc(var(--section-border-width) * 2); /* 6px */
+}
+
+/* Add border style utilities */
+.border-solid {
+  border-style: solid;
+}
+
+.border-dashed {
+  border-style: dashed;
+}
+
+/* Add standardized left border utilities for interactive states */
+.border-left-interactive {
+  border-left: var(--section-border-width) solid var(--border-secondary);
+  transition: border-left var(--transition-fast);
+}
+
+.border-left-interactive:hover {
+  border-left-width: calc(var(--section-border-width) * 2); /* 6px */
+}
+
+.border-left-active {
+  border-left: calc(var(--section-border-width) * 2) solid var(--focus-outline-color);
+  transition: none; /* Immediate transition for active state */
+}
+
+/* ========== Display Utilities ========== */
+.hidden {
+  display: none;
+}
+
+.visible {
+  display: block;
+}
+
+.opacity-0 {
+  opacity: 0;
+}
+
+.opacity-50 {
+  opacity: 0.5;
+}
+
+.opacity-100 {
+  opacity: 1;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.overflow-auto {
+  overflow: auto;
+}
+
+.overflow-y-auto {
+  overflow-y: auto;
+}
+
+.overflow-x-hidden {
+  overflow-x: hidden;
+}
+
+/* ========== Transition Utilities ========== */
+.transition-fast {
+  transition: all var(--transition-fast);
+}
+
+.transition-normal {
+  transition: all var(--transition-normal);
+}
+
+.transition-slow {
+  transition: all var(--transition-slow);
+}
+
+.transition-none {
+  transition: none;
+}
+
+/* ========== Elevation Utilities ========== */
+.shadow-sm {
+  box-shadow: var(--shadow-sm);
+}
+
+.shadow-md {
+  box-shadow: var(--shadow-md);
+}
+
+.shadow-lg {
+  box-shadow: var(--shadow-lg);
+}
+
+/* ========== Z-index Utilities ========== */
+.z-base {
+  z-index: var(--z-base);
+}
+
+.z-content {
+  z-index: var(--z-content);
+}
+
+.z-ui {
+  z-index: var(--z-ui);
+}
+
+.z-dropdown {
+  z-index: var(--z-dropdown);
+}
+
+.z-modal {
+  z-index: var(--z-modal);
+}
+
+/* ========== Media Query Utilities ========== */
+@media (max-width: 992px) {
+  .tablet-only {
+    display: block;
+  }
+  
+  .desktop-only {
+    display: none;
+  }
+  
+  .tablet-w-100 {
+    width: 100%;
+  }
+  
+  .tablet-flex-col {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 576px) {
+  .mobile-only {
+    display: block;
+  }
+  
+  .mobile-hide {
+    display: none;
+  }
+  
+  .mobile-w-100 {
+    width: 100%;
+  }
+  
+  .mobile-flex-col {
+    flex-direction: column;
+  }
+  
+  .mobile-text-center {
+    text-align: center;
+  }
+}
+
+/* ========== Interactive State Utilities ========== */
+.interactive {
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.interactive:hover {
+  background-color: rgba(var(--primary-color-rgb), 0.08);
+}
+
+.interactive:active {
+  transform: translateY(2px);
+  transition: transform var(--transition-normal);
+}
+
+.interactive-focus {
+  position: relative;
+}
+
+.interactive-focus:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--focus-outline-color);
+}
+
+/* ========== Geometric Shape Utilities ========== */
+.triangle-right {
+  position: relative;
+}
+
+.triangle-right::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-top: var(--triangle-size) solid transparent;
+  border-bottom: var(--triangle-size) solid transparent;
+  border-left: calc(var(--triangle-size) * 1.5) solid currentColor;
+}
+
+.triangle-down {
+  position: relative;
+}
+
+.triangle-down::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: var(--triangle-size) solid transparent;
+  border-right: var(--triangle-size) solid transparent;
+  border-top: calc(var(--triangle-size) * 1.5) solid currentColor;
+}
+
+/* ========== Accessibility Utilities ========== */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.focus-outline {
+  outline: 2px solid var(--focus-outline-color);
+  outline-offset: 2px;
+}
+
+.focus-within-visible:focus-within {
+  outline: 2px solid var(--focus-outline-color);
+  outline-offset: 2px;
+} 

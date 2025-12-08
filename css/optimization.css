@@ -1,0 +1,172 @@
+/* EULER - CSS Performance Optimizations */
+
+/* This file contains performance-focused CSS enhancements 
+   to improve rendering, animation, and interaction performance */
+
+/* ========== Hardware Acceleration ========== */
+
+/* Apply to elements that need smooth animations */
+.hardware-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* For elements that have significant transitions/transforms */
+.transform-optimized {
+  will-change: transform;
+}
+
+/* For opacity animations (like fade in/out) */
+.opacity-optimized {
+  will-change: opacity;
+}
+
+/* For elements that change multiple properties */
+.complex-optimized {
+  will-change: transform, opacity;
+}
+
+/* ========== Specific Component Optimizations ========== */
+
+/* Optimize button hover/active states */
+.btn:hover, 
+.btn:active {
+  transform: translateZ(0) translateY(2px);
+}
+
+/* Optimize sidebar transition */
+.sidebar {
+  transform: translateZ(0);
+  will-change: width;
+}
+
+/* Optimize euler branding transitions */
+.title-area {
+  transform: translateZ(0);
+  will-change: transform, opacity;
+}
+
+/* Optimize dropdown/tooltip animations */
+.dropdown-content,
+.tooltip-content {
+  transform: translateZ(0);
+  will-change: opacity, transform;
+}
+
+/* Optimize hint box animations */
+.hint-box:not(.hidden) {
+  transform: translateZ(0) translateY(0);
+  will-change: opacity, transform;
+}
+
+/* ========== Animation Performance ========== */
+
+/* Use opacity and transform instead of other properties */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulseHighlight {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+}
+
+/* ========== Selector Optimization ========== */
+
+/* Avoid:
+   - Deep nesting (more than 3 levels)
+   - Universal selectors (*) when possible
+   - Excessive attribute selectors
+   - Inefficient selectors like :nth-child or :not
+   - Over-qualifying selectors
+*/
+
+/* Example of optimized selectors:
+   Instead of: body .main-content .widget:nth-child(odd) div > span
+   Use: .widget-odd-text
+*/
+
+/* Reduce selector complexity for commonly accessed elements */
+.btn {
+  /* Target directly instead of .button-container .btn */
+}
+
+.form-input {
+  /* Target directly instead of .form-group .input-container .form-input */
+}
+
+/* ========== Paint/Layout Optimization ========== */
+
+/* Use opacity and transform for animations as they don't trigger layout */
+.notification-banner.active {
+  transform: translateY(0);
+}
+
+/* Use fixed size containers to minimize layout recalculation */
+.input-container,
+.button-container,
+.form-group {
+  box-sizing: border-box;
+}
+
+/* Use contain property for optimization where appropriate */
+.sidebar-panel,
+.result-panel,
+.graph-container {
+  contain: content;
+}
+
+/* ========== Responsive Performance ========== */
+
+/* Provide resolution-appropriate assets */
+@media (max-width: 576px) {
+  /* Simpler animations for mobile */
+  .complex-animation {
+    animation: none;
+  }
+  
+  /* Disable unnecessary effects */
+  .desktop-only-effect {
+    transform: none;
+    will-change: auto;
+  }
+}
+
+/* ========== Transition Optimization ========== */
+
+/* Optimize transition properties to only animate specific properties */
+.btn {
+  transition: background-color var(--transition-fast), transform var(--transition-fast);
+}
+
+/* Replace all 'transition: all' with specific properties */
+.form-input:focus {
+  transition: background-color var(--transition-fast), border-left-width var(--transition-normal);
+} 

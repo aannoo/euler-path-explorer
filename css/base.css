@@ -1,0 +1,331 @@
+/* EULER - Base CSS */
+
+/* Import utility styles */
+@import 'utility.css';
+
+/* Import performance optimizations */
+@import 'optimization.css';
+
+/* ========== CSS Variables ========== */
+:root {
+  /* Color scheme - PRIMARY PALETTE */
+  --primary-color: #ff5a1f; /* Softened primary orange */
+  --secondary-color: #ff8f29; /* Warmer secondary orange */
+  --dark-blue: #0F172A; /* Dark blue from style guide */
+  --blue-grey: #1E293B; /* Bluey grey from style guide */
+  
+  /* These are for backward compatibility, standardizing on primary-color and secondary-color */
+  --accent-primary: var(--primary-color);
+  --accent-secondary: var(--secondary-color);
+  
+  /* Working colors - derived from primary palette */
+  --dark-color-1: #1e2235; /* Slightly lighter dark blue */
+  --dark-color-2: #1a2440;
+  --dark-color-3: var(--blue-grey);
+  --dark-color-4: var(--dark-blue);
+  --light-color: #f5f0e6; /* Slightly warmer white */
+  --accent-dark: #e04d1c; /* Darker version of primary */
+  --accent-light: #ff7a4d; /* Lighter version of primary */
+  
+  /* Color for RGBA conversions - same as primary-color but in RGB format */
+  --primary-color-rgb: 255, 90, 31;
+  --secondary-color-rgb: 255, 143, 41;
+  
+  /* Dark colors RGB values for transparency effects */
+  --dark-color-1-rgb: 30, 34, 53;
+  --dark-color-2-rgb: 26, 36, 64;
+  --dark-color-3-rgb: 30, 41, 59;
+  --dark-color-4-rgb: 15, 23, 42;
+  
+  /* Functional/semantic colors */
+  --error-color: #d4351c;
+  --error-color-rgb: 212, 53, 28;
+  --success-color: #4bb543;
+  --success-color-rgb: 75, 181, 67;
+  
+  /* Graph colors - standardized to use main palette */
+  --node-color: #1b3158;
+  --edge-color: var(--primary-color);
+  --highlight-color: var(--secondary-color);
+  --visited-color: #1b3158;
+  
+  /* Text colors */
+  --text-primary: #F8FAFC; /* high contrast white */
+  --text-secondary: #B9C5D8; /* higher contrast muted text (was #94A3B8) */
+  --text-color: var(--text-primary); /* For backward compatibility */
+  
+  /* Box Model Consistency Guidelines */
+  /* 
+  To maintain consistency in spacing approach:
+  
+  USE PADDING FOR:
+  - Internal spacing within components
+  - Creating consistent heights for interactive elements
+  - Spacing inside containers like cards, panels, inputs
+  
+  USE MARGIN FOR:
+  - Spacing between components
+  - Adjusting position of standalone elements
+  - Creating vertical rhythm between sections
+  
+  GENERAL RULES:
+  - Use padding-bottom instead of margin-bottom when possible
+  - Prefer margin: 0 for resetting element spacing
+  - Use var(--spacing-X) variables for all spacing values
+  - Prefer margin-bottom over margin-top for vertical spacing
+  */
+  
+  /* Spacing */
+  --spacing-0: 0;           /* 0px - For explicitly setting zero spacing */
+  --spacing-1: 5px;         /* For very tight spacing */
+  --spacing-2: 10px;        /* For standard small spacing */
+  --spacing-3: 15px;        /* For medium spacing */
+  --spacing-4: 20px;        /* For standard large spacing */
+  --spacing-5: 25px;        /* For larger spacing */
+  --spacing-6: 30px;        /* For section spacing */
+  --spacing-7: 40px;        /* For major section breaks */
+  --spacing-8: 50px;        /* For largest spacing needs */
+  
+  /* Shadow system */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 3px 0 var(--accent-dark);
+  --shadow-lg: 0 4px 6px rgba(0, 0, 0, 0.2), 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 10px 15px rgba(0, 0, 0, 0.2), 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-none: none;
+  
+  /* Form heights - ensure consistent heights */
+  --input-height: 48px; /* Was 44px, adjusted to multiple of 4 */
+  --button-height: 52px; /* Was 50px, adjusted to multiple of 4 */
+  --control-height: 52px; /* Was 50px, adjusted to multiple of 4 */
+  
+  /* Layout */
+  --border-radius: 0px; /* No border radius - straight edges */
+  --border-radius-circle: 50%; /* For circular elements */
+  --border-radius-medium: 4px; /* For small rounded corners */
+  --sidebar-width: 380px; /* Slightly wider sidebar */
+  --sidebar-collapsed-width: 60px;
+  
+  /* Focus outline */
+  --focus-outline-color: #ffdd00;
+  --focus-outline-width: 3px;
+  
+  /* Transition System - For consistent animations */
+  /* animations/transitions should generally be avoided.
+  If used it should not detract from click feedback (something must happen instantly on click */
+  --transition-fast: 0.1s ease-in-out;      /* Quick transitions for small UI changes */
+  --transition-normal: 0.0s ease-in-out;    /* Standard transition for most elements - MOST should be no transition */
+  --transition-slow: 0.3s ease-in-out;      /* Slower transitions for larger UI changes */
+  --transition-bounce: 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy effect for emphasis */
+  --transition-gentle: 0.2s ease;           /* Gentle transition for subtle changes */
+  
+  /* Transition only for sidebar */
+  --sidebar-transition: width 0.2s ease, opacity 0.2s ease;
+  
+  /* Shapes */
+  --triangle-size: 10px;
+  
+  /* Border system - consistent approach for border colors */
+  --border-primary: var(--primary-color);      /* For content containers, main sections */
+  --border-secondary: var(--secondary-color);  /* For interactive elements (buttons, inputs) */
+  --border-accent: var(--accent-dark);         /* For highlighted or focused elements */
+  --border-neutral: var(--dark-color-4);       /* For subtle separators */
+  
+  /* Section borders */
+  --section-border-width: 3px;
+  --section-border-color: var(--border-primary);
+  
+  /* Shadows and depth */
+  --subtle-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --element-opacity: 0.95; /* Slight transparency for elements */
+
+  /* Z-index system - for consistent layering */
+  --z-base: 1;              /* Base level elements */
+  --z-content: 10;          /* Main content elements */
+  --z-ui: 50;               /* UI components like buttons, inputs */
+  --z-dropdown: 100;        /* Dropdowns, tooltips */
+  --z-sticky: 200;          /* Sticky elements like headers */
+  --z-modal-backdrop: 300;  /* Modal backdrops */
+  --z-modal: 400;           /* Modal windows */
+  --z-popover: 500;         /* Popovers, complex tooltips */
+  --z-notification: 600;    /* Notifications, alerts */
+  --z-overlay: 900;         /* Full screen overlays */
+  --z-max: 1000;            /* Maximum z-index for emergency elements */
+
+  /* Font families */
+  --font-family-base: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-family-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+}
+
+/* ========== Reset and Base Styles ========== */
+* { 
+  box-sizing: border-box; 
+  margin: 0; 
+  padding: 0; 
+}
+
+body {
+  font-family: var(--font-family-base);
+  line-height: 1.5;
+  color: var(--text-primary);
+  background: var(--dark-color-1);
+  margin: 0;
+  overflow-x: hidden;
+  background-image: none;
+}
+
+/* ========== Typography ========== */
+
+/* Typography Scale */
+:root {
+  /* Base sizes - will be used for fluid typography calculation */
+  --base-font-size-min: 14;   /* Minimum base font size at smallest viewport */
+  --base-font-size-max: 16;   /* Maximum base font size at largest viewport */
+  --viewport-min: 320;        /* Minimum viewport width in pixels */
+  --viewport-max: 1440;       /* Maximum viewport width in pixels */
+  
+  /* Fluid typography formula: calc([min size]px + ([max size] - [min size]) * (100vw - [min viewport]px) / ([max viewport] - [min viewport])); */
+  --fluid-typography-scale: calc((100vw - var(--viewport-min) * 1px) / (var(--viewport-max) - var(--viewport-min)));
+  --fluid-base-size: calc(var(--base-font-size-min) * 1px + (var(--base-font-size-max) - var(--base-font-size-min)) * var(--fluid-typography-scale));
+  
+  /* Fluid font sizes (scales relative to base size) */
+  --font-size-xs: calc(0.75 * var(--fluid-base-size));    /* ~12px-13.5px */
+  --font-size-sm: calc(0.875 * var(--fluid-base-size));   /* ~14px-15.75px */
+  --font-size-base: var(--fluid-base-size);               /* 16px-18px */
+  --font-size-md: calc(1.125 * var(--fluid-base-size));   /* ~18px-20.25px */
+  --font-size-lg: calc(1.25 * var(--fluid-base-size));    /* ~20px-22.5px */
+  --font-size-xl: calc(1.5 * var(--fluid-base-size));     /* ~24px-27px */
+  --font-size-2xl: calc(2 * var(--fluid-base-size));      /* ~32px-36px */
+  --font-size-3xl: calc(3 * var(--fluid-base-size));      /* ~48px-54px */
+  
+  /* Font weights */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+  
+  /* Line heights */
+  --line-height-tight: 1.1;
+  --line-height-snug: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+  
+  /* Letter spacing */
+  --letter-spacing-tight: -0.025em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.025em;
+  --letter-spacing-wider: 0.05em; 
+  --letter-spacing-widest: 0.1em;
+}
+
+/* Headers */
+h1, h2, h3, h4, h5, h6 {
+  margin-bottom: 0;
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  text-transform: uppercase; /* Consistent with the design guide */
+  line-height: var(--line-height-tight);
+}
+
+h1 { 
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-extrabold);
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+h2 { 
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+}
+
+h3 { 
+  font-size: var(--font-size-lg);
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+h4 { 
+  font-size: var(--font-size-base);
+  margin-bottom: 0;
+  font-weight: var(--font-weight-semibold);
+}
+
+h5 {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+}
+
+h6 {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--letter-spacing-wider);
+}
+
+p { 
+  margin-bottom: 0;
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+}
+
+/* Links */
+a {
+  color: var(--accent-light);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* UI Text Components */
+.ui-label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wider);
+}
+
+.ui-text {
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+}
+
+.ui-text-sm {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-snug);
+}
+
+/* Data Text - distinct from UI text */
+.data-text {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-md);
+  color: var(--text-primary);
+  line-height: var(--line-height-snug);
+  letter-spacing: -0.01em;
+}
+
+/* Prevent extreme font sizes on very small or very large screens */
+@media screen and (max-width: 320px) {
+  :root {
+    --fluid-base-size: calc(var(--base-font-size-min) * 1px);
+  }
+}
+
+@media screen and (min-width: 1440px) {
+  :root {
+    --fluid-base-size: calc(var(--base-font-size-max) * 1px);
+  }
+}
+
+/* ========== Helper Classes ========== */
+/* Helper classes moved to utility.css */
+
+/* Triangle shape element */
+.triangle-right {
+  width: 0;
+  height: 0;
+  border-top: var(--triangle-size) solid transparent;
+  border-bottom: var(--triangle-size) solid transparent;
+  border-left: calc(var(--triangle-size) * 1.5) solid var(--accent-primary);
+}

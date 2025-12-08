@@ -1,0 +1,471 @@
+/* EULER - Saved Graphs CSS */
+
+/* Saved Graphs Container */
+.saved-graphs-container {
+  background-color: var(--dark-color-1);
+  width: 100%;
+  margin-top: 0; /* Ensure no gap after save-hint */
+  /* Add hardware acceleration */
+  transform: translateZ(0);
+  contain: content;
+}
+
+.saved-graphs-header {
+  padding: var(--spacing-2) var(--spacing-3);
+  display: flex;
+  align-items: center;
+  background-color: var(--dark-color-2);
+  border-bottom: 1px solid var(--dark-color-1);
+  border-left: var(--section-border-width) solid var(--border-secondary);
+}
+
+.saved-graphs-title {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wider);
+  font-size: var(--font-size-base);
+  color: var(--text-primary);
+}
+
+.saved-graphs-title i {
+  color: var(--primary-color);
+}
+
+.saved-graphs-list {
+  max-height: 500px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  contain: content;
+}
+
+/* Graph Items */
+.saved-graph-item {
+  position: relative;
+  padding: var(--spacing-3);
+  padding-right: 2.5rem;
+  background-color: var(--blue-grey); /* Grey-blue base color */
+  border-bottom: 1px solid var(--dark-color-1);
+  cursor: pointer;
+  will-change: transform, border-left-width;
+  transition: border-left-width var(--transition-slow), transform var(--transition-fast), background-color var(--transition-fast);
+  border-left: var(--section-border-width) solid var(--secondary-color); /* Secondary orange border */
+  width: 100%;
+  /* Hardware acceleration for smoother animations */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  /* Performance optimizations */
+  contain: content;
+}
+
+/* Immediate transform on active (mouse down) */
+.saved-graph-item:active {
+  transition: transformY 0s, border-left-width var(--transition-slow), background-color var(--transition-fast);
+  transform: translateY(2px);
+  background-color: var(--dark-blue); /* Darker color when pressed */
+  border-left-color: var(--focus-outline-color);
+}
+
+.saved-graph-item:hover {
+  border-left: var(--focus-outline-width) solid var(--secondary-color);
+  background-color: rgba(40, 50, 70, 0.9); /* Slightly lighter than base blue-grey */
+  transform: translateX(1px);
+  transition: background-color 0s;
+}
+
+.saved-graph-item.active {
+  padding-right: var(--spacing-3);
+  border-left: 6px solid var(--focus-outline-color);
+  background-color: var(--dark-blue); /* Darker color when active */
+}
+
+/* Graph Item Content */
+.saved-graph-name {
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  width: 100%;
+  display: block;
+  margin-bottom: var(--spacing-1);
+  font-size: var(--font-size-md);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+  padding: 4px 0;
+  border-bottom: 1px solid transparent;
+  transition: border-bottom-color var(--transition-fast);
+}
+
+.saved-graph-item:not(.example-item).active .saved-graph-name:hover {
+  border-bottom: 1px solid var(--focus-outline-color);
+  cursor: text;
+}
+
+.saved-graph-input {
+  width: 100%;
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  background-color: transparent;
+  border: none;
+  font-size: var(--font-size-md);
+  padding: 4px 0;
+  margin-bottom: var(--spacing-1);
+  display: none;
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--focus-outline-color);
+}
+
+.saved-graph-input:focus {
+  outline: none;
+  background-color: rgba(255, 221, 0, 0.05);
+}
+
+/* Remove the editing classes - we'll use display inline */
+.saved-graph-item.active .saved-graph-name {
+  display: block;
+}
+
+.saved-graph-item.active .saved-graph-input {
+  display: none;
+}
+
+.saved-graph-details {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+/* Graph metadata with icons */
+.graph-metadata {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-2);
+  margin-top: var(--spacing-1);
+  color: var(--text-secondary);
+  font-size: var(--font-size-xs);
+}
+
+.graph-property {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.graph-property i {
+  color: var(--primary-color);
+  font-size: var(--font-size-sm);
+}
+
+/* Only show icons in collapsed state */
+.saved-graph-item:not(.active) .property-text {
+  display: none;
+}
+
+/* Show full text in expanded state */
+.saved-graph-item.active .property-text {
+  display: inline;
+}
+
+/* Triangle Arrow Indicator */
+.saved-graph-item::after {
+  content: '';
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: var(--triangle-size) solid transparent;
+  border-bottom: var(--triangle-size) solid transparent;
+  border-left: calc(var(--triangle-size) * 1.2) solid var(--dark-blue);
+  transition: border-left-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.saved-graph-item:hover::after {
+  border-left-color: var(--primary-color);
+  transform: translateY(-50%) translateX(3px);
+}
+
+.saved-graph-item.active::after {
+  display: none; /* Remove arrow when active */
+}
+
+/* Actions Panel */
+.saved-graph-actions {
+  display: none;
+  margin-top: var(--spacing-2);
+  border-top: 1px solid var(--dark-color-2);
+  padding-top: var(--spacing-2);
+}
+
+.saved-graph-item.active .saved-graph-actions {
+  display: block;
+}
+
+.confirmation-message {
+  color: var(--error-color);
+  font-weight: var(--font-weight-medium);
+  margin-bottom: var(--spacing-2);
+  text-align: center;
+}
+
+/* Example Graphs Section */
+.saved-section {
+  margin: 0;
+}
+
+.saved-section h4 {
+  padding: var(--spacing-2) var(--spacing-3);
+  margin: 0;
+  background-color: var(--dark-color-2);
+  color: var(--text-primary);
+  font-weight: var(--font-weight-bold);
+  border-left: var(--section-border-width) solid var(--secondary-color);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  cursor: pointer;
+  position: relative;
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wider);
+  font-size: var(--font-size-base);
+  border-top: 1px solid var(rbga(var(--dark-color-4), 0.80));
+}
+
+.saved-section h4::after {
+  content: '\f078'; /* fa-chevron-down */
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  position: absolute;
+  right: 15px;
+  transition: transform var(--transition-fast);
+}
+
+.saved-section.collapsed h4::after {
+  transform: rotate(-90deg);
+}
+
+.saved-section.collapsed .saved-graphs-items,
+.saved-section.collapsed .no-items-message {
+  display: none;
+}
+
+.saved-section h4 i {
+  color: var(--secondary-color);
+}
+
+.no-items-message {
+  padding: var(--spacing-3);
+  background-color: var(--dark-color-2);
+  color: var(--text-secondary);
+  font-style: italic;
+  margin: 0;
+  border-bottom: 1px solid var(--dark-color-1);
+  border-left: var(--section-border-width) solid var(--border-neutral);
+}
+
+/* Save Current Graph Form */
+.save-form {
+  padding: var(--spacing-3);
+  background-color: var(--dark-color-2);
+  border-left: var(--section-border-width) solid var(--primary-color);
+  margin-bottom: 0; /* Ensure no gap */
+}
+
+.save-form h3 {
+  margin-top: 0;
+  margin-bottom: var(--spacing-3);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wider);
+  font-size: var(--font-size-lg);
+  color: var(--text-primary);
+}
+
+.save-form h3 i {
+  color: var(--primary-color);
+  font-size: var(--font-size-lg);
+}
+
+/* Current graph info */
+.current-graph-message {
+  color: var(--text-secondary);
+  font-style: italic;
+  margin-bottom: var(--spacing-3);
+}
+
+.current-graph-info {
+  margin-bottom: var(--spacing-3);
+  padding: 0; /* Remove padding */
+  background-color: transparent; /* Make background transparent */
+  border-left: none; /* Remove left border */
+}
+
+.current-graph-name {
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  font-size: var(--font-size-md);
+  margin-bottom: var(--spacing-2);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.current-graph-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-2) var(--spacing-3);
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.graph-stat {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.graph-stat i {
+  color: var(--primary-color);
+  font-size: var(--font-size-base);
+}
+
+.current-graph-actions {
+  display: flex;
+  gap: var(--spacing-2);
+}
+
+.btn-small {
+  font-size: var(--font-size-sm);
+  height: 36px;
+  padding: 0 var(--spacing-2);
+}
+
+/* Save button with arrow - Match add-edge styling */
+#save {
+  /* Use the shared btn-edge-action class */
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+  font-weight: var(--font-weight-bold);
+}
+
+#save i {
+  margin-right: var(--spacing-1);
+}
+
+/* Save hint box styles have been moved to components.css to avoid duplication */
+
+/* Adjust action buttons in saved graph items */
+.action-buttons {
+  display: flex;
+  /* gap: var(--spacing-2); */
+  margin-top: var(--spacing-2);
+  justify-content: center;
+}
+
+/* Use the btn-saved-action class from buttons.css */
+.saved-graph-actions .btn {
+  /* Styles moved to buttons.css as .btn-saved-action */
+  /* Add the class to HTML elements instead */
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .saved-graph-item {
+    padding: var(--spacing-2);
+    min-height: 48px; /* Ensure minimum touch target size */
+  }
+}
+
+@media (max-width: 576px) {
+  .saved-graph-name {
+    font-size: var(--font-size-base);
+  }
+  
+  .saved-graph-details {
+    font-size: var(--font-size-xs);
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+    gap: var(--spacing-1);
+  }
+}
+
+/* Remove the example item styling */
+.saved-graph-item.example-item {
+  position: relative;
+  border-left-color: var(--secondary-color);
+}
+
+.saved-graph-item.example-item::before {
+  content: 'Example';
+  position: absolute;
+  top: var(--spacing-2);
+  right: var(--spacing-3);
+  font-size: var(--font-size-xs);
+  color: var(--secondary-color);
+  opacity: 0.6;
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+/* Add CSS for random generator UI */
+.random-generator .saved-graph-details {
+  padding: 12px;
+}
+
+.random-generator .saved-graph-details p {
+  margin: 0 0 10px 0;
+  font-size: 0.9em;
+  color: var(--text-secondary);
+}
+
+.random-params {
+  display: flex;
+  gap: 12px;
+}
+
+.random-params label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.random-params input {
+  width: 60px;
+  padding: 4px 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: var(--input-bg);
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.random-params input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 1px var(--primary-color);
+}
+
+.euler-info {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dotted var(--border-color);
+}
+
+.euler-info small {
+  color: var(--text-secondary);
+  font-style: italic;
+  font-size: 0.8em;
+  opacity: 0.8;
+} 

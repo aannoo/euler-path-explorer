@@ -1,0 +1,758 @@
+/* EULER - Responsive Layout CSS */
+
+/* ========== BASE LAYOUT ========== */
+
+/* Remove old mobile-only elements */
+.mobile-graph-controls,
+.mobile-simple-controls {
+  display: none;
+}
+
+.mobile-header-tabs {
+  display: none;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+/* ========== DESKTOP LAYOUT (Side-by-Side) ========== */
+@media (min-width: 769px) {
+  /* Desktop: Hide graph mode controls and layered interface elements */
+  .graph-mode-header,
+  .graph-controls,
+  .graph-view-tab {
+    display: none !important;
+  }
+  
+  /* Desktop: Show title area */
+  .title-notification-container {
+    display: block;
+  }
+  
+  /* Desktop: Show desktop toggles */
+  .euler-toggles-container {
+    display: flex;
+  }
+  
+  /* Desktop: Hide mobile simple controls */
+  .mobile-simple-controls {
+    display: none !important;
+  }
+  
+  /* Desktop container */
+  .main-container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+  }
+  
+  /* Content panel on left */
+  .content-layer {
+    position: relative !important;
+    width: 35%;
+    height: 100vh;
+    z-index: 100;
+    background: var(--dark-color-1);
+    transform: none !important;
+    transition: none !important;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border-right: 3px solid var(--primary-color);
+    order: 1; /* Ensure content appears first (left) */
+  }
+  
+  /* Graph panel on right */
+  .graph-layer {
+    position: relative !important;
+    width: 65%;
+    height: 100vh;
+    z-index: 1;
+    background: var(--dark-color-1);
+    order: 2; /* Ensure graph appears second (right) */
+  }
+  
+  /* Desktop content sections */
+  .content-section {
+    min-height: auto;
+    width: 100%;
+    position: relative;
+  }
+  
+  /* Desktop section headers */
+  .section-header {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    background: var(--dark-color-2);
+    border-bottom: 2px solid var(--primary-color);
+    padding: var(--spacing-4) var(--spacing-5);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .section-header:hover {
+    background: var(--dark-color-3);
+    color: var(--primary-color);
+  }
+  
+  .section-content {
+    padding: 0;
+    /* padding-bottom: var(--spacing-8); */
+    max-width: none;
+    margin: 0;
+  }
+  
+  /* Graph visualization in desktop mode - simple and clear */
+  #cy {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+  }
+  
+  .graph-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    background: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 100%);
+    }
+    /* animations for orbital welcome */
+  .graph-container:has(.orbital-welcome.graph-loaded) {
+    /* background: var(--dark-color-1); */
+    opacity: 0;
+    animation: fadeOpacity 2s ease forwards;
+  }
+
+  @keyframes fadeOpacity {
+    0% { opacity: 1; }
+    70% { opacity: 1; }
+    100% { opacity: 0; }
+}
+  
+  .desktop-control-btn {
+    width: 40px;
+    height: 40px;
+    background: var(--dark-color-3);
+    border: 1px solid var(--primary-color);
+    border-radius: var(--border-radius);
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    transition: background 0.1s ease, color 0.1s ease, transform 0.1s ease;
+  }
+  
+  .desktop-control-btn:hover {
+    background: var(--primary-color);
+    color: var(--dark-color-1);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+  
+  .desktop-control-btn:active {
+    transform: translateY(0);
+  }
+  
+  /* Desktop Resize Handle */
+  .desktop-resize-handle {
+    position: absolute;
+    top: 0;
+    left: 35%; /* Positioned at the border between content (35%) and graph (65%) */
+    width: 4px;
+    height: 100vh;
+    background: var(--secondary-color);
+    cursor: ew-resize;
+    z-index: 1000;
+    opacity: 0; /* Hidden by default, visible on hover */
+    transition: opacity 0.1s ease;
+    transform: translateX(-2px); /* Center the handle on the border */
+  }
+  
+  .desktop-resize-handle:hover {
+    opacity: 1;
+    background: var(--secondary-color);
+    box-shadow: 0 0 10px rgba(255, 152, 0, 0.5);
+  }
+  
+  .desktop-resize-handle.resizing {
+    opacity: 1;
+    transition: none;
+  }
+}
+
+/* Graph View Tab - Base mobile styles (moves naturally with content) */
+.graph-view-tab {
+  position: sticky !important; /* Sticky instead of fixed - stays at bottom during scroll, moves with content during transforms */
+  bottom: 0 !important;
+  left: 0;
+  right: 0;
+  z-index: 2500;
+  background: #FF9800; /* Bright orange background to stand out */
+  border-top: 2px solid #FFB74D; /* Lighter orange border */
+  color: #000; /* Black text for contrast on orange */
+  padding: 16px 20px; /* Fixed padding instead of CSS variables that might cause issues */
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Center the content */
+  font-weight: 700; /* Bold font weight */
+  font-size: 18px; /* Larger text */
+  box-shadow: 0 -4px 20px rgba(255, 152, 0, 0.6); /* Strong orange glow */
+  
+  /* Ensure touch events work for gestures */
+  touch-action: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  
+  /* Ensure tab is always interactive */
+  pointer-events: auto !important;
+  
+  /* Keep tab above iPhone home indicator */
+  padding-bottom: env(safe-area-inset-bottom);
+  
+  /* Ensure never transparent and consistent height */
+  opacity: 1 !important;
+  backdrop-filter: none;
+  height: 80px; /* Match JavaScript ZONE_HEIGHT to eliminate gap */
+  box-sizing: border-box; /* Include border in height calculation */
+  margin: 0; /* Remove any margin that might cause gaps */
+  
+  /* Ensure tab stays at bottom edge with no gaps */
+  border-bottom: none;
+  border-radius: 0;
+  
+  /* Force tab to stick to absolute bottom with no gaps */
+  width: 100vw !important;
+  
+  /* Remove excessive safe area padding that interferes with phone gestures */
+  margin-bottom: 0 !important;
+  
+  /* Dynamic positioning based on content state */
+  transition: top 0.3s cubic-bezier(0.4, 0.0, 0.2, 1), bottom 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+  
+  /* Eliminate any potential gaps */
+  transform: translateZ(0); /* Force hardware acceleration and precise positioning */
+}
+
+/* Fix mobile gesture navigation bar color matching */
+@supports (padding: max(0px)) {
+  .graph-view-tab {
+    /* Simple orange background without safe area complications */
+    background: #FF9800 !important;
+  }
+}
+
+/* Add meta theme-color support for mobile browsers */
+/* This will be handled in HTML head, but CSS can help with WebKit */
+@media (max-width: 768px) {
+  /* Ensure mobile viewport meta is respected */
+  html {
+    /* Prevent 1px gaps from viewport rounding */
+    height: 100%;
+    overflow-x: hidden;
+  }
+  
+  body {
+    /* Prevent 1px gaps from body rounding */
+    height: 100%;
+    min-height: 100vh;
+    min-height: -webkit-fill-available; /* iOS Safari fix */
+    overflow-x: hidden;
+  }
+}
+
+/* Remove ALL hover states on mobile to prevent weird behavior during dragging */
+@media (max-width: 768px) {
+  .graph-view-tab:hover {
+    background: #FF9800 !important; /* Keep orange, no hover effect */
+    color: #000 !important;
+    box-shadow: 0 -4px 20px rgba(255, 152, 0, 0.6) !important;
+    transform: none !important; /* No transform on mobile hover */
+  }
+  
+  .graph-view-tab:active {
+    background: #F57C00 !important; /* Slightly darker orange on press */
+    color: #000 !important;
+    transform: none !important; /* No transform to avoid alignment issues */
+  }
+}
+
+/* Desktop hover states (only for desktop) */
+@media (min-width: 769px) {
+  .graph-view-tab:hover {
+    background: var(--secondary-color);
+    color: var(--primary-color);
+    box-shadow: 0 -6px 25px rgba(0, 0, 0, 0.4);
+  }
+
+  .graph-view-tab:active {
+    background: var(--primary-color);
+    color: var(--dark-color-1);
+    transform: translateY(2px);
+    box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.6);
+    transition: all 0.1s ease;
+  }
+}
+
+.graph-view-tab:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: -2px;
+}
+
+/* ENHANCED: Gesture feedback styling */
+.graph-view-tab.gesture-active {
+  background: #FFA726 !important; /* Even brighter orange during gesture */
+  transform: scale(0.98);
+  box-shadow: 0 4px 12px rgba(255, 167, 38, 0.8) !important; /* Brighter glow */
+  border-top-color: #FFB74D !important; /* Light orange border */
+  color: #000 !important;
+  
+  /* Force solid background on mobile */
+  opacity: 1 !important;
+  backdrop-filter: none !important;
+}
+
+/* Mobile-specific gesture styling */
+@media (max-width: 768px) {
+  .graph-view-tab.gesture-active {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  
+  /* Force background on mobile webkit */
+  @supports (-webkit-touch-callout: none) {
+    .graph-view-tab.gesture-active {
+      background: #FFA726 !important;
+      opacity: 1 !important;
+    }
+  }
+}
+
+/* ========== MOBILE LAYOUT (Layered Sliding) ========== */
+@media (max-width: 768px) {
+  /* Mobile: Layered interface */
+  
+  /* Hide Euler logo/title area on mobile */
+  .title-notification-container {
+    display: none;
+  }
+  
+  /* Mobile: Hide desktop toggles */
+  .euler-toggles-container {
+    display: none !important;
+  }
+  
+  /* Mobile: Show simple controls */
+  .mobile-simple-controls {
+    display: block !important;
+    padding: var(--spacing-3);
+    background: var(--dark-color-2);
+    border-left: 3px solid var(--primary-color);
+    margin-top: var(--spacing-2);
+  }
+  
+  /* Mobile checkbox group styling */
+  .mobile-checkbox-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-2) 0;
+    border-bottom: 1px solid var(--dark-color-3);
+  }
+  
+  .mobile-checkbox-group:last-child {
+    border-bottom: none;
+  }
+  
+  .mobile-checkbox-group label {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  .mobile-checkbox-group input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--primary-color);
+    cursor: pointer;
+  }
+
+  /* Ensure graph view tab is visible on mobile */
+  .graph-view-tab {
+    display: flex !important;
+  }
+  
+  /* Graph layer (background) */
+  .graph-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1; /* Lower z-index so it stays in background */
+    background: var(--dark-color-1);
+  }
+  
+  /* Hide sigma reset button on mobile */
+  .graph-layer .sigma-reset-btn {
+    display: none !important;
+  }
+  
+  /* Orbital layout - hide in certain mobile states */
+  .orbital-layout {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    transition: opacity 0.3s ease;
+  }
+  
+  /* Hide orbital layout based on body classes that will be set by JS */
+  body.mobile-split-view .orbital-layout {
+    opacity: 0.3;
+  }
+  
+  body.mobile-retracted .orbital-layout {
+    opacity: 0.1;
+  }
+  
+  /* Hide orbital background elements in mobile states */
+  body.mobile-split-view .orbit-euler-background,
+  body.mobile-retracted .orbit-euler-background {
+    display: none;
+  }
+  
+  /* Hide desktop controls on mobile */
+  .desktop-graph-controls {
+    display: none !important;
+  }
+  
+  /* Graph visualization */
+  #cy {
+    width: 100%;
+    height: calc(100vh - 80px); /* Subtract tab height to prevent covering tab */
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 100; /* Higher than retracted content layer (10) but lower than tab (2000) */
+  }
+  
+  /* Content layer (foreground - slides up/down) */
+  .content-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    background: var(--dark-color-1);
+    transform: translateY(0);
+    transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+    overflow-y: auto; /* Restore scrolling */
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+    
+    /* Remove problematic safe area support that causes gaps */
+    padding: 0;
+    margin: 0;
+    
+    /* No padding needed - sticky tab creates its own space */
+    
+    /* Fix scrolling on mobile - CRITICAL for scroll functionality */
+    -webkit-overflow-scrolling: touch;
+    touch-action: auto; /* Allow all touch gestures for scrolling */
+    
+    /* Prevent scrolling conflicts with gesture system */
+    overscroll-behavior-y: contain;
+    overscroll-behavior-x: none;
+  }
+  
+  /* CRITICAL: Ensure content areas can scroll */
+  .content-layer * {
+    /* Remove problematic pointer-events override */
+  }
+  
+  /* Make sure section content can scroll */
+  .section-content {
+    /* Remove problematic pointer-events override */
+  }
+  
+  .content-layer.retracted {
+    transform: translateY(-95%); /* Move content further up so it doesn't cover the tab */
+    background: rgba(var(--dark-color-1-rgb), 0.95);
+    backdrop-filter: blur(10px);
+    z-index: 10; /* Lower z-index when retracted so tab can be above it */
+  }
+  
+  .content-layer.split-view {
+    transform: translateY(-50%);
+    background: rgba(var(--dark-color-1-rgb), 0.98);
+  }
+  
+  /* Mobile content sections */
+  .content-section {
+    /* min-height: 100vh; */
+    width: 100%;
+    position: relative;
+    /* Remove problematic pointer-events override */
+  }
+  
+  /* Mobile section headers */
+  .section-header {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    background: var(--dark-color-2);
+    border-bottom: 2px solid var(--primary-color);
+    padding: var(--spacing-2) var(--spacing-3);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    /* Remove problematic pointer-events override */
+  }
+  
+  .section-header:hover {
+    background: var(--dark-color-3);
+    color: var(--primary-color);
+  }
+  
+  .section-content {
+    /* padding: var(--spacing-3); */
+    /* padding-bottom: var(--spacing-8); */
+    /* Remove problematic pointer-events override */
+  }
+  
+  .section-title {
+    font-size: var(--font-size-lg);
+  }
+  
+  /* Mobile graph controls are defined in graph-controls.css */
+  
+  /* Additional mobile gesture bar support */
+  @supports (padding: max(0px)) {
+    /* Simple body background without complications */
+    body {
+      background: var(--dark-color-1);
+    }
+  }
+  
+  /* Hide desktop resize handle on mobile */
+  .desktop-resize-handle {
+    display: none !important;
+  }
+  
+  /* Mobile: Hide title area */
+  .title-notification-container {
+    display: none;
+  }
+}
+
+/* ========== SHARED STYLES ========== */
+
+/* Section icons and titles */
+.section-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: var(--primary-color);
+  color: var(--dark-color-1);
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-md);
+}
+
+.section-title {
+  flex: 1;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.section-actions {
+  display: flex;
+  gap: var(--spacing-2);
+}
+
+.section-content {
+  background: var(--dark-color-1);
+}
+
+
+/* ========== SMOOTH SCROLLING & TRANSITIONS ========== */
+
+/* Smooth section scrolling */
+.content-section {
+  scroll-margin-top: 0;
+}
+
+.content-layer {
+  scroll-behavior: smooth;
+}
+
+/* Enhanced touch scrolling on mobile */
+@media (pointer: coarse) and (max-width: 768px) {
+  .content-layer {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+  }
+}
+
+/* ========== DRAG & GESTURE SUPPORT (Mobile Only) ========== */
+
+@media (max-width: 768px) {
+  /* Prevent content selection during drag */
+  .content-layer.dragging {
+    user-select: none;
+    pointer-events: none;
+  }
+  
+  .content-layer.dragging * {
+    pointer-events: none;
+  }
+  
+  /* Visual feedback during drag */
+  .graph-view-tab.dragging {
+    background: var(--secondary-color);
+    color: var(--primary-color);
+    transition: none !important; /* Disable transitions during dragging */
+  }
+  
+  /* Also disable content layer transitions during dragging */
+  .content-layer.dragging {
+    user-select: none;
+    pointer-events: none;
+    transition: none !important; /* Disable transitions during dragging */
+  }
+}
+
+/* ========== ACCESSIBILITY ========== */
+
+/* Focus styles for keyboard navigation */
+.section-header:focus,
+.graph-view-tab:focus,
+.graph-mode-tab:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .section-header,
+  .graph-view-tab {
+    border-width: 3px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .content-layer,
+  .graph-view-tab,
+  .graph-control-btn {
+    transition: none;
+  }
+  
+  .content-layer {
+    scroll-behavior: auto;
+  }
+}
+
+/* Hide sigma reset button completely - we have our own controls */
+.sigma-reset-btn {
+  display: none !important;
+}
+
+/* ========== GRAPH INFO STRIP ========== */
+
+/* COMPLETELY REMOVED: No thin bar at top per user request */
+.graph-info-strip {
+  display: none !important;
+}
+
+.graph-info-strip.active {
+  display: none !important;
+}
+
+.graph-info-content,
+.graph-stats, 
+.graph-math-notation,
+.math-set {
+  display: none !important;
+}
+
+/* Desktop: ensure strip stays hidden */
+@media (min-width: 769px) {
+  .graph-info-strip {
+    display: none !important;
+  }
+}
+
+/* Mobile: ensure strip stays hidden */
+@media (max-width: 768px) {
+  .graph-info-strip {
+    display: none !important;
+  }
+}
+/* ========== EULER BACKGROUND STYLES ========== */
+
+/* Euler background positioning and styling */
+.euler-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0; /* Start hidden */
+  transition: opacity 2s ease-in-out;
+  background-color: rgba(0, 0, 0, 0.45);
+  z-index: 2;
+}
+
+.euler-background img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  mix-blend-mode: overlay;
+  filter: grayscale(80%);
+  opacity: 0.6;
+}
+
+/* Euler background opacity when graph loads */
+.graph-loaded-state .euler-background {
+  opacity: 1;
+}
+.graph-loaded-state .euler-background img {
+  opacity: 0.1;
+  transition: opacity 5s ease-in-out;
+}

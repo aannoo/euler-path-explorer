@@ -1,0 +1,370 @@
+/* EULER - Form Elements CSS */
+
+/* ========== Form Elements ========== */
+.form-group {
+  margin-bottom: 0;
+  width: 100%;
+}
+
+.form-label {
+  font-weight: var(--font-weight-bold);
+  margin-bottom: 0;
+  padding: var(--spacing-3) var(--spacing-3);
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wider);
+  font-size: var(--font-size-sm);
+  color: var(--light-color);
+  background-color: var(--dark-color-3);
+  border-left: var(--section-border-width) solid var(--border-primary);
+  border-top: 1px solid var(--dark-color-1);
+  position: relative; /* Added for the triangle indicator */
+}
+
+.input-container {
+  position: relative;
+  border-left: none; /* Remove any border from container */
+  width: 100%;
+  overflow: hidden; /* Contain the left border within the container */
+}
+
+.form-input {
+  width: 100%;
+  height: var(--input-height);
+  padding: 15px;
+  border: none;
+  background-color: var(--dark-color-4);
+  color: var(--text-primary);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  transition: background-color var(--transition-slow), border-left-width var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Textarea styles */
+.form-input.edge-input {
+  min-height: 120px;
+  height: auto;
+  resize: vertical;
+  overflow-y: auto;
+  font-size: var(--font-size-md);
+  font-family: var(--font-family-mono);
+  display: block;
+  margin-bottom: 0;
+  border-left: var(--section-border-width) solid var(--border-secondary);
+  transition: border-left-width 0.1s ease;
+}
+
+/* Focus state for all inputs - standard yellow outline */
+.form-input:focus {
+  outline: none;
+  background-color: #151C3D;
+  box-shadow: inset 0 0 0 1px var(--focus-outline-color);
+  border-left-width: calc(var(--section-border-width) + 3px);
+  border-left-color: var(--focus-outline-color);
+  z-index: var(--z-ui);
+}
+
+/* Error state for all inputs - standard red styling */
+.form-input.input-error {
+  background-color: rgba(var(--error-color-rgb), 0.08);
+  border-left: calc(var(--section-border-width) + 3px) solid var(--error-color);
+  z-index: var(--z-ui);
+}
+
+/* Error state WITH focus - combines red border with yellow outline */
+.form-input.input-error:focus {
+  background-color: rgba(var(--error-color-rgb), 0.08);
+  border-left: calc(var(--section-border-width) + 3px) solid var(--error-color);
+  box-shadow: inset 0 0 0 1px var(--focus-outline-color);
+  z-index: var(--z-ui);
+}
+
+/* Error message for form validation */
+.input-error-message {
+  color: var(--error-color);
+  font-size: var(--font-size-sm);
+  padding: var(--spacing-2) var(--spacing-3);
+  background-color: rgba(var(--error-color-rgb), 0.08);
+  border-left: var(--section-border-width) solid var(--error-color);
+  display: flex;
+  align-items: center;
+  margin-top: 0;
+}
+
+.input-error-message i {
+  margin-right: var(--spacing-2);
+}
+
+/* Custom select styling */
+.custom-select {
+  position: relative;
+  width: 100%;
+}
+
+.custom-select select {
+  appearance: none;
+  width: 100%;
+  height: var(--input-height);
+  padding: 0 var(--spacing-3);
+  border: none;
+  background-color: var(--dark-color-4);
+  color: var(--text-primary);
+  font-size: var(--font-size-base);
+  cursor: pointer;
+  border-left: var(--section-border-width) solid var(--accent-primary);
+  padding-right: 35px; /* Space for the triangle */
+}
+
+.custom-select::after {
+  content: '';
+  position: absolute;
+  right: var(--spacing-3);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 10px solid var(--border-primary);
+  pointer-events: none;
+}
+
+.custom-select select:focus {
+  outline: none;
+  background-color: var(--dark-color-3);
+  border-color: var(--focus-outline-color);
+  box-shadow: inset 0 0 0 1px var(--focus-outline-color);
+}
+
+/* Custom form elements */
+.form-input:disabled, 
+textarea:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: var(--dark-color-4);
+  color: var(--text-secondary);
+  border-left-color: var(--border-neutral);
+}
+
+/* Hint box styles have been moved to components.css to avoid duplication */
+
+/* ========== Graph Property Toggle Switches ========== */
+.toggle-container {
+  width: 100%;
+  border-left: var(--section-border-width) solid var(--border-secondary);
+  background-color: var(--dark-color-4);
+}
+
+.toggle-row {
+  display: flex;
+  width: 100%;
+}
+
+.toggle-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 0 15px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  border-right: 1px solid var(--dark-color-1);
+  position: relative;
+}
+
+.toggle-item:last-child {
+  border-right: none;
+}
+
+.toggle-item:hover {
+  background-color: rgba(var(--primary-color-rgb), 0.05);
+}
+
+.toggle-item.active {
+  background-color: rgba(var(--primary-color-rgb), 0.12);
+}
+
+.toggle-label {
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 10px;
+}
+
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 80px;
+  height: 28px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--dark-color-3);
+  transition: .2s;
+}
+
+.toggle-slider::before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 32px;
+  left: 4px;
+  bottom: 4px;
+  background-color: var(--dark-color-1);
+  transition: .2s;
+}
+
+input:checked + .toggle-slider::before {
+  transform: translateX(40px);
+  background-color: var(--secondary-color);
+}
+
+.toggle-item.active .toggle-slider {
+  background-color: rgba(var(--primary-color-rgb), 0.3);
+}
+
+/* For alignment with other form elements */
+.form-group .toggle-container {
+  margin-bottom: 0;
+}
+
+/* Graph Properties - Segmented Controls */
+/* .segmented-control {
+  display: flex;
+  width: 100%;
+  margin-bottom: 0;
+  position: relative;
+  border-left: var(--section-border-width) solid var(--border-secondary);
+  background-color: var(--dark-color-3);
+  padding: 0;
+  gap: 0;
+}
+
+.segmented-control .segment, 
+.segmented-control .single-toggle {
+  flex: 1;
+  height: var(--button-height);
+  padding: 0 15px;
+  background-color: var(--dark-color-4);
+  border: none;
+  color: var(--text-color);
+  font-weight: 600;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  text-transform: uppercase;
+  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.segmented-control .segment:first-child,
+.segmented-control .single-toggle:first-child {
+  border-right: 1px solid var(--dark-color-1);
+}
+
+.segmented-control .segment span,
+.segmented-control .single-toggle span {
+  position: relative;
+  z-index: 2;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.segmented-control .segment i {
+  font-size: 14px;
+  margin-right: 8px;
+}
+
+.segmented-control .segment:hover,
+.segmented-control .single-toggle:hover {
+  background-color: rgba(var(--primary-color-rgb), 0.08);
+}
+
+.segmented-control .segment.active::before,
+.segmented-control .single-toggle[data-value="true"]::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  background-color: var(--accent-secondary);
+  z-index: 1;
+  opacity: 0.85;
+} */
+
+/* Special case for textarea with consistent focus state */
+textarea.form-input:focus {
+  height: auto; /* Ensure height is not constrained */
+  min-height: 120px;
+  transition: border-left-width var(--transition-normal), background-color var(--transition-fast);
+}
+
+/* Disabled form elements */
+.form-input:disabled,
+.form-input[readonly],
+.form-input:disabled:hover,
+.form-input:disabled:focus {
+  background-color: var(--dark-color-3);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Enhanced focus states with animation */
+/* Add a subtle pulse animation for the focus outline */
+@keyframes focus-pulse {
+  0% { box-shadow: inset 0 0 0 1px var(--focus-outline-color), 0 0 0 1px var(--focus-outline-color); }
+  50% { box-shadow: inset 0 0 0 1px var(--focus-outline-color), 0 0 0 2px var(--focus-outline-color); }
+  100% { box-shadow: inset 0 0 0 1px var(--focus-outline-color), 0 0 0 1px var(--focus-outline-color); }
+}
+
+.form-input:focus,
+.custom-select select:focus,
+.edge-vertex:focus {
+  animation: focus-pulse 2s infinite ease-in-out;
+}
+
+/* Error styles for standard inputs */
+.form-input.input-error {
+  border-left: calc(var(--section-border-width) + 3px) solid var(--error-color);
+  background-color: rgba(var(--error-color-rgb), 0.08);
+  border-top: 1px solid rgba(var(--error-color-rgb), 0.2);
+  border-bottom: 1px solid rgba(var(--error-color-rgb), 0.2);
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .form-input {
+    min-height: 48px; /* Ensure minimum touch target size */
+  }
+}
+
+@media (max-width: 576px) {
+  .form-label {
+    padding: 10px;
+    font-size: 13px;
+  }
+  
+  .form-input, select {
+    font-size: 15px;
+  }
+} 
