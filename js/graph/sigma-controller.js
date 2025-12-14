@@ -5,26 +5,15 @@
 import { $, $$ } from '../utils/dom.js';
 import { getState, setState, subscribe } from '../core/state.js';
 import { Graph } from './model.js';
-import { 
-  initializeSigma, 
-  renderGraph, 
-  highlightPath, 
-  animatePath, 
-  exportImage,
-  applyLayout,
-  setDirected,
-  destroySigma,
-  getGraph,
-  getSigma,
-  getSelectedNodes,
-  getSelectedEdges,
-  deleteNode,
-  deleteEdge,
-  setBulkNodeProperties,
-  setBulkEdgeProperties,
-  initForceLayout,
-  getForceLayout
-} from './sigma-adapter.js';
+import {
+  SigmaCore,
+  SigmaRenderer,
+  SigmaLayout,
+  SigmaSelection,
+  SigmaProperties,
+  SigmaAnimation,
+  SigmaExport
+} from './sigma-facade.js';
 import { showNotification } from '../ui/init.js';
 import { findEulerPath, buildAdjacencyList, getExplanation } from '../core/algorithm.js';
 import { showCalcLoader, hideCalcLoader, updateLoaderProgress, cancelLoading } from '../ui/loader.js';
@@ -48,7 +37,7 @@ const visualFeatures = {
  */
 export const initializeSigmaGraph = (container = '#cy') => {
   // Initialize Sigma.js with all features enabled
-  const sigmaResult = initializeSigma(container, visualFeatures);
+  const sigmaResult = SigmaCore.initialize(container, visualFeatures);
   
   if (!sigmaResult) {
     console.error('Failed to initialize Sigma.js');
@@ -72,8 +61,8 @@ export const initializeSigmaGraph = (container = '#cy') => {
     Object.assign(visualFeatures, features);
     
     // Re-initialize Sigma with new settings (requires destroying and recreating)
-    destroySigma();
-    initializeSigma(container, visualFeatures);
+    SigmaCore.destroy();
+    SigmaCore.initialize(container, visualFeatures);
     
     // Re-render the graph
     updateGraph();
@@ -134,8 +123,8 @@ export const initializeSigmaGraph = (container = '#cy') => {
   
   return {
     getGraph: () => graph,
-    getSigma: getSigma,
-    getGraphology: getGraph
+    getSigma: SigmaCore.getInstance,
+    getGraphology: SigmaCore.getGraph
   };
 };
 
@@ -505,7 +494,7 @@ export const parseEdgeInput = (input) => {
  */
 const updateGraph = () => {
   // Render the graph using Sigma.js adapter
-  renderGraph(graph);
+  SigmaRenderer.render(graph);
   
   // Update the state for the UI
   const edges = graph.getAllEdges();
@@ -662,7 +651,7 @@ const processPathResult = (result) => {
       highlightChinesePostmanPath(result.path, result.duplicatedEdges);
     } else {
       // Regular path highlighting
-      highlightPath(result.path);
+      SigmaAnimation.highlightPath(result.path);
     }
   }
 };
@@ -674,9 +663,9 @@ const processPathResult = (result) => {
  */
 const highlightChinesePostmanPath = (path, duplicatedEdges) => {
   if (!path || path.length < 2) return;
-  
+
   // Get the Sigma and graph instances
-  const graphInstance = getGraph();
+  const graphInstance = SigmaCore.getGraph();
   if (!graphInstance) return;
   
   try {
@@ -751,7 +740,7 @@ const highlightChinesePostmanPath = (path, duplicatedEdges) => {
     }
     
     // Make sure sigma refreshes
-    const sigmaInstance = getSigma();
+    const sigmaInstance = SigmaCore.getInstance();
     if (sigmaInstance) {
       sigmaInstance.refresh();
     }
@@ -767,7 +756,7 @@ const highlightChinesePostmanPath = (path, duplicatedEdges) => {
  * @return {string|null} Edge ID or null if not found
  */
 const findEdgeId = (source, target) => {
-  const graphInstance = getGraph();
+  const graphInstance = SigmaCore.getGraph();
   if (!graphInstance) return null;
   
   let edgeId = null;
@@ -820,7 +809,7 @@ const handleAnimation = async () => {
     }
     
     // Animate the path
-    await animatePath(path, 800);
+    await SigmaAnimation.animatePath(path, 800);
     
     // Re-enable button
     if (animateBtn) {
@@ -850,7 +839,7 @@ const handleExport = async () => {
     showNotification('Exporting graph image...');
     
     // Export the image
-    await exportImage();
+    await SigmaExport.exportImage();
     
     // Show success notification
     showNotification('Graph exported successfully!');
@@ -884,16 +873,16 @@ export const toggleSigmaForceLayout = (enabled) => {
   setState('ui.visualFeatures', { ...visualFeatures });
   
   // Get the adapter functions
-  const sigmaAdapter = getSigma();
-  const graphInstance = getGraph();
-  
+  const sigmaAdapter = SigmaCore.getInstance();
+  const graphInstance = SigmaCore.getGraph();
+
   try {
     if (enabled) {
       // If enabled, initialize the force layout
-      initForceLayout();
+      SigmaLayout.init();
     } else {
       // If disabled, stop the force layout
-      const forceLayout = getForceLayout();
+      const forceLayout = SigmaLayout.get();
       if (forceLayout) {
         forceLayout.stop();
       }
@@ -909,7 +898,7 @@ export const toggleSigmaForceLayout = (enabled) => {
  */
 export const setSigmaLayout = (layoutName) => {
   // Apply the layout
-  applyLayout(layoutName);
+  SigmaRenderer.applyLayout(layoutName);
 };
 
 /**
@@ -970,17 +959,17 @@ export const updateSigmaEdgeListFromGraph = () => {
  */
 export const deleteSigmaSelected = () => {
   // Get selected nodes and edges
-  const selectedNodes = getSelectedNodes();
-  const selectedEdges = getSelectedEdges();
-  
+  const selectedNodes = SigmaSelection.getNodes();
+  const selectedEdges = SigmaSelection.getEdges();
+
   // Delete selected edges first
   selectedEdges.forEach(edge => {
-    deleteEdge(edge);
+    SigmaSelection.deleteEdge(edge);
   });
-  
+
   // Then delete selected nodes
   selectedNodes.forEach(node => {
-    deleteNode(node);
+    SigmaSelection.deleteNode(node);
   });
   
   // Update the visualization
@@ -995,8 +984,8 @@ export const deleteSigmaSelected = () => {
  * @param {Object} properties - Properties to set
  */
 export const setSigmaSelectedNodeProperties = (properties) => {
-  const selectedNodes = getSelectedNodes();
-  setBulkNodeProperties(selectedNodes, properties);
+  const selectedNodes = SigmaSelection.getNodes();
+  SigmaProperties.setBulkNodeProps(selectedNodes, properties);
 };
 
 /**
@@ -1004,6 +993,6 @@ export const setSigmaSelectedNodeProperties = (properties) => {
  * @param {Object} properties - Properties to set
  */
 export const setSigmaSelectedEdgeProperties = (properties) => {
-  const selectedEdges = getSelectedEdges();
-  setBulkEdgeProperties(selectedEdges, properties);
+  const selectedEdges = SigmaSelection.getEdges();
+  SigmaProperties.setBulkEdgeProps(selectedEdges, properties);
 }; 
