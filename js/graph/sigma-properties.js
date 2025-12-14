@@ -5,7 +5,7 @@
  */
 
 import { setState, getState } from '../core/state.js';
-import { DEFAULT_NODE_ATTRIBUTES, DEFAULT_EDGE_ATTRIBUTES } from './sigma-core.js';
+import { DEFAULT_NODE_ATTRIBUTES, DEFAULT_EDGE_ATTRIBUTES } from './sigma-constants.js';
 
 // Editable property definitions
 export const EDITABLE_NODE_PROPERTIES = ['label', 'color', 'size'];

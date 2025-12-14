@@ -89,7 +89,6 @@ export class CanvasGestureController {
     // Create and setup canvas
     this.setupCanvas();
     
-    console.log('🎨 Canvas Gesture Controller initialized with gesture zones');
   }
   
   setupCanvas() {
@@ -188,7 +187,6 @@ export class CanvasGestureController {
     this.triggerHapticFeedback('light');
     
     if (this.enableDebug) {
-      console.log('🎯 Gesture start:', { x, y, zone, currentMode: this.currentMode });
     }
     
     this.isGestureActive = true;
@@ -248,7 +246,6 @@ export class CanvasGestureController {
     if (isGestureIntent && this.allowScrolling) {
       this.allowScrolling = false; // Switch to gesture mode
       if (this.enableDebug) {
-        console.log('🔄 Switching from scroll to gesture mode');
       }
     }
     
@@ -304,7 +301,6 @@ export class CanvasGestureController {
     }
     
     if (this.enableDebug) {
-      console.log('🖱️ Gesture move:', { deltaY, newProgress, velocity: this.gestureVelocityY, ratio: '1:1' });
     }
     
     e.preventDefault();
@@ -328,16 +324,7 @@ export class CanvasGestureController {
     }
     
     if (this.enableDebug) {
-      console.log('🔚 Gesture end:', { 
-        deltaY,
-        averageVelocity: this.gestureVelocityY,
-        releaseVelocity: this.releaseVelocity,
-        releaseSpeed: Math.abs(this.releaseVelocity),
-        velocitySamples: this.velocityHistory.length,
-        duration: gestureDuration,
-        currentProgress: this.currentProgress.toFixed(2),
-        direction: this.releaseVelocity > 0 ? 'UP (retract)' : 'DOWN (expand)'
-      });
+      // Debug info removed for production
     }
     
     // NEW: Remove visual feedback
@@ -359,14 +346,12 @@ export class CanvasGestureController {
     if (wasTap) {
       // Quick tap - toggle mode with smooth animation
       if (this.enableDebug) {
-        console.log('👆 Tap detected - toggling mode');
       }
       this.triggerHapticFeedback('medium'); // Clear haptic feedback for taps
       this.handleTap();
     } else {
       // Drag gesture - snap based on position and velocity
       if (this.enableDebug) {
-        console.log('🖱️ Drag detected - snapping to position');
       }
       let targetProgress;
       
@@ -383,13 +368,11 @@ export class CanvasGestureController {
         // In middle zone with moderate velocity - prefer middle (magnetic pull)
         targetProgress = 0.5;
         if (this.enableDebug) {
-          console.log('🧲 Middle zone magnetic pull - snap to 0.5 (release velocity:', releaseSpeed.toFixed(2), ')');
         }
       } else if (releaseSpeed > normalVelocityThreshold) {
         // Fast gesture - momentum overrides position (like real platforms)
         targetProgress = this.releaseVelocity > 0 ? this.maxProgress : 0;
         if (this.enableDebug) {
-          console.log('⚡ Momentum override - velocity snap:', this.releaseVelocity > 0 ? 'retracted' : 'normal', '(release velocity:', releaseSpeed.toFixed(2), ')');
         }
       } else {
         // Slow gesture - snap to nearest position
@@ -401,7 +384,6 @@ export class CanvasGestureController {
           targetProgress = this.maxProgress; // retracted
         }
         if (this.enableDebug) {
-          console.log('🐌 Position-based snap to:', targetProgress, '(release velocity:', releaseSpeed.toFixed(2), ')');
         }
       }
       
@@ -429,7 +411,6 @@ export class CanvasGestureController {
       }
       
       if (this.enableDebug) {
-        console.log('⏱️ Animation duration:', animationDuration + 'ms', 'for velocity:', releaseSpeed.toFixed(2));
       }
       this.animateToProgress(targetProgress, animationDuration);
     }
@@ -449,7 +430,6 @@ export class CanvasGestureController {
   // NEW: Handle tap to toggle between modes
   handleTap() {
     if (this.enableDebug) {
-      console.log('🎯 handleTap() called - current mode:', this.currentMode);
     }
     
     let targetProgress;
@@ -457,20 +437,17 @@ export class CanvasGestureController {
       case 'normal':
         targetProgress = this.maxProgress; // Go to retracted
         if (this.enableDebug) {
-          console.log('📤 Tap: normal -> retracted');
         }
         break;
       case 'split':
         // From split, go to the opposite end based on current position
         targetProgress = this.currentProgress > 0.5 ? 0 : this.maxProgress;
         if (this.enableDebug) {
-          console.log('📑 Tap: split -> ', targetProgress === 0 ? 'normal' : 'retracted');
         }
         break;
       case 'retracted':
         targetProgress = 0; // Go to normal
         if (this.enableDebug) {
-          console.log('📥 Tap: retracted -> normal');
         }
         break;
       default:
@@ -530,12 +507,7 @@ export class CanvasGestureController {
     
     // MOBILE DEBUG: Track actual animation timing
     if (this.enableDebug) {
-      console.log('🎬 Animation START:', {
-        from: startProgress.toFixed(2),
-        to: targetProgress.toFixed(2),
-        expectedDuration: duration + 'ms',
-        timestamp: startTime
-      });
+      // Debug logging disabled
     }
     
     // CRITICAL: Ensure NO CSS transitions interfere on mobile
@@ -562,13 +534,7 @@ export class CanvasGestureController {
       } else {
         // MOBILE DEBUG: Log actual completion time
         if (this.enableDebug) {
-          const actualDuration = Date.now() - startTime;
-          console.log('🎬 Animation END:', {
-            expectedDuration: duration + 'ms',
-            actualDuration: actualDuration + 'ms',
-            difference: (actualDuration - duration) + 'ms',
-            efficiency: ((actualDuration / duration) * 100).toFixed(1) + '%'
-          });
+          // Debug logging disabled
         }
       }
     };
@@ -829,19 +795,11 @@ export class CanvasGestureController {
       document.body.appendChild(this.bottomGestureZone);
       
       // DEBUG: Log gesture zone positions and tab position
-      console.log('🎨 Debug gesture zones created:');
-      console.log('  - Top zone:', this.topGestureZone.getBoundingClientRect());
-      console.log('  - Bottom zone:', this.bottomGestureZone.getBoundingClientRect());
     }
     
     // Check where the tab actually is
-    if (tab) {
-      console.log('  - Tab position:', tab.getBoundingClientRect());
-      console.log('  - Tab computed style:', {
-        position: getComputedStyle(tab).position,
-        zIndex: getComputedStyle(tab).zIndex,
-        display: getComputedStyle(tab).display
-      });
+    if (tab && this.enableDebug) {
+      // Debug logging disabled
     }
     
     // Attach events based on debug mode
@@ -857,23 +815,14 @@ export class CanvasGestureController {
       const zoneName = index === 0 ? 'TOP' : 'BOTTOM';
       
       zone.addEventListener('touchstart', (e) => {
-        console.log(`🎯 ${zoneName} ZONE TOUCHSTART:`, {
-          zone: zoneName,
-          touches: e.touches.length,
-          clientX: e.touches[0].clientX,
-          clientY: e.touches[0].clientY
-        });
-        
         const touch = e.touches[0];
         const x = touch.clientX;
         const y = touch.clientY;
         
         // CRITICAL FIX: Check if touch is on an interactive element (like the tab)
         const elementAtPoint = document.elementFromPoint(x, y);
-        console.log('🎯 Touch on element:', elementAtPoint?.tagName, elementAtPoint?.className, elementAtPoint?.id);
         
         if (this.isInteractiveElement(elementAtPoint)) {
-          console.log('🔗 Interactive element detected, entering DOM passthrough mode');
           this.enterDomInteractionMode(elementAtPoint, e);
           return; // Let DOM handle the event
         }
@@ -922,7 +871,6 @@ export class CanvasGestureController {
     // Check for specific IDs that should be interactive
     if (element.id === 'graph-view-tab') {
       if (this.enableDebug) {
-        console.log('✅ Found graph-view-tab - allowing interaction');
       }
       return true;
     }
@@ -963,7 +911,6 @@ export class CanvasGestureController {
     // Check parent element (for nested structures)
     if (element.parentElement && element.parentElement.id === 'graph-view-tab') {
       if (this.enableDebug) {
-        console.log('✅ Found child of graph-view-tab - allowing interaction');
       }
       return true;
     }
@@ -974,7 +921,6 @@ export class CanvasGestureController {
   // NEW: Temporarily disable canvas for DOM interaction
   enterDomInteractionMode(element, originalEvent) {
     if (this.enableDebug) {
-      console.log('🔄 Entering DOM interaction mode for:', element.tagName, element.className);
     }
     
     // Temporarily disable gesture zones
@@ -986,7 +932,6 @@ export class CanvasGestureController {
       this.topGestureZone.style.pointerEvents = 'auto';
       this.bottomGestureZone.style.pointerEvents = 'auto';
       if (this.enableDebug) {
-        console.log('🔄 DOM interaction mode disabled - gesture zones re-enabled');
       }
       
       document.removeEventListener('touchend', enableGestureZones);
@@ -1011,14 +956,7 @@ export class CanvasGestureController {
     }
     
     if (this.enableDebug) {
-      console.log('📍 Attaching direct events to tab element');
-      console.log('📍 Tab computed style before events:', {
-        touchAction: getComputedStyle(tab).touchAction,
-        pointerEvents: getComputedStyle(tab).pointerEvents,
-        userSelect: getComputedStyle(tab).userSelect,
-        webkitUserSelect: getComputedStyle(tab).webkitUserSelect,
-        webkitTouchCallout: getComputedStyle(tab).webkitTouchCallout
-      });
+      // Debug logging disabled
     }
     
     // CRITICAL: Set CSS properties to ensure touch events work
@@ -1028,7 +966,6 @@ export class CanvasGestureController {
     tab.style.webkitTouchCallout = 'none';
     
     if (this.enableDebug) {
-      console.log('📍 Tab style updated for touch events');
     }
     
     tab.addEventListener('touchstart', (e) => {
@@ -1130,10 +1067,6 @@ export class CanvasGestureController {
         const touch = e.touches[0];
         const elementAtTouch = document.elementFromPoint(touch.clientX, touch.clientY);
         if (elementAtTouch === tab || elementAtTouch?.closest('#graph-view-tab')) {
-          console.log('🌍 GLOBAL DEBUG: Touch on tab area detected');
-          console.log('  - Actual target:', e.target.tagName, e.target.className);
-          console.log('  - Element at point:', elementAtTouch.tagName, elementAtTouch.className);
-          console.log('  - Event path:', e.composedPath().map(el => el.tagName || el.constructor.name).slice(0, 5));
         }
       }, { passive: true, capture: true });
     }
@@ -1169,7 +1102,6 @@ export class CanvasGestureController {
     tab.classList.add('gesture-active');
     
     if (this.enableDebug) {
-      console.log('✨ Added drag visual feedback');
     }
   }
   
@@ -1189,7 +1121,6 @@ export class CanvasGestureController {
     tab.classList.remove('gesture-active');
     
     if (this.enableDebug) {
-      console.log('✨ Removed drag visual feedback');
     }
   }
   

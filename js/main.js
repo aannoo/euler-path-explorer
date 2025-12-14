@@ -10,7 +10,6 @@ import * as SigmaAdapter from './graph/sigma-adapter.js';
 import { initDesktopResize, cleanupDesktopResize } from './ui/desktop-resize.js';
 
 // Log to confirm ES modules are working
-console.log('EULER Application - ES Modules Initialized');
 
 // Track if this is the first graph render
 let isFirstGraphRender = true;
@@ -18,7 +17,6 @@ let isFirstGraphRender = true;
 // Orbital Welcome State Management
 const handleOrbitalWelcome = () => {
   const orbitalWelcome = $('#orbital-welcome');
-  console.log('handleOrbitalWelcome called, orbitalWelcome element:', orbitalWelcome);
   
   if (!orbitalWelcome) {
     console.error('Orbital welcome element not found in handleOrbitalWelcome');
@@ -69,14 +67,6 @@ const handleOrbitalWelcome = () => {
       targetSize,
       finalScale
     };
-    
-    console.log('Calculated orbital values:', {
-      container: `${containerWidth}×${containerHeight}`,
-      aspectRatio: `${targetAspectRatio.toFixed(2)}:1`,
-      startSize: '300px (always circular)',
-      targetSize: targetSize,
-      scale: finalScale
-    });
   };
 
   // Create container border elements
@@ -146,29 +136,22 @@ const handleOrbitalWelcome = () => {
   };
 
   // Subscribe to state changes to trigger expansion
-  console.log('Setting up orbital animation subscription...');
   const calculationUnsubscribe = subscribe('ui.calculationStarted', (calculationStarted) => {
-    console.log('ui.calculationStarted changed:', calculationStarted, 'isFirstGraphRender:', isFirstGraphRender);
     
     if (isFirstGraphRender && calculationStarted) {
-      console.log('First calculation started - starting orbital expansion...');
       triggerOrbitalExpansion();
     }
   });
   
   const savedGraphUnsubscribe = subscribe('ui.savedGraphLoaded', (savedGraphLoaded) => {
-    console.log('ui.savedGraphLoaded changed:', savedGraphLoaded, 'isFirstGraphRender:', isFirstGraphRender);
     
     if (isFirstGraphRender && savedGraphLoaded) {
-      console.log('First saved graph loaded - starting orbital expansion...');
       triggerOrbitalExpansion();
     }
   });
 
   // Function to trigger the orbital expansion animation
   const triggerOrbitalExpansion = () => {
-    console.log('>>> triggerOrbitalExpansion START <<<');
-    console.log('triggerOrbitalExpansion called, orbitalWelcome:', orbitalWelcome);
     
     if (!orbitalWelcome) {
       console.error('Orbital welcome element not found!');
@@ -182,16 +165,11 @@ const handleOrbitalWelcome = () => {
     if (calculatedValues.finalScale && calculatedValues.targetAspectRatio) {
       document.documentElement.style.setProperty('--final-scale', calculatedValues.finalScale);
       document.documentElement.style.setProperty('--target-aspect-ratio', calculatedValues.targetAspectRatio);
-      console.log('Applied CSS properties for expansion:', {
-        scale: calculatedValues.finalScale,
-        aspectRatio: calculatedValues.targetAspectRatio
-      });
     } else {
       console.warn('No calculated values available for animation');
     }
     
     // Start the orbital expansion animation
-    console.log('Adding expand class to orbital welcome');
     orbitalWelcome.classList.add('graph-loaded');
     
     // Also add class to graph-layer for CSS targeting
@@ -242,7 +220,6 @@ let stateSubscriptions = [];
  * Clean up all application resources to prevent memory leaks
  */
 function cleanupApplication() {
-  console.log('Cleaning up application resources...');
   
   // Execute all registered cleanup functions
   cleanupFunctions.forEach(cleanup => {
@@ -289,7 +266,6 @@ window.cleanupEULER = cleanupApplication;
 
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('DOM Content Loaded');
   
   // Implement loading sequence: simple loader → orbital → graph
   setTimeout(() => {
@@ -309,11 +285,9 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Check if orbital element exists at startup
   const orbitalCheck = document.getElementById('orbital-welcome');
-  console.log('Orbital element check at startup:', orbitalCheck);
   
   // Initialize orbital welcome state
   const orbitalCleanup = handleOrbitalWelcome();
-  console.log('Orbital cleanup function:', orbitalCleanup);
   if (orbitalCleanup) {
     stateSubscriptions.push(orbitalCleanup);
   }
@@ -342,18 +316,15 @@ document.addEventListener('DOMContentLoaded', () => {
   // Test DOM selectors
   const eulerLogo = $('#euler-logo');
   if (eulerLogo) {
-    console.log('EULER Logo found:', eulerLogo);
   } else {
     console.error('EULER Logo not found');
   }
   
   // Test multiple selectors
   const tabButtons = $$('.sidebar-tab');
-  console.log(`Found ${tabButtons.length} tab buttons`);
   
   // Subscribe to state changes
   const unsubscribeTab = subscribe('ui.activeTab', (activeTab) => {
-    console.log('Active tab changed:', activeTab);
   });
   stateSubscriptions.push(unsubscribeTab);
   
@@ -391,7 +362,6 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Subscribe to sidebar state changes
   const unsubscribeSidebar = subscribe('ui.sidebarExpanded', (expanded) => {
-    console.log('Sidebar expanded:', expanded);
   });
   stateSubscriptions.push(unsubscribeSidebar);
   

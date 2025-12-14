@@ -11,21 +11,8 @@ import { initForceLayout, pauseForceLayout, resumeForceLayout, getForceLayout } 
 import { setupSelectionTracking, clearSelection, getSelectedNodes, getSelectedEdges } from './sigma-selection.js';
 import { initPropertyEditing, EDITABLE_NODE_PROPERTIES, EDITABLE_EDGE_PROPERTIES } from './sigma-properties.js';
 
-// Default attributes for new nodes and edges
-export const DEFAULT_NODE_ATTRIBUTES = {
-  size: 8,
-  color: '#FFDD00',
-  label: '',
-  x: 0,
-  y: 0
-};
-
-export const DEFAULT_EDGE_ATTRIBUTES = {
-  size: 4,
-  color: '#FF5A1F',
-  label: '',
-  type: 'line'
-};
+// Import and re-export constants from sigma-constants.js (breaks circular dependency)
+export { DEFAULT_NODE_ATTRIBUTES, DEFAULT_EDGE_ATTRIBUTES } from './sigma-constants.js';
 
 // Instance references (module-scoped)
 let sigmaInstance = null;

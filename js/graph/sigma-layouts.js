@@ -9,7 +9,7 @@ import circular from 'graphology-layout/circular';
 import random from 'graphology-layout/random';
 import ForceSupervisor from 'graphology-layout-force/worker';
 import { setState, getState } from '../core/state.js';
-import { DEFAULT_NODE_ATTRIBUTES, DEFAULT_EDGE_ATTRIBUTES } from './sigma-core.js';
+import { DEFAULT_NODE_ATTRIBUTES, DEFAULT_EDGE_ATTRIBUTES } from './sigma-constants.js';
 
 // Force layout instance (module-scoped)
 let forceLayout = null;
@@ -54,6 +54,14 @@ export function initForceLayout(graph) {
       }
     });
     forceLayout.start();
+
+    // PERFORMANCE FIX: Auto-stop force layout after 3 seconds to prevent CPU drain
+    // The graph should stabilize within this time; users can manually restart if needed
+    setTimeout(() => {
+      if (forceLayout && forceLayout.isRunning()) {
+        forceLayout.stop();
+      }
+    }, 3000);
   } catch (error) {
     console.error('Error initializing force layout:', error);
     forceLayout = null;
@@ -83,6 +91,12 @@ export const pauseForceLayout = () => {
 export const resumeForceLayout = () => {
   if (forceLayout && !forceLayout.isRunning()) {
     forceLayout.start();
+    // PERFORMANCE FIX: Auto-stop after 3 seconds
+    setTimeout(() => {
+      if (forceLayout && forceLayout.isRunning()) {
+        forceLayout.stop();
+      }
+    }, 3000);
   }
 };
 
@@ -174,6 +188,12 @@ export const applyLayout = (layoutType = 'forceatlas2', options = {}) => {
       initForceLayout(graphInstance);
     } else {
       forceLayout.start();
+      // PERFORMANCE FIX: Auto-stop after 3 seconds
+      setTimeout(() => {
+        if (forceLayout && forceLayout.isRunning()) {
+          forceLayout.stop();
+        }
+      }, 3000);
     }
   }
 };
@@ -333,6 +353,12 @@ export const animatePath = (path, delay = 1000) => {
 
           if (forceLayout) {
             forceLayout.start();
+            // PERFORMANCE FIX: Auto-stop after 3 seconds
+            setTimeout(() => {
+              if (forceLayout && forceLayout.isRunning()) {
+                forceLayout.stop();
+              }
+            }, 3000);
           }
 
           resolve();

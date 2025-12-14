@@ -5,7 +5,7 @@
  */
 
 import { setState, getState } from '../core/state.js';
-import { DEFAULT_NODE_ATTRIBUTES, DEFAULT_EDGE_ATTRIBUTES } from './sigma-core.js';
+import { DEFAULT_NODE_ATTRIBUTES, DEFAULT_EDGE_ATTRIBUTES } from './sigma-constants.js';
 import { EDITABLE_NODE_PROPERTIES, EDITABLE_EDGE_PROPERTIES } from './sigma-properties.js';
 
 // Selection state (module-scoped)

@@ -5,7 +5,8 @@
  */
 
 import { setState, getState } from '../core/state.js';
-import { DEFAULT_NODE_ATTRIBUTES, DEFAULT_EDGE_ATTRIBUTES, getSigma, getGraph } from './sigma-core.js';
+import { DEFAULT_NODE_ATTRIBUTES, DEFAULT_EDGE_ATTRIBUTES } from './sigma-constants.js';
+import { getSigma, getGraph } from './sigma-core.js';
 import { applyLayout, initForceLayout, pauseForceLayout, setDirected } from './sigma-layouts.js';
 import { clearSelection } from './sigma-selection.js';
 

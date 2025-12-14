@@ -432,7 +432,7 @@ const createSavedItemHTML = (graph) => {
   return `
     <div class="saved-graph-item ${isActive ? 'active' : ''}" data-id="${graph.id}">
       <div class="saved-graph-name">${graph.name}</div>
-      <input type="text" class="saved-graph-input" value="${graph.name}">
+      <input type="text" class="saved-graph-input" name="graph-name" aria-label="Graph name" value="${graph.name}">
       <div class="saved-graph-details">${graph.edges}</div>
       <div class="graph-metadata">
         <div class="graph-property">
@@ -480,11 +480,11 @@ const createExampleItemHTML = (graph, index) => {
           <div class="random-params">
             <label>
               <span>Vertices:</span>
-              <input type="number" class="random-vertices" min="3" max="15" value="5">
+              <input type="number" class="random-vertices" name="random-vertices" aria-label="Number of vertices" min="3" max="15" value="5">
             </label>
             <label>
               <span>Edges:</span>
-              <input type="number" class="random-edges" min="5" max="50" value="8">
+              <input type="number" class="random-edges" name="random-edges" aria-label="Number of edges" min="5" max="50" value="8">
             </label>
           </div>
           <div class="euler-info">
@@ -854,7 +854,6 @@ const handleLoadGraph = async (id) => {
           nodes.add(edge.target);
         });
         nodeCount = nodes.size;
-        console.log(`Saved graph has ${nodeCount} nodes`);
       } catch (error) {
         console.warn('Could not calculate node count for loader decision:', error);
         // Fall back to default behavior (full loader)
@@ -1088,7 +1087,6 @@ const handleRegularExample = async (example) => {
       nodes.add(edge.target);
     });
     nodeCount = nodes.size;
-    console.log(`Example graph has ${nodeCount} nodes`);
   } catch (error) {
     console.warn('Could not calculate node count for loader decision:', error);
     // Fall back to default behavior (full loader)

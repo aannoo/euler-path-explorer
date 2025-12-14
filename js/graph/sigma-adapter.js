@@ -370,6 +370,14 @@ export function initForceLayout() {
       }
     });
     forceLayout.start();
+
+    // PERFORMANCE FIX: Auto-stop force layout after 3 seconds to prevent CPU drain
+    // The graph should stabilize within this time; users can manually restart if needed
+    setTimeout(() => {
+      if (forceLayout && forceLayout.isRunning()) {
+        forceLayout.stop();
+      }
+    }, 3000);
   } catch (error) {
     console.error('Error initializing force layout:', error);
     forceLayout = null;
@@ -399,6 +407,12 @@ export const pauseForceLayout = () => {
 export const resumeForceLayout = () => {
   if (forceLayout && !forceLayout.isRunning()) {
     forceLayout.start();
+    // PERFORMANCE FIX: Auto-stop after 3 seconds
+    setTimeout(() => {
+      if (forceLayout && forceLayout.isRunning()) {
+        forceLayout.stop();
+      }
+    }, 3000);
   }
 };
 
@@ -569,7 +583,6 @@ function initVisualCreation() {
         window.updateEdgeListDisplay();
       }
       
-      console.log(`✅ Created edge: ${selectedNodeId} → ${nodeId}`);
     }
     // If visual mode with no selection or multiple selections, do nothing
   });
@@ -589,7 +602,6 @@ function initDeletionFunctionality() {
   // Node click handler for selection
   sigmaInstance.on("clickNode", (e) => {
     // Debug event structure
-    console.log('Node click event:', e);
     
     const nodeId = e.node;
     const editorMode = getState('ui.editorMode');
@@ -631,7 +643,6 @@ function initDeletionFunctionality() {
           window.updateEdgeListDisplay();
         }
         
-        console.log(`✅ Created edge: ${firstNodeId} → ${nodeId}`);
       } catch (error) {
         console.error('Error creating edge:', error);
       }
@@ -685,7 +696,6 @@ function initDeletionFunctionality() {
   // Edge click handler for selection
   sigmaInstance.on("clickEdge", (e) => {
     // Debug event structure
-    console.log('Edge click event:', e);
     
     const edgeId = e.edge;
     const editorMode = getState('ui.editorMode');
@@ -740,7 +750,6 @@ function initDeletionFunctionality() {
   // Stage click handler to clear selection when clicking on empty space
   sigmaInstance.on("clickStage", (e) => {
     // Debug event structure
-    console.log('Stage click event:', e);
     
     // Safely check for modifier keys - handle both old and new event structure
     const isMultiSelect = (e.original && (e.original.ctrlKey || e.original.metaKey)) || 
@@ -1139,13 +1148,7 @@ export const convertToGraphology = (eulerGraph) => {
         weight: edge.weight || 1
       };
     });
-    
-    // Log the conversion result
-    console.log('Converted graph data:', { 
-      nodeCount: nodes.length, 
-      edgeCount: edges.length
-    });
-    
+
     return { nodes, edges };
   } catch (error) {
     console.error('Error converting graph model:', error);
@@ -1169,7 +1172,6 @@ export const renderGraph = (eulerGraph, fit = true) => {
     const { nodes, edges } = convertToGraphology(eulerGraph);
     
     // Debug log
-    console.log(`Rendering graph with ${nodes.length} nodes and ${edges.length} edges`);
     
     // Clear the graph
     graphInstance.clear();
@@ -1265,13 +1267,11 @@ export const renderGraph = (eulerGraph, fit = true) => {
         ? featureState.enableForceLayout 
         : true;
     } catch (error) {
-      console.log('Could not read force layout state, defaulting to enabled:', error);
       // Default to enabled if there's an error
       enableForceLayout = true;
     }
     
     if (enableForceLayout !== false && !forceLayout) {
-      console.log('Initializing force layout for the graph');
       initForceLayout();
     }
   } catch (error) {
@@ -1355,7 +1355,6 @@ export const applyLayout = (layoutType = 'forceatlas2', options = {}) => {
       ? featureState.enableForceLayout 
       : true;
   } catch (error) {
-    console.log('Could not read force layout state, defaulting to enabled:', error);
     // Default to enabled if there's an error
     enableForceLayout = true;
   }
@@ -1364,12 +1363,16 @@ export const applyLayout = (layoutType = 'forceatlas2', options = {}) => {
   if (enableForceLayout !== false) {
     // If force layout doesn't exist, initialize it
     if (!forceLayout) {
-      console.log('Initializing new force layout after applying static layout');
       initForceLayout();
     } else {
       // Otherwise just restart it
-      console.log('Restarting existing force layout');
       forceLayout.start();
+      // PERFORMANCE FIX: Auto-stop after 3 seconds
+      setTimeout(() => {
+        if (forceLayout && forceLayout.isRunning()) {
+          forceLayout.stop();
+        }
+      }, 3000);
     }
   }
 };
@@ -1381,7 +1384,6 @@ export const applyLayout = (layoutType = 'forceatlas2', options = {}) => {
 export const setDirected = (directed) => {
   if (!graphInstance) return;
   
-  console.log('Setting graph directed state to', directed);
   
   // Convert to boolean to ensure consistent type
   directed = Boolean(directed);
@@ -1434,7 +1436,6 @@ export const setDirected = (directed) => {
     sigmaInstance.refresh();
   }
   
-  console.log('Graph directed state updated to', directed);
 };
 
 /**
@@ -1581,8 +1582,14 @@ export const animatePath = (path, delay = 1000) => {
           // Restart force layout if it exists
           if (forceLayout) {
             forceLayout.start();
+            // PERFORMANCE FIX: Auto-stop after 3 seconds
+            setTimeout(() => {
+              if (forceLayout && forceLayout.isRunning()) {
+                forceLayout.stop();
+              }
+            }, 3000);
           }
-          
+
           resolve();
           return;
         }
@@ -1730,7 +1737,6 @@ export const enforceCameraBoundaries = () => {
     
     // If no nodes are visible, reset the view
     if (!foundVisibleNode) {
-      console.log("No nodes visible in viewport, resetting camera view");
       camera.animatedReset({duration: 300});
       return true;
     }
@@ -2129,7 +2135,6 @@ function handleGraphControlAction(action) {
     return;
   }
 
-  console.log('🎮 Handling graph control action:', action);
   
   try {
     switch (action) {

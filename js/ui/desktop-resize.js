@@ -34,7 +34,6 @@ export function initDesktopResize() {
   // Initialize CoolTextFit for fullWidthText
   initTextFitter();
   
-  console.log('👻 Desktop resize initialized (Ghost Preview Mode)');
   
   resizeHandle.addEventListener('mousedown', handleMouseDown);
   document.addEventListener('mousemove', handleMouseMove, { passive: true });
@@ -174,7 +173,6 @@ function handleMouseUp(e) {
   document.body.style.cursor = '';
   document.body.style.userSelect = '';
   
-  console.log(`🎯 Layout animated to: ${constrainedWidth.toFixed(1)}% / ${graphWidth.toFixed(1)}%`);
 }
 
 function handleWindowResize() {
@@ -242,5 +240,4 @@ function fitEulerText() {
   
   textFitter.fit(eulerText);
   
-  console.log('📝 EULER title text fitted');
 } 

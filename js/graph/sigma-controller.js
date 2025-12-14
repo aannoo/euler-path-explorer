@@ -182,22 +182,17 @@ const setupEdgeInput = () => {
         return;
       }
       
-      console.log('handleCalculation called, about to set ui.calculationStarted');
       
       // Test if orbital element exists
       const orbitalTest = document.getElementById('orbital-welcome');
-      console.log('Orbital element test:', orbitalTest);
       
       // Signal that calculation has started (for orbital animation)
       setState('ui.calculationStarted', true);
-      console.log('Set ui.calculationStarted to true');
       
       // Direct trigger for orbital animation as backup
       if (window.triggerOrbitalAnimation && typeof window.triggerOrbitalAnimation === 'function') {
-        console.log('Calling window.triggerOrbitalAnimation directly');
         try {
           window.triggerOrbitalAnimation();
-          console.log('window.triggerOrbitalAnimation call completed');
         } catch (error) {
           console.error('Error calling window.triggerOrbitalAnimation:', error);
         }
@@ -211,9 +206,7 @@ const setupEdgeInput = () => {
       // Wait for orbital animation to start before beginning graph processing
       setTimeout(() => {
         // Parse edges first to get node count
-        console.log('Edge input string:', edgeStr);
         const edges = parseEdgeInput(edgeStr);
-        console.log('Parsed edges:', edges, 'Type:', typeof edges, 'Is Array:', Array.isArray(edges));
         
         // Make sure edges is an array
         if (!Array.isArray(edges)) {
@@ -228,7 +221,6 @@ const setupEdgeInput = () => {
           nodes.add(edge.target);
         });
         const nodeCount = nodes.size;
-        console.log(`Graph has ${nodeCount} nodes`);
         
         // Show global loader with node count and wait for animations to complete
         showCalcLoader('Parsing Graph...', nodeCount).then(() => {
@@ -258,7 +250,6 @@ const setupEdgeInput = () => {
             
             // Add all edges (this will add nodes as well)
             edges.forEach(edge => {
-              console.log('Adding edge:', edge);
               graph.addEdge(edge.source, edge.target, { weight: edge.weight });
             });
             
@@ -284,7 +275,6 @@ const setupEdgeInput = () => {
             hideCalcLoader().then(() => {
               // Only show notification after loader is completely gone
               showNotification('Graph updated successfully');
-              console.log('Loader animations complete');
             });
           } catch (error) {
             console.error('Error calculating:', error);
@@ -358,7 +348,6 @@ const setupEdgeInput = () => {
 export const parseEdgeInput = (input) => {
   // Strip whitespace and validate basic format
   input = input.trim();
-  console.log('Parsing edge input:', input);
   
   if (!input) {
     throw new Error('Edge input is empty. Please enter some edge data.');
@@ -373,7 +362,6 @@ export const parseEdgeInput = (input) => {
     const eulerEdgePattern = /^([a-zA-Z0-9_]+)(->|<->|-)([a-zA-Z0-9_]+)$/;
     
     if (eulerEdgePattern.test(firstLine)) {
-      console.log('Detected Euler edge format');
       
       // Extract all vertices first for validation
       const vertices = new Set();
@@ -429,11 +417,9 @@ export const parseEdgeInput = (input) => {
     
     // First check if it's already in JSON format
     if (input.startsWith('[{') && input.endsWith('}]')) {
-      console.log('Input appears to be JSON format, trying JSON.parse');
       // Try parsing as JSON array of objects
       try {
         const parsed = JSON.parse(input);
-        console.log('JSON parsed result:', parsed, 'Is Array:', Array.isArray(parsed));
         
         // Ensure result is an array
         if (!Array.isArray(parsed)) {
@@ -455,10 +441,8 @@ export const parseEdgeInput = (input) => {
     }
     
     // Parse using regex approach like in Graph.parseEdgeList
-    console.log('Using regex approach to parse edge list');
     const edges = [];
     const edgeMatches = input.match(/\[([^\]]+)\]/g) || [];
-    console.log('Edge matches found:', edgeMatches);
     
     if (edgeMatches.length === 0) {
       throw new Error('No valid edges found. Format should be: [a,b],[c,d]');
@@ -472,7 +456,6 @@ export const parseEdgeInput = (input) => {
       
       // Remove brackets and split by comma
       const parts = match.substring(1, match.length - 1).split(',').map(p => p.trim());
-      console.log(`Edge ${index} parts:`, parts);
       
       if (parts.length < 2) {
         throw new Error(`Edge ${index + 1} is invalid: ${match}. Each edge needs at least source and target.`);
@@ -502,11 +485,9 @@ export const parseEdgeInput = (input) => {
       
       // Add edge object
       const edge = { source, target, weight };
-      console.log('Adding edge:', edge);
       edges.push(edge);
     });
     
-    console.log('Parsed edges result:', edges);
     return edges;
   } catch (error) {
     console.error('Error in parseEdgeInput:', error);
@@ -536,20 +517,12 @@ const updateGraph = () => {
  * Calculate Euler path
  */
 export const calculateEulerPath = async (showLoader = true) => {
-  try {
     // Get all nodes and edges
     const nodes = graph.getAllNodes();
     const edges = graph.getAllEdges();
     
     const isWeighted = getState('graph.weighted');
-    
-    console.log('Calculating Euler path with:', {
-      nodes: nodes.length,
-      edges: edges.length,
-      directed: graph.directed,
-      weighted: graph.weighted
-    });
-    
+
     if (nodes.length === 0 || edges.length === 0) {
       showNotification('Graph is empty');
       return null;
@@ -571,13 +544,11 @@ export const calculateEulerPath = async (showLoader = true) => {
       updateLoaderProgress('Building adjacency list...');
       const adjacencyList = buildAdjacencyList(edges, graph.directed);
       
-      console.log('Built adjacency list:', adjacencyList);
       
       // Find Euler path - pass weighted flag to use Chinese Postman if weighted
       updateLoaderProgress(isWeighted ? 'Finding Chinese Postman tour...' : 'Finding Euler path...');
       const result = await findEulerPath(adjacencyList, null, isWeighted);
       
-      console.log('Path result:', result);
       
       // Process result
       updateLoaderProgress('Processing result...');
@@ -601,14 +572,6 @@ export const calculateEulerPath = async (showLoader = true) => {
       }
       return null;
     }
-  } catch (error) {
-    console.error('Error preparing for Euler path calculation:', error);
-    showNotification(`Error: ${error.message}`);
-    if (showLoader) {
-      hideCalcLoader();
-    }
-    return null;
-  }
 };
 
 /**
@@ -927,11 +890,9 @@ export const toggleSigmaForceLayout = (enabled) => {
   try {
     if (enabled) {
       // If enabled, initialize the force layout
-      console.log('Starting force layout');
       initForceLayout();
     } else {
       // If disabled, stop the force layout
-      console.log('Stopping force layout');
       const forceLayout = getForceLayout();
       if (forceLayout) {
         forceLayout.stop();

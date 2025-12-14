@@ -35,17 +35,14 @@ export const showCalcLoader = (message = 'Processing Graph...', nodeCount = 50) 
       return;
     }
     
-    console.log(`Graph has ${nodeCount} nodes, threshold is ${NODE_COUNT_THRESHOLD}`);
     
     // For small graphs, skip loader entirely - just resolve immediately
     if (nodeCount < NODE_COUNT_THRESHOLD) {
-      console.log(`Skipping loader for small graph with ${nodeCount} nodes`);
       resolve();
       return;
     }
     
     // Use full orbital animation for larger graphs
-    console.log(`Using full orbital animation for ${nodeCount} nodes`);
     
     // Set loading state flag
     isLoading = true;

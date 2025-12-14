@@ -211,13 +211,7 @@ export function isMobileMode() {
 // Debug functions
 if (typeof window !== 'undefined') {
   window.debugCanvas = function() {
-    console.log('Canvas Gesture Debug:');
-    console.log('- Window size:', window.innerWidth, 'x', window.innerHeight);
-    console.log('- UI mode:', getState('ui.contentMode'));
-    console.log('- Canvas gesture active:', !!canvasGesture);
     if (canvasGesture) {
-      console.log('- Current mode:', canvasGesture.getMode());
-      console.log('- Current progress:', canvasGesture.getProgress());
     }
   };
 

@@ -16,7 +16,6 @@ let buttonClickHandler = null; // Store button handler for cleanup
  * Initialize visual editor functionality
  */
 export const initVisualEditor = () => {
-  console.log('🎨 Initializing visual editor...');
   
   // Expose updateEdgeListDisplay globally for sigma-adapter
   if (typeof window !== 'undefined') {
@@ -25,7 +24,6 @@ export const initVisualEditor = () => {
   
   // Subscribe to editor mode changes
   subscribe('ui.editorMode', (mode) => {
-    console.log('Visual mode active:', mode === 'visual');
     isVisualMode = mode === 'visual';
     
     if (isVisualMode) {
@@ -45,14 +43,12 @@ export const initVisualEditor = () => {
     }
   });
   
-  console.log('✅ Visual editor initialized');
 };
 
 /**
  * Sync text input to visual mode display
  */
 const syncTextToVisual = () => {
-  console.log('🔄 Syncing text to visual...');
   
   const textInput = $('#edges');
   if (!textInput) {
@@ -65,7 +61,6 @@ const syncTextToVisual = () => {
   
   try {
     const edges = parseEdgeInput(textInput.value);
-    console.log('📝 Parsed edges:', edges);
     displayEdgeList(edges);
   } catch (error) {
     console.error('❌ Parse error:', error);
@@ -79,7 +74,6 @@ const syncTextToVisual = () => {
  * Extract current graph state and convert to text format
  */
 const syncVisualToText = () => {
-  console.log('🔄 Syncing visual to text...');
   
   const textInput = $('#edges');
   
@@ -125,7 +119,6 @@ const syncVisualToText = () => {
     
     // Update the input
     textInput.value = edgeStr;
-    console.log('📝 Updated text input with current graph state:', edgeStr);
   } catch (error) {
     console.error('❌ Error syncing visual to text:', error);
     // Fallback to original text if there's an error
@@ -188,7 +181,6 @@ const updateEdgeListDisplay = () => {
     
     // Display the updated edge list
     displayEdgeList(edges);
-    console.log(`🔄 Updated edge list display with ${edges.length} edges`);
   } catch (error) {
     console.error('❌ Error updating edge list display:', error);
   }
@@ -267,7 +259,6 @@ const displayEdgeList = (edges) => {
     container.appendChild(edgeItem);
   });
   
-  console.log(`📋 Displayed ${edges.length} edges in visual list`);
 };
 
 /**
