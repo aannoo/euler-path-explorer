@@ -16,7 +16,7 @@ import { v4 as uuid } from 'uuid';
 
 // Default attributes for new nodes and edges
 const DEFAULT_NODE_ATTRIBUTES = {
-  size: 8,
+  size: 10,
   color: '#FFDD00',
   label: '',
   x: 0,
@@ -24,24 +24,32 @@ const DEFAULT_NODE_ATTRIBUTES = {
 };
 
 const DEFAULT_EDGE_ATTRIBUTES = {
-  size: 4,
+  size: 5,
   color: '#FF5A1F',
   label: '',
   type: 'line'
 };
 
+// Selection highlight constants
+const SELECTION_NODE_SIZE = 14;
+const SELECTION_EDGE_SIZE = 6;
+const SELECTION_COLOR = '#ffdd00';
+
+// Directed edge size (arrows need to be larger)
+const DIRECTED_EDGE_SIZE = 7;
+
 // Editable property definitions
 const EDITABLE_NODE_PROPERTIES = [
   { name: 'label', type: 'string', label: 'Label' },
   { name: 'color', type: 'color', label: 'Color' },
-  { name: 'size', type: 'number', label: 'Size', min: 1, max: 20 },
+  { name: 'size', type: 'number', label: 'Size', min: 4, max: 24 },
   { name: 'fixed', type: 'boolean', label: 'Fixed Position' }
 ];
 
 const EDITABLE_EDGE_PROPERTIES = [
   { name: 'label', type: 'string', label: 'Label' },
   { name: 'color', type: 'color', label: 'Color' },
-  { name: 'size', type: 'number', label: 'Size', min: 1, max: 10 },
+  { name: 'size', type: 'number', label: 'Size', min: 2, max: 12 },
   { name: 'type', type: 'select', label: 'Type', options: ['line', 'arrow', 'dashed'] }
 ];
 
@@ -347,17 +355,17 @@ export function initForceLayout() {
         // Ensure selected nodes maintain their visual highlighting
         selectedNodes.forEach(nodeId => {
           if (graphInstance.hasNode(nodeId)) {
-            graphInstance.setNodeAttribute(nodeId, "color", "#ffdd00");
-            graphInstance.setNodeAttribute(nodeId, "size", 12);
+            graphInstance.setNodeAttribute(nodeId, "color", SELECTION_COLOR);
+            graphInstance.setNodeAttribute(nodeId, "size", SELECTION_NODE_SIZE);
             graphInstance.setNodeAttribute(nodeId, "zIndex", 10);
           }
         });
-        
+
         // Ensure selected edges maintain their visual highlighting
         selectedEdges.forEach(edgeId => {
           if (graphInstance.hasEdge(edgeId)) {
-            graphInstance.setEdgeAttribute(edgeId, "color", "#ffdd00");
-            graphInstance.setEdgeAttribute(edgeId, "size", 4);
+            graphInstance.setEdgeAttribute(edgeId, "color", SELECTION_COLOR);
+            graphInstance.setEdgeAttribute(edgeId, "size", SELECTION_EDGE_SIZE);
           }
         });
       },
@@ -660,27 +668,27 @@ function initDeletionFunctionality() {
         // Remove highlight styling
         if (graphInstance.hasNodeAttribute(nodeId, "selected")) {
           graphInstance.removeNodeAttribute(nodeId, "selected");
-          graphInstance.setNodeAttribute(nodeId, "color", "#ff5a1f");
-          graphInstance.setNodeAttribute(nodeId, "size", 8);
+          graphInstance.setNodeAttribute(nodeId, "color", DEFAULT_NODE_ATTRIBUTES.color);
+          graphInstance.setNodeAttribute(nodeId, "size", DEFAULT_NODE_ATTRIBUTES.size);
         }
       } else {
         selectedNodes.add(nodeId);
         // Add highlight styling with a more distinct appearance
         graphInstance.setNodeAttribute(nodeId, "selected", true);
-        graphInstance.setNodeAttribute(nodeId, "color", "#ffdd00");
-        graphInstance.setNodeAttribute(nodeId, "size", 12);
+        graphInstance.setNodeAttribute(nodeId, "color", SELECTION_COLOR);
+        graphInstance.setNodeAttribute(nodeId, "size", SELECTION_NODE_SIZE);
         // Add a border effect by setting zIndex higher so selected nodes appear on top
         graphInstance.setNodeAttribute(nodeId, "zIndex", 10);
       }
     } else {
       // Clear previous selection
       clearSelection();
-      
+
       // Select only this node
       selectedNodes.add(nodeId);
       graphInstance.setNodeAttribute(nodeId, "selected", true);
-      graphInstance.setNodeAttribute(nodeId, "color", "#ffdd00");
-      graphInstance.setNodeAttribute(nodeId, "size", 12);
+      graphInstance.setNodeAttribute(nodeId, "color", SELECTION_COLOR);
+      graphInstance.setNodeAttribute(nodeId, "size", SELECTION_NODE_SIZE);
       // Add a border effect by setting zIndex higher so selected nodes appear on top
       graphInstance.setNodeAttribute(nodeId, "zIndex", 10);
     }
@@ -718,25 +726,25 @@ function initDeletionFunctionality() {
         // Remove highlight styling
         if (graphInstance.hasEdgeAttribute(edgeId, "selected")) {
           graphInstance.removeEdgeAttribute(edgeId, "selected");
-          graphInstance.setEdgeAttribute(edgeId, "color", "#1E293B");
-          graphInstance.setEdgeAttribute(edgeId, "size", 2);
+          graphInstance.setEdgeAttribute(edgeId, "color", DEFAULT_EDGE_ATTRIBUTES.color);
+          graphInstance.setEdgeAttribute(edgeId, "size", DEFAULT_EDGE_ATTRIBUTES.size);
         }
       } else {
         selectedEdges.add(edgeId);
         // Add highlight styling
         graphInstance.setEdgeAttribute(edgeId, "selected", true);
-        graphInstance.setEdgeAttribute(edgeId, "color", "#ffdd00");
-        graphInstance.setEdgeAttribute(edgeId, "size", 4);
+        graphInstance.setEdgeAttribute(edgeId, "color", SELECTION_COLOR);
+        graphInstance.setEdgeAttribute(edgeId, "size", SELECTION_EDGE_SIZE);
       }
     } else {
       // Clear previous selection
       clearSelection();
-      
+
       // Select only this edge
       selectedEdges.add(edgeId);
       graphInstance.setEdgeAttribute(edgeId, "selected", true);
-      graphInstance.setEdgeAttribute(edgeId, "color", "#ffdd00");
-      graphInstance.setEdgeAttribute(edgeId, "size", 4);
+      graphInstance.setEdgeAttribute(edgeId, "color", SELECTION_COLOR);
+      graphInstance.setEdgeAttribute(edgeId, "size", SELECTION_EDGE_SIZE);
     }
     
     // Notify state change
@@ -776,33 +784,33 @@ function initDeletionFunctionality() {
  */
 function clearSelection() {
   if (!graphInstance) return;
-  
+
   // Start batch operation
   graphInstance.emit('startBatch');
-  
+
   // Clear node selections
   selectedNodes.forEach(nodeId => {
     if (graphInstance.hasNode(nodeId)) {
       graphInstance.removeNodeAttribute(nodeId, "selected");
-      graphInstance.setNodeAttribute(nodeId, "color", "#ff5a1f");
-      graphInstance.setNodeAttribute(nodeId, "size", 8);
+      graphInstance.setNodeAttribute(nodeId, "color", DEFAULT_NODE_ATTRIBUTES.color);
+      graphInstance.setNodeAttribute(nodeId, "size", DEFAULT_NODE_ATTRIBUTES.size);
       // Reset z-index
       graphInstance.removeNodeAttribute(nodeId, "zIndex");
     }
   });
-  
+
   // Clear edge selections
   selectedEdges.forEach(edgeId => {
     if (graphInstance.hasEdge(edgeId)) {
       graphInstance.removeEdgeAttribute(edgeId, "selected");
-      graphInstance.setEdgeAttribute(edgeId, "color", "#1E293B");
-      graphInstance.setEdgeAttribute(edgeId, "size", 2);
+      graphInstance.setEdgeAttribute(edgeId, "color", DEFAULT_EDGE_ATTRIBUTES.color);
+      graphInstance.setEdgeAttribute(edgeId, "size", DEFAULT_EDGE_ATTRIBUTES.size);
     }
   });
-  
+
   // End batch operation
   graphInstance.emit('endBatch');
-  
+
   // Reset selection state
   selectedNodes.clear();
   selectedEdges.clear();
@@ -1413,21 +1421,21 @@ export const setDirected = (directed) => {
       // Only change size if it's the default or smaller to avoid overriding custom sizes
       const currentSize = graphInstance.getEdgeAttribute(edge, 'size');
       if (!currentSize || currentSize <= DEFAULT_EDGE_ATTRIBUTES.size) {
-        graphInstance.setEdgeAttribute(edge, 'size', 6); // Make arrows even thicker (increased from 4)
+        graphInstance.setEdgeAttribute(edge, 'size', DIRECTED_EDGE_SIZE);
       }
-      
+
       // Add a visual indicator to emphasize direction
-      graphInstance.setEdgeAttribute(edge, 'color', '#FF5A1F'); // Orange
+      graphInstance.setEdgeAttribute(edge, 'color', DEFAULT_EDGE_ATTRIBUTES.color);
     } else {
       // Reset to default size if switching back to undirected
       graphInstance.setEdgeAttribute(edge, 'size', DEFAULT_EDGE_ATTRIBUTES.size);
       graphInstance.setEdgeAttribute(edge, 'color', DEFAULT_EDGE_ATTRIBUTES.color);
     }
-    
+
     // If the edge was selected, keep its highlighting
     if (selectedEdges.has(edge)) {
-      graphInstance.setEdgeAttribute(edge, 'color', '#ffdd00');
-      graphInstance.setEdgeAttribute(edge, 'size', 4);
+      graphInstance.setEdgeAttribute(edge, 'color', SELECTION_COLOR);
+      graphInstance.setEdgeAttribute(edge, 'size', SELECTION_EDGE_SIZE);
     }
   });
   
@@ -1450,44 +1458,50 @@ export const highlightPath = (path) => {
   
   // Reset all node and edge colors
   graphInstance.forEachNode((node) => {
-    graphInstance.setNodeAttribute(node, 'color', DEFAULT_NODE_ATTRIBUTES.color); // Use default yellow
+    graphInstance.setNodeAttribute(node, 'color', DEFAULT_NODE_ATTRIBUTES.color);
     graphInstance.setNodeAttribute(node, 'size', DEFAULT_NODE_ATTRIBUTES.size);
   });
-  
+
   graphInstance.forEachEdge((edge) => {
-    graphInstance.setEdgeAttribute(edge, 'color', DEFAULT_EDGE_ATTRIBUTES.color); // Use default orange
+    graphInstance.setEdgeAttribute(edge, 'color', DEFAULT_EDGE_ATTRIBUTES.color);
     graphInstance.setEdgeAttribute(edge, 'size', DEFAULT_EDGE_ATTRIBUTES.size);
-    
+
     // Make arrows bigger for directed graphs
     if (getState('graph.directed') && graphInstance.getEdgeAttribute(edge, 'type') === 'arrow') {
-      graphInstance.setEdgeAttribute(edge, 'size', 6);
+      graphInstance.setEdgeAttribute(edge, 'size', DIRECTED_EDGE_SIZE);
     }
-    
+
     // Remove any existing weight labels when highlighting a new path
     if (graphInstance.hasEdgeAttribute(edge, 'label')) {
       graphInstance.removeEdgeAttribute(edge, 'label');
     }
   });
-  
+
+  // Path highlight colors
+  const PATH_NODE_COLOR = '#0ea5e9';
+  const PATH_NODE_SIZE = 12;
+  const PATH_EDGE_COLOR = '#0ea5e9';
+  const PATH_EDGE_SIZE = 4;
+
   // Highlight the path nodes first
   for (let i = 0; i < path.length; i++) {
     // Convert node ID to string for comparison
     const nodeId = String(path[i]);
-    
+
     // Highlight current node
     if (graphInstance.hasNode(nodeId)) {
-      graphInstance.setNodeAttribute(nodeId, 'color', '#0ea5e9'); // Blue
-      graphInstance.setNodeAttribute(nodeId, 'size', 10);
+      graphInstance.setNodeAttribute(nodeId, 'color', PATH_NODE_COLOR);
+      graphInstance.setNodeAttribute(nodeId, 'size', PATH_NODE_SIZE);
     }
-    
+
     // If not the last node, highlight edge to next node
     if (i < path.length - 1) {
       const nextNodeId = String(path[i + 1]);
       const edgeId = findEdgeId(nodeId, nextNodeId);
-      
+
       if (edgeId && graphInstance.hasEdge(edgeId)) {
-        graphInstance.setEdgeAttribute(edgeId, 'color', '#0ea5e9'); // Blue
-        graphInstance.setEdgeAttribute(edgeId, 'size', 3);
+        graphInstance.setEdgeAttribute(edgeId, 'color', PATH_EDGE_COLOR);
+        graphInstance.setEdgeAttribute(edgeId, 'size', PATH_EDGE_SIZE);
         
         // Show weight if this is a weighted graph
         if (graphInstance.weighted) {
@@ -1538,13 +1552,13 @@ export const animatePath = (path, delay = 1000) => {
   
   // Reset all node and edge colors with a single batch
   graphInstance.forEachNode((node) => {
-    graphInstance.setNodeAttribute(node, 'color', '#ff5a1f');
-    graphInstance.setNodeAttribute(node, 'size', 8);
+    graphInstance.setNodeAttribute(node, 'color', DEFAULT_NODE_ATTRIBUTES.color);
+    graphInstance.setNodeAttribute(node, 'size', DEFAULT_NODE_ATTRIBUTES.size);
   });
-  
+
   graphInstance.forEachEdge((edge) => {
-    graphInstance.setEdgeAttribute(edge, 'color', '#1E293B');
-    graphInstance.setEdgeAttribute(edge, 'size', 2);
+    graphInstance.setEdgeAttribute(edge, 'color', DEFAULT_EDGE_ATTRIBUTES.color);
+    graphInstance.setEdgeAttribute(edge, 'size', DEFAULT_EDGE_ATTRIBUTES.size);
   });
   
   // End batch operation
@@ -1600,19 +1614,27 @@ export const animatePath = (path, delay = 1000) => {
         // Start batch operation
         graphInstance.emit('startBatch');
         
+        // Animation constants
+        const ANIM_PATH_COLOR = '#ff8f29';
+        const ANIM_PATH_SIZE = 12;
+        const ANIM_ACTIVE_COLOR = '#ffdd00';
+        const ANIM_ACTIVE_SIZE = 16;
+        const ANIM_EDGE_COLOR = '#ffdd00';
+        const ANIM_EDGE_SIZE = 5;
+
         // Set all nodes in path to a standard highlight color
         normalizedPath.forEach(nodeId => {
           if (graphInstance.hasNode(nodeId)) {
-            graphInstance.setNodeAttribute(nodeId, 'color', '#ff8f29');
-            graphInstance.setNodeAttribute(nodeId, 'size', 10);
+            graphInstance.setNodeAttribute(nodeId, 'color', ANIM_PATH_COLOR);
+            graphInstance.setNodeAttribute(nodeId, 'size', ANIM_PATH_SIZE);
           }
         });
-        
+
         // Highlight current node with more intense color
         const currentNodeId = normalizedPath[step];
         if (graphInstance.hasNode(currentNodeId)) {
-          graphInstance.setNodeAttribute(currentNodeId, 'color', '#ffdd00');
-          graphInstance.setNodeAttribute(currentNodeId, 'size', 14);
+          graphInstance.setNodeAttribute(currentNodeId, 'color', ANIM_ACTIVE_COLOR);
+          graphInstance.setNodeAttribute(currentNodeId, 'size', ANIM_ACTIVE_SIZE);
           
           // If there's a next node, highlight the edge between them
           if (step < normalizedPath.length - 1) {
@@ -1626,8 +1648,8 @@ export const animatePath = (path, delay = 1000) => {
               
               if (edgeId) {
                 // Highlight this edge
-                graphInstance.setEdgeAttribute(edgeId, 'color', '#ffdd00');
-                graphInstance.setEdgeAttribute(edgeId, 'size', 4);
+                graphInstance.setEdgeAttribute(edgeId, 'color', ANIM_EDGE_COLOR);
+                graphInstance.setEdgeAttribute(edgeId, 'size', ANIM_EDGE_SIZE);
               }
             }
           }
@@ -2037,27 +2059,27 @@ function updateSelectionVisuals() {
       // For directed graphs, keep the larger size for arrows
       if (getState('graph.directed') && graphInstance.getEdgeAttribute(edge, 'type') === 'arrow') {
         graphInstance.setEdgeAttribute(edge, 'color', DEFAULT_EDGE_ATTRIBUTES.color);
-        graphInstance.setEdgeAttribute(edge, 'size', 6);
+        graphInstance.setEdgeAttribute(edge, 'size', DIRECTED_EDGE_SIZE);
       } else {
         graphInstance.setEdgeAttribute(edge, 'color', DEFAULT_EDGE_ATTRIBUTES.color);
         graphInstance.setEdgeAttribute(edge, 'size', DEFAULT_EDGE_ATTRIBUTES.size);
       }
     }
   });
-  
+
   // Then apply selection styling
   selectedNodes.forEach(nodeId => {
     if (graphInstance.hasNode(nodeId) && !graphInstance.hasNodeAttribute(nodeId, 'originalColor')) {
-      graphInstance.setNodeAttribute(nodeId, 'color', '#ffdd00');
-      graphInstance.setNodeAttribute(nodeId, 'size', 12);
+      graphInstance.setNodeAttribute(nodeId, 'color', SELECTION_COLOR);
+      graphInstance.setNodeAttribute(nodeId, 'size', SELECTION_NODE_SIZE);
       graphInstance.setNodeAttribute(nodeId, 'zIndex', 10);
     }
   });
-  
+
   selectedEdges.forEach(edgeId => {
     if (graphInstance.hasEdge(edgeId)) {
-      graphInstance.setEdgeAttribute(edgeId, 'color', '#ffdd00');
-      graphInstance.setEdgeAttribute(edgeId, 'size', 4);
+      graphInstance.setEdgeAttribute(edgeId, 'color', SELECTION_COLOR);
+      graphInstance.setEdgeAttribute(edgeId, 'size', SELECTION_EDGE_SIZE);
     }
   });
   
@@ -2169,16 +2191,16 @@ function handleGraphControlAction(action) {
       case 'reset':
         // Reset camera view
         sigmaInstance.getCamera().animatedReset({ duration: 300 });
-        
+
         // Clear all selections
         clearSelection();
         setState('ui.selectedNodes', []);
         setState('ui.selectedEdges', []);
-        
+
         // Reset all node and edge colors to default (clear highlights)
         if (graphInstance) {
           graphInstance.emit('startBatch');
-          
+
           graphInstance.forEachNode((node) => {
             graphInstance.setNodeAttribute(node, 'color', DEFAULT_NODE_ATTRIBUTES.color);
             graphInstance.setNodeAttribute(node, 'size', DEFAULT_NODE_ATTRIBUTES.size);
@@ -2186,17 +2208,17 @@ function handleGraphControlAction(action) {
               graphInstance.removeNodeAttribute(node, 'zIndex');
             }
           });
-          
+
           graphInstance.forEachEdge((edge) => {
             graphInstance.setEdgeAttribute(edge, 'color', DEFAULT_EDGE_ATTRIBUTES.color);
             graphInstance.setEdgeAttribute(edge, 'size', DEFAULT_EDGE_ATTRIBUTES.size);
-            
+
             // Adjust size for directed graphs
             if (getState('graph.directed') && graphInstance.getEdgeAttribute(edge, 'type') === 'arrow') {
-              graphInstance.setEdgeAttribute(edge, 'size', 6);
+              graphInstance.setEdgeAttribute(edge, 'size', DIRECTED_EDGE_SIZE);
             }
           });
-          
+
           graphInstance.emit('endBatch');
           sigmaInstance.refresh();
         }
