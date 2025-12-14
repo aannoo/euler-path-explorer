@@ -59,13 +59,13 @@ body {
     z-index: 100;
     background: var(--dark-color-1);
     transform: none !important;
-    transition: none !important;
     overflow-y: auto;
     overflow-x: hidden;
     border-right: 3px solid var(--primary-color);
     order: 1; /* Ensure content appears first (left) */
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  
+
   /* Graph panel on right */
   .graph-layer {
     position: relative !important;
@@ -74,6 +74,7 @@ body {
     z-index: 1;
     background: var(--dark-color-1);
     order: 2; /* Ensure graph appears second (right) */
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   /* Desktop content sections */
@@ -144,6 +145,71 @@ body {
     100% { opacity: 0; }
 }
   
+  /* ========== DESKTOP SIDEBAR COLLAPSE ========== */
+
+  /* Sidebar toggle button */
+  .desktop-sidebar-toggle {
+    position: absolute;
+    top: 50%;
+    right: -16px;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 64px;
+    background: var(--dark-color-2);
+    border: 2px solid var(--primary-color);
+    border-left: none;
+    border-radius: 0 8px 8px 0;
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    z-index: 150;
+    transition: all 0.3s ease;
+  }
+
+  .desktop-sidebar-toggle:hover {
+    background: var(--primary-color);
+    color: var(--dark-color-1);
+  }
+
+  .desktop-sidebar-toggle i {
+    transition: transform 0.3s ease;
+  }
+
+  /* Collapsed state */
+  .content-layer.collapsed {
+    width: 60px !important;
+  }
+
+  .content-layer.collapsed ~ .graph-layer {
+    width: calc(100% - 60px) !important;
+  }
+
+  .content-layer.collapsed .desktop-sidebar-toggle i {
+    transform: rotate(180deg);
+  }
+
+  .content-layer.collapsed .title-notification-container,
+  .content-layer.collapsed .section-content,
+  .content-layer.collapsed .section-title,
+  .content-layer.collapsed .section-actions,
+  .content-layer.collapsed .euler-toggles-container {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .content-layer.collapsed .section-header {
+    justify-content: center;
+    padding: var(--spacing-3);
+  }
+
+  .content-layer.collapsed .section-icon {
+    margin: 0;
+  }
+
   .desktop-control-btn {
     width: 40px;
     height: 40px;
@@ -270,13 +336,18 @@ body {
     height: 100%;
     overflow-x: hidden;
   }
-  
+
   body {
     /* Prevent 1px gaps from body rounding */
     height: 100%;
     min-height: 100vh;
     min-height: -webkit-fill-available; /* iOS Safari fix */
     overflow-x: hidden;
+  }
+
+  /* Hide desktop sidebar toggle on mobile */
+  .desktop-sidebar-toggle {
+    display: none !important;
   }
 }
 

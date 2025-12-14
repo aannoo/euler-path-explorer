@@ -44,6 +44,7 @@ export function initializeDesktopInterface() {
 
   setupDesktopControls();
   setupGraphModeControls();
+  setupSidebarToggle();
 
   resizeHandler = throttledResize(handleResize);
   window.addEventListener('resize', resizeHandler);
@@ -53,6 +54,56 @@ export function initializeDesktopInterface() {
       window.removeEventListener('resize', resizeHandler);
     }
   };
+}
+
+/**
+ * Set up desktop sidebar toggle functionality
+ */
+function setupSidebarToggle() {
+  const toggleBtn = $('#desktop-sidebar-toggle');
+  if (!toggleBtn || !contentLayer) return;
+
+  // Restore collapsed state from localStorage
+  const isCollapsed = localStorage.getItem('euler_sidebar_collapsed') === 'true';
+  if (isCollapsed) {
+    contentLayer.classList.add('collapsed');
+    toggleBtn.title = 'Expand sidebar';
+  }
+
+  on(toggleBtn, 'click', () => {
+    toggleSidebar();
+  });
+}
+
+/**
+ * Toggle sidebar collapsed state
+ */
+function toggleSidebar() {
+  if (!contentLayer) return;
+
+  const isCollapsed = contentLayer.classList.toggle('collapsed');
+  const toggleBtn = $('#desktop-sidebar-toggle');
+
+  // Update button title
+  if (toggleBtn) {
+    toggleBtn.title = isCollapsed ? 'Expand sidebar' : 'Collapse sidebar';
+  }
+
+  // Persist state
+  localStorage.setItem('euler_sidebar_collapsed', isCollapsed);
+
+  // Update state
+  setState('ui.sidebarCollapsed', isCollapsed);
+
+  // Trigger sigma refresh after transition
+  setTimeout(() => {
+    if (window.SigmaAdapter && window.SigmaAdapter.getSigma) {
+      const sigma = window.SigmaAdapter.getSigma();
+      if (sigma) {
+        sigma.refresh();
+      }
+    }
+  }, 350);
 }
 
 /**
