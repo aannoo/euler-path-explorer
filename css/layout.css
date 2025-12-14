@@ -53,12 +53,12 @@ body {
   
   /* Content panel on left */
   .content-layer {
-    position: relative !important;
+    position: relative;
     width: 35%;
     height: 100vh;
     z-index: 100;
     background: var(--dark-color-1);
-    transform: none !important;
+    transform: none;
     overflow-y: auto;
     overflow-x: hidden;
     border-right: 3px solid var(--primary-color);
@@ -68,7 +68,7 @@ body {
 
   /* Graph panel on right */
   .graph-layer {
-    position: relative !important;
+    position: relative;
     width: 65%;
     height: 100vh;
     z-index: 1;
@@ -265,8 +265,8 @@ body {
 
 /* Graph View Tab - Base mobile styles (moves naturally with content) */
 .graph-view-tab {
-  position: sticky !important; /* Sticky instead of fixed - stays at bottom during scroll, moves with content during transforms */
-  bottom: 0 !important;
+  position: sticky; /* Sticky - stays at bottom during scroll, moves with content during transforms */
+  bottom: 0;
   left: 0;
   right: 0;
   z-index: 2500;
@@ -283,38 +283,38 @@ body {
   font-weight: 700; /* Bold font weight */
   font-size: 18px; /* Larger text */
   box-shadow: 0 -4px 20px rgba(255, 152, 0, 0.6); /* Strong orange glow */
-  
+
   /* Ensure touch events work for gestures */
   touch-action: none;
   -webkit-touch-callout: none;
   -webkit-tap-highlight-color: transparent;
-  
+
   /* Ensure tab is always interactive */
-  pointer-events: auto !important;
-  
+  pointer-events: auto;
+
   /* Keep tab above iPhone home indicator */
   padding-bottom: env(safe-area-inset-bottom);
-  
+
   /* Ensure never transparent and consistent height */
-  opacity: 1 !important;
+  opacity: 1;
   backdrop-filter: none;
   height: 80px; /* Match JavaScript ZONE_HEIGHT to eliminate gap */
   box-sizing: border-box; /* Include border in height calculation */
   margin: 0; /* Remove any margin that might cause gaps */
-  
+
   /* Ensure tab stays at bottom edge with no gaps */
   border-bottom: none;
   border-radius: 0;
-  
+
   /* Force tab to stick to absolute bottom with no gaps */
-  width: 100vw !important;
-  
+  width: 100vw;
+
   /* Remove excessive safe area padding that interferes with phone gestures */
-  margin-bottom: 0 !important;
-  
+  margin-bottom: 0;
+
   /* Dynamic positioning based on content state */
   transition: top 0.3s cubic-bezier(0.4, 0.0, 0.2, 1), bottom 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
-  
+
   /* Eliminate any potential gaps */
   transform: translateZ(0); /* Force hardware acceleration and precise positioning */
 }
@@ -760,39 +760,19 @@ body {
 
 /* Hide sigma reset button completely - we have our own controls */
 .sigma-reset-btn {
-  display: none !important;
+  display: none;
 }
 
 /* ========== GRAPH INFO STRIP ========== */
-
 /* COMPLETELY REMOVED: No thin bar at top per user request */
-.graph-info-strip {
-  display: none !important;
-}
-
-.graph-info-strip.active {
-  display: none !important;
-}
-
+/* Single rule with high specificity - no media query variants needed */
+.graph-info-strip,
+.graph-info-strip.active,
 .graph-info-content,
-.graph-stats, 
+.graph-stats,
 .graph-math-notation,
 .math-set {
-  display: none !important;
-}
-
-/* Desktop: ensure strip stays hidden */
-@media (min-width: 769px) {
-  .graph-info-strip {
-    display: none !important;
-  }
-}
-
-/* Mobile: ensure strip stays hidden */
-@media (max-width: 768px) {
-  .graph-info-strip {
-    display: none !important;
-  }
+  display: none;
 }
 /* ========== EULER BACKGROUND STYLES ========== */
 
