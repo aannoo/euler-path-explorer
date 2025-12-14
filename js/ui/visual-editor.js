@@ -16,12 +16,15 @@ let buttonClickHandler = null; // Store button handler for cleanup
  * Initialize visual editor functionality
  */
 export const initVisualEditor = () => {
-  
-  // Expose updateEdgeListDisplay globally for sigma-adapter
-  if (typeof window !== 'undefined') {
-    window.updateEdgeListDisplay = updateEdgeListDisplay;
-  }
-  
+
+  // Subscribe to edge list update requests via state.js pub/sub
+  // Replaces window.updateEdgeListDisplay global
+  subscribe('ui.edgeListNeedsUpdate', () => {
+    if (isVisualMode) {
+      updateEdgeListDisplay();
+    }
+  });
+
   // Subscribe to editor mode changes
   subscribe('ui.editorMode', (mode) => {
     isVisualMode = mode === 'visual';
@@ -52,7 +55,6 @@ const syncTextToVisual = () => {
   
   const textInput = $('#edges');
   if (!textInput) {
-    console.warn('❌ Text input not found');
     return;
   }
   
@@ -63,7 +65,6 @@ const syncTextToVisual = () => {
     const edges = parseEdgeInput(textInput.value);
     displayEdgeList(edges);
   } catch (error) {
-    console.error('❌ Parse error:', error);
     displayEdgeList([]);
     showParseError(error.message);
   }
@@ -78,15 +79,13 @@ const syncVisualToText = () => {
   const textInput = $('#edges');
   
   if (!textInput) {
-    console.warn('❌ Text input not found');
     return;
   }
-  
+
   try {
     // Get current graph from Sigma
     const graphInstance = getGraph();
     if (!graphInstance) {
-      console.warn('❌ Graph instance not found, restoring original text');
       textInput.value = originalTextValue;
       return;
     }
@@ -120,7 +119,6 @@ const syncVisualToText = () => {
     // Update the input
     textInput.value = edgeStr;
   } catch (error) {
-    console.error('❌ Error syncing visual to text:', error);
     // Fallback to original text if there's an error
     textInput.value = originalTextValue;
   }
@@ -182,7 +180,7 @@ const updateEdgeListDisplay = () => {
     // Display the updated edge list
     displayEdgeList(edges);
   } catch (error) {
-    console.error('❌ Error updating edge list display:', error);
+    // Error updating edge list - silently ignore
   }
 };
 
@@ -235,7 +233,6 @@ const removeButtonHandler = () => {
 const displayEdgeList = (edges) => {
   const container = $('#edge-list');
   if (!container) {
-    console.warn('❌ Edge list container not found');
     return;
   }
   

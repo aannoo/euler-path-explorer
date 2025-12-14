@@ -176,21 +176,8 @@ const setupEdgeInput = () => {
       const orbitalTest = document.getElementById('orbital-welcome');
       
       // Signal that calculation has started (for orbital animation)
+      // The state subscription in main.js handles the animation trigger
       setState('ui.calculationStarted', true);
-      
-      // Direct trigger for orbital animation as backup
-      if (window.triggerOrbitalAnimation && typeof window.triggerOrbitalAnimation === 'function') {
-        try {
-          window.triggerOrbitalAnimation();
-        } catch (error) {
-          console.error('Error calling window.triggerOrbitalAnimation:', error);
-        }
-      } else {
-        console.error('window.triggerOrbitalAnimation not available:', {
-          exists: !!window.triggerOrbitalAnimation,
-          type: typeof window.triggerOrbitalAnimation
-        });
-      }
       
       // Wait for orbital animation to start before beginning graph processing
       setTimeout(() => {
@@ -321,11 +308,9 @@ const setupEdgeInput = () => {
   });
   
   // Update graph info strip when edge input changes
+  // Uses state.js pub/sub instead of window global
   edgeInput.addEventListener('input', () => {
-    // Check if updateGraphInfoStrip function exists (it's in ui/init.js)
-    if (typeof window.updateGraphInfoStrip === 'function') {
-      window.updateGraphInfoStrip();
-    }
+    setState('ui.edgeInputChanged', Date.now());
   });
 };
 

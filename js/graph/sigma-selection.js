@@ -484,7 +484,6 @@ function syncEdgeListToInput() {
 
   edgeInput.value = edgeStr;
 
-  if (typeof window !== 'undefined' && window.updateEdgeListDisplay) {
-    window.updateEdgeListDisplay();
-  }
+  // Uses state.js pub/sub instead of window global
+  setState('ui.edgeListNeedsUpdate', Date.now());
 }

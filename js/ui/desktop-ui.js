@@ -273,7 +273,5 @@ export function updateGraphInfoStrip() {
   if (edgeCountEl) edgeCountEl.textContent = edgeCount;
 }
 
-// Expose globally for backward compatibility
-if (typeof window !== 'undefined') {
-  window.updateGraphInfoStrip = updateGraphInfoStrip;
-}
+// NOTE: Removed window.updateGraphInfoStrip - use setState('ui.edgeInputChanged', Date.now()) instead
+// Subscribers in init.js handle the update via state.js pub/sub

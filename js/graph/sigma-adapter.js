@@ -587,9 +587,8 @@ function initVisualCreation() {
       updateSigmaEdgeListFromGraph();
       
       // Also update visual editor display if in visual mode
-      if (typeof window !== 'undefined' && window.updateEdgeListDisplay) {
-        window.updateEdgeListDisplay();
-      }
+      // Uses state.js pub/sub instead of window global
+      setState('ui.edgeListNeedsUpdate', Date.now());
       
     }
     // If visual mode with no selection or multiple selections, do nothing
@@ -647,9 +646,8 @@ function initDeletionFunctionality() {
         updateSigmaEdgeListFromGraph();
         
         // Also update visual editor display if in visual mode
-        if (typeof window !== 'undefined' && window.updateEdgeListDisplay) {
-          window.updateEdgeListDisplay();
-        }
+        // Uses state.js pub/sub instead of window global
+        setState('ui.edgeListNeedsUpdate', Date.now());
         
       } catch (error) {
         console.error('Error creating edge:', error);

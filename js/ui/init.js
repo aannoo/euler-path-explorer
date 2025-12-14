@@ -45,7 +45,6 @@ function initializeCanvasGestureInterface() {
   
   
   if (!contentLayer) {
-    console.error('❌ contentLayer not found for canvas gesture interface');
     return;
   }
   
@@ -121,7 +120,6 @@ function scrollToSection(sectionId) {
 function setupGraphViewTabHandlers() {
   
   if (!graphViewTab) {
-    console.error('❌ graphViewTab not found in setupGraphViewTabHandlers');
     return;
   }
   
@@ -144,7 +142,6 @@ function setupGraphViewTabHandlers() {
 function setupGraphViewTab() {
   
   if (!graphViewTab) {
-    console.error('❌ graphViewTab not found in setupGraphViewTab');
     return;
   }
   
@@ -222,7 +219,6 @@ function setContentPosition(position) {
   }
   
   if (!contentLayer) {
-    console.error('❌ contentLayer not found in setContentPosition');
     return;
   }
   
@@ -368,8 +364,11 @@ function updateGraphInfoStrip() {
   
 }
 
-// Make updateGraphInfoStrip available globally
-window.updateGraphInfoStrip = updateGraphInfoStrip;
+// Subscribe to edge input changes to update graph info strip
+// Uses state.js pub/sub instead of window global
+const edgeInputChangeUnsubscribe = subscribe('ui.edgeInputChanged', () => {
+  updateGraphInfoStrip();
+});
 
 // ========== GRAPH MODE CONTROLS ==========
 
@@ -552,32 +551,24 @@ window.testCanvasGesture = function() {
     setTimeout(() => {
       canvasGesture.setProgress(0);
     }, 5000);
-  } else {
-    console.error('❌ Canvas gesture not active');
   }
 };
 
 // Also expose manually trigger functions
 window.testGraphViewTab = function() {
   if (graphViewTab) {
-  } else {
-    console.error('❌ Graph view tab not found');
   }
 };
 
 window.forceRetract = function() {
   if (canvasGesture) {
     canvasGesture.setProgress(0.85);
-  } else {
-    console.error('❌ Canvas gesture not active');
   }
 };
 
 window.forceNormal = function() {
   if (canvasGesture) {
     canvasGesture.setProgress(0);
-  } else {
-    console.error('❌ Canvas gesture not active');
   }
 };
 
@@ -676,7 +667,6 @@ export function showNotification(message, type = 'info', duration = 3000) {
   const banner = $(`#${bannerId}`);
   
   if (!banner) {
-    console.warn(`Notification banner not found: ${bannerId}`);
     return;
   }
   
@@ -714,7 +704,6 @@ function setupDesktopNotification(banner, message, type) {
   const text = banner.querySelector('.notification-text');
   
   if (!icon || !text) {
-    console.warn('Desktop notification elements missing');
     return;
   }
   

@@ -19,7 +19,6 @@ const handleOrbitalWelcome = () => {
   const orbitalWelcome = $('#orbital-welcome');
   
   if (!orbitalWelcome) {
-    console.error('Orbital welcome element not found in handleOrbitalWelcome');
     return null;
   }
 
@@ -30,13 +29,11 @@ const handleOrbitalWelcome = () => {
   const calculateDynamicValues = () => {
     const graphContainer = $('.graph-container');
     if (!graphContainer) {
-      console.error('Graph container not found');
       return;
     }
 
     // Ensure container has layout before measuring
     if (graphContainer.offsetWidth === 0 || graphContainer.offsetHeight === 0) {
-      console.warn('Container has no dimensions, retrying...');
       setTimeout(calculateDynamicValues, 50);
       return;
     }
@@ -154,7 +151,6 @@ const handleOrbitalWelcome = () => {
   const triggerOrbitalExpansion = () => {
     
     if (!orbitalWelcome) {
-      console.error('Orbital welcome element not found!');
       return;
     }
     
@@ -165,8 +161,6 @@ const handleOrbitalWelcome = () => {
     if (calculatedValues.finalScale && calculatedValues.targetAspectRatio) {
       document.documentElement.style.setProperty('--final-scale', calculatedValues.finalScale);
       document.documentElement.style.setProperty('--target-aspect-ratio', calculatedValues.targetAspectRatio);
-    } else {
-      console.warn('No calculated values available for animation');
     }
     
     // Start the orbital expansion animation
@@ -198,8 +192,8 @@ const handleOrbitalWelcome = () => {
   // Initial calculation on load
   setTimeout(calculateDynamicValues, 100);
 
-  // Expose globally for direct access
-  window.triggerOrbitalAnimation = triggerOrbitalExpansion;
+  // NOTE: Removed window.triggerOrbitalAnimation - use setState('ui.calculationStarted', true) instead
+  // The subscription above handles the animation trigger via state.js pub/sub
 
   // Return cleanup function
   return () => {
@@ -227,7 +221,7 @@ function cleanupApplication() {
       try {
         cleanup();
       } catch (error) {
-        console.error('Error during cleanup:', error);
+        // Cleanup error - continue with remaining cleanups
       }
     }
   });
@@ -238,7 +232,7 @@ function cleanupApplication() {
       try {
         unsubscribe();
       } catch (error) {
-        console.error('Error unsubscribing from state:', error);
+        // Unsubscribe error - continue with remaining unsubscriptions
       }
     }
   });
@@ -315,10 +309,6 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Test DOM selectors
   const eulerLogo = $('#euler-logo');
-  if (eulerLogo) {
-  } else {
-    console.error('EULER Logo not found');
-  }
   
   // Test multiple selectors
   const tabButtons = $$('.sidebar-tab');

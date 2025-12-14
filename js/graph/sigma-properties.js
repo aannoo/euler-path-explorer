@@ -187,10 +187,8 @@ export const updateNodeLabel = (nodeId, newLabel) => {
 
   if (sigmaInstance) sigmaInstance.refresh();
 
-  // Trigger edge list update
-  if (typeof window !== 'undefined' && window.updateEdgeListDisplay) {
-    window.updateEdgeListDisplay();
-  }
+  // Trigger edge list update via state.js pub/sub
+  setState('ui.edgeListNeedsUpdate', Date.now());
 
   return true;
 };
