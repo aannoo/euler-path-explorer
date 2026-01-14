@@ -203,8 +203,7 @@ const handleOrbitalWelcome = () => {
   };
 };
 
-// Make Sigma adapter available globally for components that need it
-window.SigmaAdapter = SigmaAdapter;
+// NOTE: Removed window.SigmaAdapter - components should import from sigma-facade.js instead
 
 // Store cleanup functions for proper application teardown
 let cleanupFunctions = [];
@@ -244,15 +243,13 @@ function cleanupApplication() {
   }
   
   // Destroy Sigma if it exists
-  if (window.SigmaAdapter && typeof window.SigmaAdapter.destroySigma === 'function') {
-    window.SigmaAdapter.destroySigma();
+  if (SigmaAdapter && typeof SigmaAdapter.destroySigma === 'function') {
+    SigmaAdapter.destroySigma();
   }
-  
+
   // Clear references
   cleanupFunctions = [];
   stateSubscriptions = [];
-  window.SigmaAdapter = null;
-  window.GraphController = null;
 }
 
 // Make cleanup function available globally
@@ -355,8 +352,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   stateSubscriptions.push(unsubscribeSidebar);
   
-  // Make graph modules available globally for the UI controls
-  window.GraphController = graphController;
+  // NOTE: Removed window.GraphController - use sigma-facade.js imports instead
   
   // Add unload event listener to clean up resources when page is closed
   window.addEventListener('beforeunload', cleanupApplication);

@@ -8,6 +8,7 @@ import { $, $$ } from '../utils/dom.js';
 import { on } from '../utils/events.js';
 import { setState, getState } from '../core/state.js';
 import { CanvasGestureController } from '../utils/canvas-gesture.js';
+import { SigmaCore } from '../graph/sigma-facade.js';
 
 // Module state
 let contentLayer = null;
@@ -97,11 +98,9 @@ function toggleSidebar() {
 
   // Trigger sigma refresh after transition
   setTimeout(() => {
-    if (window.SigmaAdapter && window.SigmaAdapter.getSigma) {
-      const sigma = window.SigmaAdapter.getSigma();
-      if (sigma) {
-        sigma.refresh();
-      }
+    const sigma = SigmaCore.getInstance();
+    if (sigma) {
+      sigma.refresh();
     }
   }, 350);
 }

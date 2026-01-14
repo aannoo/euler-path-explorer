@@ -54,7 +54,6 @@ export const initializeSigma = (container, options = {}) => {
   }
 
   if (!containerElement) {
-    console.error('Sigma container not found');
     return null;
   }
 
@@ -94,7 +93,6 @@ export const initializeSigma = (container, options = {}) => {
 
     return sigmaInstance;
   } catch (error) {
-    console.error('Error initializing Sigma:', error);
     return null;
   }
 };
@@ -217,7 +215,6 @@ export const enforceCameraBoundaries = () => {
 
     return false;
   } catch (e) {
-    console.error('[CAMERA-BOUNDS] Error checking visibility:', e);
     return false;
   }
 };
@@ -257,7 +254,7 @@ export const destroySigma = () => {
         sigmaInstance.off("cameraUpdated");
       }
     } catch (e) {
-      console.warn('Error removing boundary handler:', e);
+      // Boundary handler removal error - continue
     }
     delete window._boundaryHandler;
   }
@@ -274,7 +271,7 @@ export const destroySigma = () => {
         forceLayout.worker.terminate();
       }
     } catch (e) {
-      console.warn('Error terminating force layout:', e);
+      // Force layout termination error - continue
     }
   }
 
@@ -303,7 +300,7 @@ export const destroySigma = () => {
       sigmaInstance.clear();
       sigmaInstance.kill();
     } catch (e) {
-      console.warn('Error during Sigma disposal', e);
+      // Sigma disposal error - continue
     }
     sigmaInstance = null;
   }
@@ -312,7 +309,7 @@ export const destroySigma = () => {
     try {
       graphInstance.clear();
     } catch (e) {
-      console.warn('Error clearing graph instance', e);
+      // Graph instance clear error - continue
     }
     graphInstance = null;
   }
@@ -321,7 +318,7 @@ export const destroySigma = () => {
     try {
       containerElement.innerHTML = '';
     } catch (e) {
-      console.warn('Error clearing container', e);
+      // Container clear error - continue
     }
     containerElement = null;
   }
@@ -335,7 +332,6 @@ function setupGraphControlListeners() {
   const { subscribe } = require('../core/state.js');
 
   if (typeof subscribe !== 'function') {
-    console.warn('State management not available for graph controls');
     return;
   }
 
@@ -362,7 +358,6 @@ function setupGraphControlListeners() {
  */
 function handleGraphControlAction(action) {
   if (!sigmaInstance) {
-    console.warn('Sigma instance not available for control action:', action);
     return;
   }
 
@@ -416,10 +411,10 @@ function handleGraphControlAction(action) {
             break;
 
           default:
-            console.warn('Unknown graph control action:', action);
+            // Unknown action - ignore
         }
       } catch (error) {
-        console.error('Error handling graph control action:', action, error);
+        // Graph control action error - ignore
       }
     });
   });

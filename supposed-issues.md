@@ -1,3 +1,12 @@
+todo:
+- finish visual mode.
+- add polish to the webiste and code
+- fix any issues
+
+
+take all the below with a grain of salt
+
+
 # Below is just some bullshit generated nonsense by AI that may or  may not be correct.
 ---------
 

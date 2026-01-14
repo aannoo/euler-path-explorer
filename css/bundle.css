@@ -1,10 +1,5 @@
 /* EULER - Base CSS */
-
-/* Import utility styles */
-@import 'utility.css';
-
-/* Import performance optimizations */
-@import 'optimization.css';
+/* Note: utility.css and optimization.css content is already inlined below */
 
 /* ========== CSS Variables ========== */
 :root {

@@ -100,7 +100,6 @@ export const renderGraph = (eulerGraph, fit = true) => {
   const graphInstance = getGraph();
 
   if (!sigmaInstance || !graphInstance) {
-    console.error('Sigma not initialized');
     return;
   }
 
@@ -127,9 +126,7 @@ export const renderGraph = (eulerGraph, fit = true) => {
         color: node.color || DEFAULT_NODE_ATTRIBUTES.color
       });
     } catch (error) {
-      if (!error.message.includes('already exists')) {
-        console.error('Error adding node:', error);
-      }
+      // Node add error - ignore duplicates
     }
   });
 
@@ -144,9 +141,7 @@ export const renderGraph = (eulerGraph, fit = true) => {
         label: edge.label
       });
     } catch (error) {
-      if (!error.message.includes('already exists')) {
-        console.error('Error adding edge:', error);
-      }
+      // Edge add error - ignore duplicates
     }
   });
 
@@ -181,7 +176,6 @@ export const exportImage = () => {
   const sigmaInstance = getSigma();
 
   if (!sigmaInstance) {
-    console.error('Sigma not initialized for export');
     return null;
   }
 

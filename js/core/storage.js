@@ -94,21 +94,18 @@ export const getExampleGraphs = () => {
 export const generateRandomEulerGraph = (vertices = 5, edges = 8) => {
   // Validation checks
   if (vertices < 3) {
-    console.warn(`Cannot create valid Euler circuit with ${vertices} vertices. Using minimum of 3.`);
     vertices = 3;
   }
   
   // For an Euler circuit, all vertices must have even degree
   // Total edges must be at least equal to vertices for a connected graph
   if (edges < vertices) {
-    console.warn(`Edge count too low. Setting to minimum ${vertices}.`);
     edges = vertices;
   }
   
   // Maximum edges for a simple graph is v(v-1)/2
   const maxEdges = vertices * (vertices - 1) / 2;
   if (edges > maxEdges) {
-    console.warn(`Edge count too high. Setting to maximum ${maxEdges}.`);
     edges = maxEdges;
   }
 
@@ -248,13 +245,11 @@ export const generateRandomEulerGraph = (vertices = 5, edges = 8) => {
         weighted: false
       };
     } catch (error) {
-      console.error('Error generating random Euler graph:', error);
       // Continue to next attempt
     }
   }
   
   // If we've exhausted our attempts, return a simple guaranteed Euler circuit
-  console.warn('Failed to generate complex random Euler graph, using simple cycle');
   
   // A simple cycle is always an Euler circuit
   const edgeList = [];

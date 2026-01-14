@@ -87,13 +87,18 @@ export {
 } from './sigma-rendering.js';
 
 /**
- * Initialize window globals for backward compatibility
- * This maintains compatibility with existing code that uses window.SigmaAdapter
+ * @deprecated Use imports from sigma-facade.js instead of window.SigmaAdapter
+ * This function is no longer called and will be removed in a future version.
+ *
+ * Migration guide:
+ *   Before: window.SigmaAdapter.getSigma()
+ *   After:  import { SigmaCore } from './sigma-facade.js'; SigmaCore.getInstance()
  */
 export function initializeGlobals() {
+  console.warn('initializeGlobals() is deprecated. Use sigma-facade.js imports instead.');
   if (typeof window === 'undefined') return;
 
-  // Import all modules
+  // Import all modules (kept for backward compatibility, not recommended)
   Promise.all([
     import('./sigma-core.js'),
     import('./sigma-layouts.js'),
@@ -152,6 +157,5 @@ export function initializeGlobals() {
       getGraphStats: rendering.getGraphStats
     };
 
-    console.log('SigmaAdapter globals initialized (modular)');
   });
 }

@@ -24,7 +24,6 @@ export function showNotification(message, type = 'info', duration = 3000) {
   const banner = $(`#${bannerId}`);
 
   if (!banner) {
-    console.warn(`Notification banner not found: ${bannerId}`);
     return;
   }
 
@@ -68,7 +67,6 @@ function setupDesktopNotification(banner, message, type) {
   const text = banner.querySelector('.notification-text');
 
   if (!icon || !text) {
-    console.warn('Desktop notification elements missing');
     return;
   }
 

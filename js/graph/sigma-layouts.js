@@ -63,7 +63,6 @@ export function initForceLayout(graph) {
       }
     }, 3000);
   } catch (error) {
-    console.error('Error initializing force layout:', error);
     forceLayout = null;
   }
 }
@@ -115,7 +114,7 @@ export const destroyForceLayout = () => {
         forceLayout.worker.terminate();
       }
     } catch (e) {
-      console.warn('Error terminating force layout:', e);
+      // Force layout termination error - continue
     }
     forceLayout = null;
   }
@@ -340,7 +339,7 @@ export const animatePath = (path, delay = 1000) => {
         easing: 'cubicOut'
       });
     } catch (err) {
-      console.error("Camera animation error:", err);
+      // Camera animation error - continue
     }
 
     setTimeout(() => {
