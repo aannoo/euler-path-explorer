@@ -1,3 +1,8 @@
+@import 'sidebar.css';
+@import 'form-elements.css';
+@import 'edge-list.css';
+@import 'results-panel.css';
+
 /* EULER - Base CSS */
 /* Note: utility.css and optimization.css content is already inlined below */
 
@@ -831,7 +836,7 @@ body {
     transform: translateY(-95%); /* Move content further up so it doesn't cover the tab */
     background: rgba(var(--dark-color-1-rgb), 0.95);
     backdrop-filter: blur(10px);
-    z-index: 10; /* Lower z-index when retracted so tab can be above it */
+    z-index: 150; /* Raise stacking so the retracted tab stays above the graph */
   }
   
   .content-layer.split-view {
@@ -1713,12 +1718,6 @@ body {
 .form-input:focus {
   transition: background-color var(--transition-fast), border-left-width var(--transition-normal);
 } /* EULER - Components CSS */
-
-/* This file now imports specialized component styles */
-@import 'sidebar.css';
-@import 'form-elements.css';
-@import 'edge-list.css';
-@import 'results-panel.css';
 
 /* ========== Hint Boxes ========== */
 /* Consolidated hint-box styles to avoid duplication */

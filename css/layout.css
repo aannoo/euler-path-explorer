@@ -577,7 +577,7 @@ body {
     transform: translateY(-95%); /* Move content further up so it doesn't cover the tab */
     background: rgba(var(--dark-color-1-rgb), 0.95);
     backdrop-filter: blur(10px);
-    z-index: 10; /* Lower z-index when retracted so tab can be above it */
+    z-index: 150; /* Raise stacking so the retracted tab stays above the graph */
   }
   
   .content-layer.split-view {
