@@ -12,9 +12,12 @@ import {
   saveCurrentGraph, 
   loadGraph, 
   deleteGraph, 
-  duplicateGraph 
+  duplicateGraph,
+  generateRandomEulerGraph
 } from '../core/storage.js';
-import { parseEdgeInput } from '../graph/sigma-controller.js';
+import { parseEdgeInput, calculateEulerPath } from '../graph/sigma-controller.js';
+import { Graph } from '../graph/model.js';
+import { getGraph, renderGraph } from '../graph/sigma-adapter.js';
 import { showCalcLoader, hideCalcLoader, updateLoaderProgress } from '../ui/loader.js';
 
 // State for collapsed sections
@@ -843,8 +846,6 @@ const handleLoadGraph = async (id) => {
       // Parse edges first to get node count for conditional loader behavior
       let nodeCount = 0;
       try {
-        // Import parseEdgeInput temporarily to get node count
-        const { parseEdgeInput } = await import('../graph/sigma-controller.js');
         const parsedEdges = parseEdgeInput(graph.edges);
         
         // Calculate node count from edges
@@ -853,7 +854,7 @@ const handleLoadGraph = async (id) => {
           nodes.add(edge.source);
           nodes.add(edge.target);
         });
-        nodeCount = nodes.size;
+        nodeCount = nodes.size || 50;
       } catch (error) {
         console.warn('Could not calculate node count for loader decision:', error);
         // Fall back to default behavior (full loader)
@@ -863,122 +864,92 @@ const handleLoadGraph = async (id) => {
       // Show global loader with node count and wait for animations to complete
       showCalcLoader('Loading Graph...', nodeCount).then(() => {
         try {
-          // Import the required functions directly
-          import('../graph/sigma-controller.js').then((controllerModule) => {
-            // Get the necessary functions
-            const { parseEdgeInput, calculateEulerPath } = controllerModule;
+          // Parse edges to update the graph state
+          const parsedEdges = parseEdgeInput(graph.edges);
+          
+          // Update the graph state
+          setState('graph.edges', parsedEdges);
+          
+          // Update loader progress
+          updateLoaderProgress('Rendering Graph...');
+          
+          // Get the graph instance
+          const graphInstance = getGraph();
+          
+          if (graphInstance) {
+            // Clear existing graph
+            graphInstance.clear();
             
-            if (typeof parseEdgeInput === 'function' && typeof calculateEulerPath === 'function') {
-              try {
-                // Parse edges
-                const parsedEdges = parseEdgeInput(graph.edges);
-                
-                // Update the graph state
-                setState('graph.edges', parsedEdges);
-                
-                // Update loader progress
-                updateLoaderProgress('Rendering Graph...');
-                
-                // Import sigma adapter functions
-                import('../graph/sigma-adapter.js').then(async (sigmaAdapterModule) => {
-                  const { getGraph, renderGraph } = sigmaAdapterModule;
-                  
-                  // Also import the Graph model
-                  const modelModule = await import('../graph/model.js');
-                  const { Graph } = modelModule;
-                  
-                  // Get the graph instance
-                  const graphInstance = getGraph();
-                  
-                  if (graphInstance) {
-                    // Clear existing graph
-                    graphInstance.clear();
-                    
-                    // Set graph properties
-                    graphInstance.directed = graph.directed;
-                    graphInstance.weighted = graph.weighted;
-                    
-                    // First, create a set of all unique nodes from the edges
-                    const nodeSet = new Set();
-                    parsedEdges.forEach(edge => {
-                      nodeSet.add(edge.source);
-                      nodeSet.add(edge.target);
-                    });
-                    
-                    // Add all nodes to the graph first
-                    nodeSet.forEach(nodeId => {
-                      graphInstance.addNode(nodeId, {
-                        label: nodeId,
-                        x: Math.random() * 10 - 5,
-                        y: Math.random() * 10 - 5,
-                        size: 8,
-                        color: '#ff5a1f'
-                      });
-                    });
-                    
-                    // Now add all edges
-                    parsedEdges.forEach(edge => {
-                      graphInstance.addEdge(edge.source, edge.target, { weight: edge.weight });
-                    });
-                    
-                    // Create a Graph model instance to use with renderGraph
-                    const graphModel = new Graph();
-                    graphModel.directed = graph.directed;
-                    graphModel.weighted = graph.weighted;
-                    
-                    // Add nodes and edges to the model
-                    nodeSet.forEach(nodeId => {
-                      graphModel.addNode({ id: nodeId });
-                    });
-                    
-                    parsedEdges.forEach(edge => {
-                      graphModel.addEdge(edge.source, edge.target, { weight: edge.weight });
-                    });
-                    
-                    // Render the graph using the proper model
-                    renderGraph(graphModel);
-                  }
-                  
-                  // Update loader for Euler path calculation
-                  updateLoaderProgress('Finding Euler Path...');
-                  
-                  // Calculate Euler path
-                  calculateEulerPath(false);
-                  
-                  // Don't switch to results tab automatically
-                  // Let the user stay on the saved tab
-                  
-                  // Update current graph section
-                  updateCurrentGraphSection();
-                  
-                  // Hide loader after processing is complete
-                  hideCalcLoader().then(() => {
-                    showNotification(`Loaded graph "${graph.name}"`, 'success');
-                  });
-                }).catch(error => {
-                  console.error('Error importing sigma adapter module:', error);
-                  hideCalcLoader();
-                  showNotification(`Error: ${error.message}`, 'error');
-                });
-              } catch (innerError) {
-                console.error('Error processing graph data:', innerError);
-                hideCalcLoader();
-                showNotification(`Error: ${innerError.message}`, 'error');
-              }
-            } else {
-              hideCalcLoader();
-              showNotification('Error: Required functions not found', 'error');
-            }
-          }).catch(error => {
-            console.error('Error importing controller module:', error);
-            hideCalcLoader();
-            showNotification(`Error: ${error.message}`, 'error');
+            // Set graph properties
+            graphInstance.directed = graph.directed;
+            graphInstance.weighted = graph.weighted;
+            
+            // First, create a set of all unique nodes from the edges
+            const nodeSet = new Set();
+            parsedEdges.forEach(edge => {
+              nodeSet.add(edge.source);
+              nodeSet.add(edge.target);
+            });
+            
+            // Add all nodes to the graph first
+            nodeSet.forEach(nodeId => {
+              graphInstance.addNode(nodeId, {
+                label: nodeId,
+                x: Math.random() * 10 - 5,
+                y: Math.random() * 10 - 5,
+                size: 8,
+                color: '#ff5a1f'
+              });
+            });
+            
+            // Now add all edges
+            parsedEdges.forEach(edge => {
+              graphInstance.addEdge(edge.source, edge.target, { weight: edge.weight });
+            });
+            
+            // Create a Graph model instance to use with renderGraph
+            const graphModel = new Graph();
+            graphModel.directed = graph.directed;
+            graphModel.weighted = graph.weighted;
+            
+            // Add nodes and edges to the model
+            nodeSet.forEach(nodeId => {
+              graphModel.addNode({ id: nodeId });
+            });
+            
+            parsedEdges.forEach(edge => {
+              graphModel.addEdge(edge.source, edge.target, { weight: edge.weight });
+            });
+            
+            // Render the graph using the proper model
+            renderGraph(graphModel);
+          }
+          
+          // Update loader for Euler path calculation
+          updateLoaderProgress('Finding Euler Path...');
+          
+          // Calculate Euler path
+          calculateEulerPath(false);
+          
+          // Don't switch to results tab automatically
+          // Let the user stay on the saved tab
+          
+          // Update current graph section
+          updateCurrentGraphSection();
+          
+          // Hide loader after processing is complete
+          hideCalcLoader().then(() => {
+            showNotification(`Loaded graph "${graph.name}"`, 'success');
           });
-        } catch (error) {
-          console.error('Error loading graph:', error);
-          showNotification(`Error: ${error.message}`, 'error');
+        } catch (innerError) {
+          console.error('Error processing graph data:', innerError);
           hideCalcLoader();
+          showNotification(`Error: ${innerError.message}`, 'error');
         }
+      }).catch((error) => {
+        console.error('Error loading graph:', error);
+        showNotification(`Error: ${error.message}`, 'error');
+        hideCalcLoader();
       });
     } else {
       showNotification('Failed to load graph', 'error');
@@ -1023,22 +994,8 @@ const handleLoadExample = (example) => {
         }
         
         // Generate random Euler graph
-        import('../core/storage.js').then((storageModule) => {
-          const { generateRandomEulerGraph } = storageModule;
-          
-          if (typeof generateRandomEulerGraph === 'function') {
-            const randomGraph = generateRandomEulerGraph(vertices, edges);
-            
-            // Now handle this random graph like a regular example
-            handleRegularExample(randomGraph);
-          } else {
-            showNotification('Error: Random graph generator not found', 'error');
-          }
-        }).catch(error => {
-          console.error('Error importing storage module:', error);
-          showNotification(`Error: ${error.message}`, 'error');
-        });
-        
+        const randomGraph = generateRandomEulerGraph(vertices, edges);
+        handleRegularExample(randomGraph);
         return;
       }
     }
@@ -1076,143 +1033,82 @@ const handleRegularExample = async (example) => {
   // Parse edges first to get node count for conditional loader behavior
   let nodeCount = 0;
   try {
-    // Import parseEdgeInput temporarily to get node count
-    const { parseEdgeInput } = await import('../graph/sigma-controller.js');
     const parsedEdges = parseEdgeInput(example.edges);
     
-    // Calculate node count from edges
     const nodes = new Set();
     parsedEdges.forEach(edge => {
       nodes.add(edge.source);
       nodes.add(edge.target);
     });
-    nodeCount = nodes.size;
+    nodeCount = nodes.size || 50;
   } catch (error) {
     console.warn('Could not calculate node count for loader decision:', error);
-    // Fall back to default behavior (full loader)
-    nodeCount = 50; // Ensures full loader is used
+    nodeCount = 50;
   }
   
-  // Use the same calculation process as the Calculate button
-  // Show global loader with node count and wait for animations to complete
   showCalcLoader('Loading Example...', nodeCount).then(() => {
     try {
-      // Import the required functions directly
-      import('../graph/sigma-controller.js').then((controllerModule) => {
-        // Get the necessary functions
-        const { parseEdgeInput, calculateEulerPath } = controllerModule;
-        
-        if (typeof parseEdgeInput === 'function' && typeof calculateEulerPath === 'function') {
-          try {
-            // Parse edges
-            const parsedEdges = parseEdgeInput(example.edges);
-            
-            // Update the graph state
-            setState('graph.edges', parsedEdges);
-            
-            // Update loader progress
-            updateLoaderProgress('Rendering Graph...');
-            
-            // Import sigma adapter functions
-            import('../graph/sigma-adapter.js').then(async (sigmaAdapterModule) => {
-              const { getGraph, renderGraph } = sigmaAdapterModule;
-              
-              // Also import the Graph model
-              const modelModule = await import('../graph/model.js');
-              const { Graph } = modelModule;
-              
-              // Get the graph instance
-              const graphInstance = getGraph();
-              
-              if (graphInstance) {
-                // Clear existing graph
-                graphInstance.clear();
-                
-                // Set graph properties
-                graphInstance.directed = example.directed;
-                graphInstance.weighted = example.weighted;
-                
-                // First, create a set of all unique nodes from the edges
-                const nodeSet = new Set();
-                parsedEdges.forEach(edge => {
-                  nodeSet.add(edge.source);
-                  nodeSet.add(edge.target);
-                });
-                
-                // Add all nodes to the graph first
-                nodeSet.forEach(nodeId => {
-                  graphInstance.addNode(nodeId, {
-                    label: nodeId,
-                    x: Math.random() * 10 - 5,
-                    y: Math.random() * 10 - 5,
-                    size: 8,
-                    color: '#ff5a1f'
-                  });
-                });
-                
-                // Now add all edges
-                parsedEdges.forEach(edge => {
-                  graphInstance.addEdge(edge.source, edge.target, { weight: edge.weight });
-                });
-                
-                // Create a Graph model instance to use with renderGraph
-                const graphModel = new Graph();
-                graphModel.directed = example.directed;
-                graphModel.weighted = example.weighted;
-                
-                // Add nodes and edges to the model
-                nodeSet.forEach(nodeId => {
-                  graphModel.addNode({ id: nodeId });
-                });
-                
-                parsedEdges.forEach(edge => {
-                  graphModel.addEdge(edge.source, edge.target, { weight: edge.weight });
-                });
-                
-                // Render the graph using the proper model
-                renderGraph(graphModel);
-              }
-              
-              // Update loader for Euler path calculation
-              updateLoaderProgress('Finding Euler Path...');
-              
-              // Calculate Euler path
-              calculateEulerPath(false);
-              
-              // Don't switch to results tab automatically
-              // Let the user stay on the saved tab
-              
-              // Update current graph section
-              updateCurrentGraphSection();
-              
-              // Hide loader after processing is complete
-              hideCalcLoader().then(() => {
-                showNotification(`Loaded example "${example.name}"`, 'success');
-              });
-            }).catch(error => {
-              console.error('Error importing sigma adapter module:', error);
-              hideCalcLoader();
-              showNotification(`Error: ${error.message}`, 'error');
-            });
-          } catch (innerError) {
-            console.error('Error processing example data:', innerError);
-            hideCalcLoader();
-            showNotification(`Error: ${innerError.message}`, 'error');
-          }
-        } else {
-          hideCalcLoader();
-          showNotification('Error: Required functions not found', 'error');
-        }
-      }).catch(error => {
-        console.error('Error importing controller module:', error);
-        hideCalcLoader();
-        showNotification(`Error: ${error.message}`, 'error');
+      const parsedEdges = parseEdgeInput(example.edges);
+      setState('graph.edges', parsedEdges);
+      updateLoaderProgress('Rendering Graph...');
+      
+      const graphInstance = getGraph();
+      
+      if (graphInstance) {
+        graphInstance.clear();
+        graphInstance.directed = example.directed;
+        graphInstance.weighted = example.weighted;
+
+        const nodeSet = new Set();
+        parsedEdges.forEach(edge => {
+          nodeSet.add(edge.source);
+          nodeSet.add(edge.target);
+        });
+
+        nodeSet.forEach(nodeId => {
+          graphInstance.addNode(nodeId, {
+            label: nodeId,
+            x: Math.random() * 10 - 5,
+            y: Math.random() * 10 - 5,
+            size: 8,
+            color: '#ff5a1f'
+          });
+        });
+
+        parsedEdges.forEach(edge => {
+          graphInstance.addEdge(edge.source, edge.target, { weight: edge.weight });
+        });
+
+        const graphModel = new Graph();
+        graphModel.directed = example.directed;
+        graphModel.weighted = example.weighted;
+
+        nodeSet.forEach(nodeId => {
+          graphModel.addNode({ id: nodeId });
+        });
+
+        parsedEdges.forEach(edge => {
+          graphModel.addEdge(edge.source, edge.target, { weight: edge.weight });
+        });
+
+        renderGraph(graphModel);
+      }
+
+      updateLoaderProgress('Finding Euler Path...');
+      calculateEulerPath(false);
+      updateCurrentGraphSection();
+      hideCalcLoader().then(() => {
+        showNotification(`Loaded example "${example.name}"`, 'success');
       });
-    } catch (error) {
-      console.error('Error loading example:', error);
-      showNotification(`Error: ${error.message}`, 'error');
+    } catch (innerError) {
+      console.error('Error processing example data:', innerError);
       hideCalcLoader();
+      showNotification(`Error: ${innerError.message}`, 'error');
     }
+  }).catch((error) => {
+    console.error('Error loading example:', error);
+    showNotification(`Error: ${error.message}`, 'error');
+    hideCalcLoader();
   });
 };
 

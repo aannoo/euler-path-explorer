@@ -6,7 +6,7 @@
 import { $, $$ } from '../utils/dom.js';
 import { getState, setState, subscribe } from '../core/state.js';
 import { parseEdgeInput } from '../graph/sigma-controller.js';
-import { getGraph } from '../graph/sigma-adapter.js';
+import { deleteSelectedElements, getGraph } from '../graph/sigma-adapter.js';
 
 let isVisualMode = false;
 let originalTextValue = ''; // Store original text when entering visual mode
@@ -192,11 +192,9 @@ const handleButtonClick = () => {
   
   if (selectedNodes.length > 0) {
     // Delete selected nodes using the correct function from sigma-adapter
-    import('../graph/sigma-adapter.js').then(({ deleteSelectedElements }) => {
-      deleteSelectedElements();
-      // Sync the edge list display after deletion
-      updateEdgeListDisplay();
-    });
+    deleteSelectedElements();
+    // Sync the edge list display after deletion
+    updateEdgeListDisplay();
   }
   // If no selection, button is disabled so nothing happens
 };
