@@ -137,6 +137,11 @@
       </div>
       
       <style>
+        #euler-logo {
+          gap: 16px;
+          padding: 0 18px 0 12px;
+        }
+
         .euler-portrait {
           flex: 0 0 auto;
         }
@@ -155,6 +160,7 @@
           text-transform: uppercase; 
           font-family: 'Anybody', sans-serif;
           line-height: 1;
+          letter-spacing: 0.08em;
           /* CTF will handle sizing, spacing, and transforms */
         }
       </style>
@@ -181,11 +187,11 @@
           <div class="editor-mode-switch" id="editor-mode-container">
             <button id="text-mode-btn" class="mode-btn active" data-mode="text">
               <i class="fas fa-keyboard mode-icon"></i>
-              <span class="mode-text">TEXT</span>
+              <span class="mode-text">Text</span>
             </button>
             <button id="visual-mode-btn" class="mode-btn" data-mode="visual">
               <i class="fas fa-project-diagram mode-icon"></i>
-              <span class="mode-text">VISUAL</span>
+              <span class="mode-text">Visual</span>
             </button>
           </div>
           
@@ -207,7 +213,7 @@
           <div id="visual-editor-mode" class="editor-mode">
             <div class="visual-editor-container">
               <div class="edge-list-tools">
-                <button id="add-edge" class="btn btn-primary btn-edge-action"><i class="fas fa-plus"></i> ADD EDGE</button>
+                <button id="add-edge" class="btn btn-primary btn-edge-action"><i class="fas fa-plus"></i> Add Edge</button>
               </div>
               <div id="edge-list" class="edge-list">
                 <!-- Edge items will be added here dynamically -->

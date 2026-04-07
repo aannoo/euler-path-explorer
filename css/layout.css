@@ -15,8 +15,8 @@
 body {
   margin: 0;
   padding: 0;
-  height: 100vh;
-  width: 100vw;
+  height: 100dvh;
+  width: 100%;
   overflow: hidden;
 }
 
@@ -47,15 +47,15 @@ body {
   /* Desktop container */
   .main-container {
     display: flex;
-    height: 100vh;
-    width: 100vw;
+    height: 100dvh;
+    width: 100%;
   }
   
   /* Content panel on left */
   .content-layer {
     position: relative;
     width: 35%;
-    height: 100vh;
+    height: 100dvh;
     z-index: 100;
     background: var(--dark-color-1);
     transform: none;
@@ -70,7 +70,7 @@ body {
   .graph-layer {
     position: relative;
     width: 65%;
-    height: 100vh;
+    height: 100dvh;
     z-index: 1;
     background: var(--dark-color-1);
     order: 2; /* Ensure graph appears second (right) */
@@ -130,8 +130,14 @@ body {
     width: 100%;
     height: 100%;
     z-index: 1;
-    background: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 100%);
-    }
+    background:
+      radial-gradient(circle at center, rgba(255, 90, 31, 0.14) 0%, rgba(255, 90, 31, 0.04) 22%, transparent 55%),
+      linear-gradient(0deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+      radial-gradient(circle at center, #171717 0%, #0a0a0a 100%);
+    background-size: 100% 100%, 28px 28px, 28px 28px, cover;
+    background-position: center;
+  }
     /* animations for orbital welcome */
   .graph-container:has(.orbital-welcome.graph-loaded) {
     /* background: var(--dark-color-1); */
@@ -242,7 +248,7 @@ body {
     top: 0;
     left: 35%; /* Positioned at the border between content (35%) and graph (65%) */
     width: 4px;
-    height: 100vh;
+    height: 100dvh;
     background: var(--secondary-color);
     cursor: ew-resize;
     z-index: 1000;
@@ -307,7 +313,7 @@ body {
   border-radius: 0;
 
   /* Force tab to stick to absolute bottom with no gaps */
-  width: 100vw;
+  width: 100%;
 
   /* Remove excessive safe area padding that interferes with phone gestures */
   margin-bottom: 0;
@@ -340,7 +346,7 @@ body {
   body {
     /* Prevent 1px gaps from body rounding */
     height: 100%;
-    min-height: 100vh;
+    min-height: 100dvh;
     min-height: -webkit-fill-available; /* iOS Safari fix */
     overflow-x: hidden;
   }
@@ -526,7 +532,7 @@ body {
   /* Graph visualization */
   #cy {
     width: 100%;
-    height: calc(100vh - 80px); /* Subtract tab height to prevent covering tab */
+    height: calc(100dvh - 80px); /* Subtract tab height to prevent covering tab */
     position: absolute;
     top: 0;
     left: 0;
@@ -574,7 +580,7 @@ body {
   }
   
   .content-layer.retracted {
-    transform: translateY(-95%); /* Move content further up so it doesn't cover the tab */
+    transform: translateY(-91%); /* Move content further up so it doesn't cover the tab */
     background: rgba(var(--dark-color-1-rgb), 0.95);
     backdrop-filter: blur(10px);
     z-index: 150; /* Raise stacking so the retracted tab stays above the graph */

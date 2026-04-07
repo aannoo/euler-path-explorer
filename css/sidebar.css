@@ -34,39 +34,35 @@
   cursor: pointer;
   font-weight: var(--font-weight-semibold);
   border-bottom: 3px solid transparent;
-  border-left: 3px solid transparent;
+  border-left: 2px solid transparent;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  text-transform: uppercase;
+  text-transform: none;
   letter-spacing: var(--letter-spacing-wider);
   /* Update transitions for smooth feedback */
-  transition: color 0.1s ease-in-out,
-              background-color 0.1s ease-in-out,
-              border-bottom-color 0.1s ease-in-out,
-              border-left-width 0.1s ease-in-out,
-              border-left-color 0.1s ease-in-out;
+  transition: all 0.2s ease;
 }
 
 .sidebar-tab.active {
   color: #ffffff; /* Pure white for active text (left tab) */
   border-bottom-color: var(--accent-primary);
-  border-left: 6px solid var(--secondary-color); /* Orange left border for active tab */
+  border-left: 2px solid var(--secondary-color); /* Orange left border for active tab */
   background-color: #252a3e; /* Darker blue-purple background for active tab */
 }
 
 .sidebar-tab:hover:not(.active) {
   background-color: #1e2338; /* Subtle background for hover (middle tab) */
   color: #a0aac2; /* Lighter blue-gray on hover (middle tab) */
-  border-left: 3px solid var(--border-secondary); /* Orange left border on hover */
+  border-left-color: var(--border-secondary); /* Orange left border on hover */
 }
 
 /* Simple pressed effect with yellow border */
 .sidebar-tab:active {
-  transform: translateY(2px); /* 2px downward movement on click */
-  transition: color 0s, border-left-width 0.1s;
-  border-left: 6px solid var(--focus-outline-color) !important; /* Yellow left border when pressed */
+  background-color: #2a3046;
+  opacity: 0.95;
+  border-left-color: var(--focus-outline-color) !important; /* Yellow left border when pressed */
 }
 
 .tab-pane {
@@ -113,11 +109,7 @@
   z-index: 2;
   position: relative;
   /* Update transitions for better feedback */
-  transition: color 0.1s ease-in-out,
-              background-color 0.1s ease-in-out,
-              opacity 0.1s ease-in-out,
-              border-left-width 0.1s ease-in-out,
-              border-left-color 0.1s ease-in-out;
+  transition: all 0.2s ease;
 }
 
 .mode-btn.active {
@@ -130,14 +122,14 @@
 
 /* 1st mode btn (left aligned) has left border */
 .mode-btn:first-child {
-  border-left: var(--section-border-width) solid var(--border-secondary);
+  border-left: 2px solid var(--border-secondary);
 }
 
 /* show the bright yellow focus color for left border when mouse clicker is down */
 .mode-btn:active {
-  transform: translateY(2px); /* 2px downward movement on click */
-  transition: transform 0s; /* Immediate feedback on click */
-  border-left: 6px solid var(--focus-outline-color) !important; /* Yellow left border when pressed */
+  background-color: rgba(var(--primary-color-rgb), 0.18);
+  opacity: 0.98;
+  border-left-color: var(--focus-outline-color) !important; /* Yellow left border when pressed */
 }
 
 /* Sliding background for editor mode switch */
@@ -152,7 +144,7 @@
   opacity: var(--element-opacity);
   z-index: 1;
   transition: transform 0.15s ease;
-  border-left: 3px solid var(--secondary-color);
+  border-left: 2px solid var(--secondary-color);
   /* Add hardware acceleration */
   transform: translateZ(0);
   will-change: transform;
@@ -170,7 +162,7 @@
 .mode-text {
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-semibold);
-  text-transform: uppercase;
+  text-transform: none;
   letter-spacing: var(--letter-spacing-wide);
 }
 
@@ -208,4 +200,4 @@
   .sidebar-tab, .mode-btn {
     font-size: 15px;
   }
-} 
+}

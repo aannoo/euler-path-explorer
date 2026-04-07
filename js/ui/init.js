@@ -79,6 +79,17 @@ function initializeCanvasGestureInterface() {
         // Update state
         setState('ui.contentMode', mode);
         
+        // Apply CSS classes to content-layer element
+        const contentLayer = $('#content-layer');
+        if (contentLayer) {
+          contentLayer.classList.remove('mobile-retracted', 'split-view');
+          if (mode === 'retracted') {
+            contentLayer.classList.add('mobile-retracted');
+          } else if (mode === 'split') {
+            contentLayer.classList.add('split-view');
+          }
+        }
+        
         // Update tab text and graph controls
         updateTabForMode(mode);
         updateGraphControlsForMode(mode);
@@ -199,16 +210,16 @@ function toggleContentLayer() {
   
   switch (currentMode) {
     case 'normal':
-      setContentPosition(-85); // Less retraction to avoid jarring jump
+      setContentPosition(-91); // Less retraction to avoid jarring jump
       break;
     case 'split':
-      setContentPosition(-85); // Less retraction to avoid jarring jump
+      setContentPosition(-91); // Less retraction to avoid jarring jump
       break;
     case 'retracted':
       setContentPosition(0); // Return to normal
       break;
     default:
-      setContentPosition(-85);
+      setContentPosition(-91);
   }
 }
 
@@ -495,6 +506,18 @@ function handleResize() {
         },
         onModeChange: (mode, progress) => {
           setState('ui.contentMode', mode);
+          
+          // Apply CSS classes to content-layer element
+          const contentLayer = $('#content-layer');
+          if (contentLayer) {
+            contentLayer.classList.remove('mobile-retracted', 'split-view');
+            if (mode === 'retracted') {
+              contentLayer.classList.add('mobile-retracted');
+            } else if (mode === 'split') {
+              contentLayer.classList.add('split-view');
+            }
+          }
+          
           updateTabForMode(mode);
           updateGraphControlsForMode(mode);
         }
@@ -763,7 +786,7 @@ export function setContentMode(mode) {
         if (contentLayer) contentLayer.style.transform = 'translateY(-50%)';
         break;
       case 'retracted':
-        if (contentLayer) contentLayer.style.transform = 'translateY(-85%)';
+        if (contentLayer) contentLayer.style.transform = 'translateY(-91%)';
         break;
     }
   }
