@@ -221,7 +221,7 @@ export function cleanupDesktopResize() {
 }
 function initTextFitter() {
   textFitter = new CoolTextFit({
-    //use defaults and maximize height (read ctf docs to understand)
+    // Fit to height first, then stretch width to better fill horizontal space
     mode: 'height',
     textBounds: 'ink-box'
   });
@@ -231,11 +231,21 @@ function initTextFitter() {
 
 function fitEulerText() {
   const eulerText = document.getElementById('eulerText');
+  const eulerTextContainer = document.getElementById('eulerTextContainer');
   
-  if (!eulerText || !textFitter) {
+  if (!eulerText || !eulerTextContainer || !textFitter) {
     return;
   }
   
   textFitter.fit(eulerText);
-  
+
+  // Stretch horizontally to use available title space more completely.
+  const textWidth = eulerText.scrollWidth;
+  const containerWidth = eulerTextContainer.clientWidth;
+  if (textWidth > 0 && containerWidth > 0) {
+    const rawScale = (containerWidth / textWidth) * 0.985;
+    const scaleX = Math.max(0.9, Math.min(1.6, rawScale));
+    eulerText.style.transformOrigin = 'left center';
+    eulerText.style.transform = `scaleX(${scaleX})`;
+  }
 }
