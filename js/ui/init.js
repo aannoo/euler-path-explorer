@@ -6,11 +6,7 @@ import { $, $$ } from '../utils/dom.js';
 import { on } from '../utils/events.js';
 import { getState, setState, subscribe } from '../core/state.js';
 import { CanvasGestureController } from '../utils/canvas-gesture.js';
-import { 
-  createToggleButton,
-  createPropertyToggle,
-  createExplanationToggle
-} from './components.js';
+import { createExplanationToggle } from './components.js';
 import { initializeSavedGraphs } from './saved-graphs.js';
 import { initializeEulerToggles } from './euler-toggles.js';
 import { initVisualEditor } from './visual-editor.js';

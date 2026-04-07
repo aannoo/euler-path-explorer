@@ -2,8 +2,8 @@
  * EULER - Main Application Entry Point
  */
 import { $, $$ } from './utils/dom.js';
-import { on, setupEvents } from './utils/events.js';
-import { getState, setState, subscribe } from './core/state.js';
+import { on } from './utils/events.js';
+import { setState, subscribe } from './core/state.js';
 import { initializeUI, showNotification } from './ui/init.js';
 import { initializeSigmaGraph } from './graph/sigma-controller.js';
 import * as SigmaAdapter from './graph/sigma-adapter.js';
