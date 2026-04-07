@@ -1,72 +1,60 @@
-# EULER - Euler Path Explorer
+# EULER
 
-A sophisticated graph theory visualization web application for exploring Euler paths and circuits.
+EULER is a browser-based graph theory explorer for building graphs, visualizing them with Sigma.js, and calculating Euler paths, Euler circuits, and Chinese Postman tours for weighted graphs.
 
-## Overview
-
-EULER is a browser-based tool for creating, visualizing, and analyzing graphs to find Euler paths. Built with vanilla JavaScript (ES6 modules), it features an orange-themed interface with Leonhard Euler's portrait, mobile-first design with advanced gesture controls, and Sigma.js-powered graph visualization.
-
-### Key Features
-
-- **Graph Creation**: Text-based edge list input and visual editor mode
-- **Algorithms**: Euler path/circuit detection (Hierholzer's), Chinese Postman Problem for weighted graphs
-- **Mobile-First**: Canvas-based gesture system for mobile, responsive desktop layout
-- **Visualization**: Interactive Sigma.js v3 with force-directed layouts
-- **Graph Management**: Save/load graphs locally, 6 built-in examples, import/export JSON
+It is built around the classic Euler path problem and the broader idea of making graph behavior easier to see, test, and understand in the browser.
 
 ## Quick Start
 
 ```bash
-# Install dependencies
 npm install
-
-# Start development server (port 8888)
 npm run dev
-
-# Build for production
-npm run build
 ```
 
-## Architecture
+The Vite dev server runs on `http://localhost:8888`.
 
-**Tech Stack**: Vanilla JavaScript (ES6 modules), Sigma.js v3, Vite, CSS3
-**Code Size**: ~10,128 lines of JavaScript (17 modules), ~5,237 lines of CSS (19 files)
-**State Management**: Centralized reactive pub/sub pattern
-**No Framework**: Pure vanilla JS with ES6 modules
+## Commands
 
-### Project Structure
-```
-├── index.html              # Main application entry
-├── vite.config.js          # Vite configuration
-├── js/                     # JavaScript modules
-│   ├── main.js            # Application bootstrap
-│   ├── core/              # Business logic (state, algorithms, storage)
-│   ├── graph/             # Visualization layer (Sigma.js integration)
-│   ├── ui/                # Interface components
-│   └── utils/             # Utilities (DOM, events, gestures)
-├── css/                    # Modular CSS architecture
-│   ├── base.css           # Foundation + variables
-│   ├── layout.css         # Responsive layouts (758 lines)
-│   └── ...                # Component-specific styles
-└── CLAUDE.md files         # AI assistance guides in each folder
+```bash
+npm run dev            # local development
+npm run build          # production build into dist/
+npm run preview        # preview the production build
+npm run serve          # simple static server on port 8000
+
+npm test               # Vitest unit tests
+npm run test:watch     # Vitest in watch mode
+npm run test:coverage  # Vitest coverage run
+npm run test:e2e       # Playwright end-to-end tests
+npm run test:e2e:ui    # Playwright UI runner
 ```
 
-## Interface Design
+## What The App Does
 
-### Responsive Breakpoint: 768px
+- Accepts graph input as edge lists in text mode
+- Supports a visual editing mode backed by the same graph state
+- Renders graphs with Sigma.js and Graphology
+- Detects Euler paths and Euler circuits with Hierholzer's algorithm
+- Uses a Chinese Postman pass for weighted graphs
+- Saves user graphs in `localStorage` and ships built-in examples
+- Provides separate desktop and mobile interaction models
 
-- **Desktop (≥769px)**: Side-by-side layout (35% controls, 65% graph)
-- **Mobile (≤768px)**: Layered interface with sliding gesture navigation
-  - Three states: normal, split (~50%), retracted (graph visible)
+## Project Structure
 
-## Documentation
+```text
+.
+├── index.html
+├── js/
+│   ├── main.js
+│   ├── core/
+│   ├── graph/
+│   ├── ui/
+│   └── utils/
+├── css/
+├── docs/
+└── tests/
+    └── e2e/
+```
 
-- [ARCHITECTURE.md](ARCHITECTURE.md) - Detailed technical architecture
-- [CLAUDE.md](CLAUDE.md) - AI assistance guidelines
-- [supposed-issues.md](supposed-issues.md) - Known issues and technical debt
-- Individual `CLAUDE.md` files in each module folder
+## Docs
 
-
----
-
-*Built with modern web technologies and inspired by Leonhard Euler's mathematical contributions.*
+- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md): technical architecture
