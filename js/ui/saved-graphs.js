@@ -1188,15 +1188,10 @@ export const updateCurrentGraphSection = () => {
     currentGraphSection.removeChild(currentGraphSection.firstChild);
   }
   
-  if (!hasEdges) {
-    // No graph data - show default message
-    currentGraphSection.innerHTML = `
-      <h3><i class="fas fa-project-diagram"></i>Current Graph</h3>
-      <p class="current-graph-message">Create or select a graph to begin</p>
-      <button id="save" class="btn btn-primary btn-edge-action" style="display: none;"><i class="fas fa-save"></i> Save New Graph</button>
-    `;
-  } else if (currentGraphId) {
-    // Has a current saved graph
+  if (currentGraphId) {
+    // Prefer the saved graph metadata whenever a current graph is selected.
+    // This keeps the card stable even if the live graph state is momentarily
+    // empty while other render paths are updating.
     const graph = loadGraph(currentGraphId);
     
     if (graph) {
@@ -1275,18 +1270,33 @@ export const updateCurrentGraphSection = () => {
     } else {
       // Current graph not found (might have been deleted)
       setState('ui.savedGraphs.currentGraphId', null);
-      currentGraphSection.innerHTML = `
-        <h3><i class="fas fa-project-diagram"></i>Current Graph</h3>
-        <p class="current-graph-message">New unsaved graph</p>
-        <button id="save" class="btn btn-primary btn-edge-action"><i class="fas fa-save"></i> Save New Graph</button>
-      `;
+      if (hasEdges) {
+        currentGraphSection.innerHTML = `
+          <h3><i class="fas fa-project-diagram"></i>Current Graph</h3>
+          <p class="current-graph-message">New unsaved graph</p>
+          <button id="save" class="btn btn-primary btn-edge-action"><i class="fas fa-save"></i> Save New Graph</button>
+        `;
+      } else {
+        currentGraphSection.innerHTML = `
+          <h3><i class="fas fa-project-diagram"></i>Current Graph</h3>
+          <p class="current-graph-message">Create or select a graph to begin</p>
+          <button id="save" class="btn btn-primary btn-edge-action" style="display: none;"><i class="fas fa-save"></i> Save New Graph</button>
+        `;
+      }
     }
-  } else {
+  } else if (hasEdges) {
     // Has edges but no saved reference - new graph
     currentGraphSection.innerHTML = `
       <h3><i class="fas fa-project-diagram"></i>Current Graph</h3>
       <p class="current-graph-message">New unsaved graph</p>
       <button id="save" class="btn btn-primary btn-edge-action"><i class="fas fa-save"></i> Save New Graph</button>
+    `;
+  } else {
+    // No graph data - show default message
+    currentGraphSection.innerHTML = `
+      <h3><i class="fas fa-project-diagram"></i>Current Graph</h3>
+      <p class="current-graph-message">Create or select a graph to begin</p>
+      <button id="save" class="btn btn-primary btn-edge-action" style="display: none;"><i class="fas fa-save"></i> Save New Graph</button>
     `;
   }
   

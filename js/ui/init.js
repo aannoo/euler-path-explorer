@@ -7,7 +7,7 @@ import { on } from '../utils/events.js';
 import { getState, setState, subscribe } from '../core/state.js';
 import { CanvasGestureController } from '../utils/canvas-gesture.js';
 import { createExplanationToggle } from './components.js';
-import { initializeSavedGraphs } from './saved-graphs.js';
+import { initializeSavedGraphs, updateCurrentGraphSection } from './saved-graphs.js';
 import { initializeEulerToggles } from './euler-toggles.js';
 import { initVisualEditor } from './visual-editor.js';
 import { setupSidebarToggle } from './desktop-ui.js';
@@ -471,6 +471,9 @@ function setupMobileFormSync() {
     on(mobileDirected, 'change', () => {
       directedInput.value = mobileDirected.checked ? 'true' : 'false';
       setState('graph.directed', mobileDirected.checked);
+      queueMicrotask(() => {
+        updateCurrentGraphSection();
+      });
     });
   }
   
@@ -478,6 +481,9 @@ function setupMobileFormSync() {
     on(mobileWeighted, 'change', () => {
       weightedInput.value = mobileWeighted.checked ? 'true' : 'false';
       setState('graph.weighted', mobileWeighted.checked);
+      queueMicrotask(() => {
+        updateCurrentGraphSection();
+      });
     });
   }
 }
