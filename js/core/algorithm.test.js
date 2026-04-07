@@ -98,6 +98,24 @@ describe('findEulerPath', () => {
       expect(result.path[0]).toBe(result.path[result.path.length - 1]); // Circuit: starts and ends same
     });
 
+    it('should reject disconnected graphs even when every vertex has even degree', () => {
+      const graph = {
+        'a': [{ vertex: 'b', weight: 1 }, { vertex: 'c', weight: 1 }],
+        'b': [{ vertex: 'a', weight: 1 }, { vertex: 'c', weight: 1 }],
+        'c': [{ vertex: 'a', weight: 1 }, { vertex: 'b', weight: 1 }],
+        'd': [{ vertex: 'e', weight: 1 }, { vertex: 'f', weight: 1 }],
+        'e': [{ vertex: 'd', weight: 1 }, { vertex: 'f', weight: 1 }],
+        'f': [{ vertex: 'd', weight: 1 }, { vertex: 'e', weight: 1 }]
+      };
+
+      const result = findEulerPath(graph);
+
+      expect(result.hasPath).toBe(false);
+      expect(result.hasCircuit).toBe(false);
+      expect(result.path).toEqual([]);
+      expect(result.explanation).toContain('not connected');
+    });
+
     it('should find Euler circuit in square graph', () => {
       // Square: a-b-c-d-a
       const graph = {
@@ -243,6 +261,17 @@ describe('getExplanation', () => {
     const explanation = getExplanation(result);
 
     expect(explanation).toContain('odd degree');
+  });
+
+  it('should explain disconnected graph case', () => {
+    const result = {
+      hasPath: false,
+      hasCircuit: false,
+      explanation: 'Graph is not connected - Euler paths require all edges to be in a single connected component.'
+    };
+    const explanation = getExplanation(result);
+
+    expect(explanation).toContain('connected component');
   });
 
   it('should explain circuit case', () => {

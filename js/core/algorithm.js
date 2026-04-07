@@ -40,6 +40,15 @@ export const findEulerPath = (adjacencyList, startVertex = null, isWeighted = fa
   // Check if an Euler path or circuit exists
   const hasPath = oddVertices.length === 0 || oddVertices.length === 2;
   const hasCircuit = oddVertices.length === 0;
+
+  if (hasPath && !isGraphConnected(graph)) {
+    return {
+      path: [],
+      hasPath: false,
+      hasCircuit: false,
+      explanation: 'Graph is not connected - Euler paths require all edges to be in a single connected component.'
+    };
+  }
   
   // Determine starting vertex
   let start = startVertex;
@@ -79,6 +88,58 @@ export const findEulerPath = (adjacencyList, startVertex = null, isWeighted = fa
     hasCircuit,
     explanation
   };
+};
+
+/**
+ * Check whether all vertices that have edges belong to a single connected component.
+ * Isolated vertices are ignored so empty-edge graphs keep their existing behavior.
+ * @param {Object} graph - Adjacency list representation of graph
+ * @return {boolean} Whether the graph is connected
+ */
+const isGraphConnected = (graph) => {
+  const activeVertices = new Set();
+  const neighbors = new Map();
+  
+  for (const vertex in graph) {
+    if (!neighbors.has(vertex)) {
+      neighbors.set(vertex, new Set());
+    }
+    
+    for (const edge of graph[vertex]) {
+      const neighbor = edge.vertex;
+      activeVertices.add(vertex);
+      activeVertices.add(neighbor);
+      
+      if (!neighbors.has(neighbor)) {
+        neighbors.set(neighbor, new Set());
+      }
+      
+      neighbors.get(vertex).add(neighbor);
+      neighbors.get(neighbor).add(vertex);
+    }
+  }
+  
+  if (activeVertices.size <= 1) {
+    return true;
+  }
+  
+  const [start] = activeVertices;
+  const visited = new Set([start]);
+  const stack = [start];
+  
+  while (stack.length > 0) {
+    const current = stack.pop();
+    const adjacent = neighbors.get(current) || new Set();
+    
+    for (const neighbor of adjacent) {
+      if (!visited.has(neighbor)) {
+        visited.add(neighbor);
+        stack.push(neighbor);
+      }
+    }
+  }
+  
+  return visited.size === activeVertices.size;
 };
 
 /**
@@ -441,6 +502,10 @@ export const getExplanation = (result) => {
   
   // For standard Euler algorithm
   if (!hasPath) {
+    if (explanation.toLowerCase().includes('not connected')) {
+      return `${explanation}\n\nAll edges must belong to one connected component for an Euler path or circuit.`;
+    }
+    
     return `${explanation}\n\nFor a graph to have an Euler path, it must have either 0 or 2 vertices with odd degree. This graph has more than 2 vertices with odd degree.`;
   }
   

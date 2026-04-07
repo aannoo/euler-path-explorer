@@ -17,7 +17,7 @@ import {
 import { showNotification } from '../ui/init.js';
 import { findEulerPath, buildAdjacencyList, getExplanation } from '../core/algorithm.js';
 import { showCalcLoader, hideCalcLoader, updateLoaderProgress, cancelLoading } from '../ui/loader.js';
-import { validateEdge, validateEdges, formatValidationError } from '../utils/validation.js';
+import { validateEdges, formatValidationError, validateVertex } from '../utils/validation.js';
 
 // Create a graph instance
 const graph = new Graph();
@@ -436,6 +436,20 @@ export const parseEdgeInput = (input) => {
       
       if (!source || !target) {
         throw new Error(`Edge ${index + 1} has empty source or target: ${match}`);
+      }
+
+      const sourceValidation = validateVertex(source);
+      if (!sourceValidation.valid) {
+        throw new Error(`Edge ${index + 1} has invalid source "${source}": ${sourceValidation.message}`);
+      }
+
+      const targetValidation = validateVertex(target);
+      if (!targetValidation.valid) {
+        throw new Error(`Edge ${index + 1} has invalid target "${target}": ${targetValidation.message}`);
+      }
+
+      if (source === target) {
+        throw new Error(`Edge ${index + 1} is invalid: self-loops are not allowed`);
       }
       
       // If there's a third part, use as weight
