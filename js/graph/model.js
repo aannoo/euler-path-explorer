@@ -260,7 +260,6 @@ export class Graph {
       
       return this;
     } catch (error) {
-      console.error('Error parsing edge list:', error);
       return this;
     }
   }
@@ -278,4 +277,4 @@ export class Graph {
       }
     }).join(',');
   }
-} 
+}

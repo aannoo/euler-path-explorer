@@ -24,7 +24,6 @@ export function initDesktopResize() {
   const graphLayer = document.querySelector('.graph-layer');
   
   if (!resizeHandle || !contentLayer || !graphLayer) {
-    console.warn('Desktop resize: Required elements not found');
     return;
   }
   
@@ -240,4 +239,4 @@ function fitEulerText() {
   
   textFitter.fit(eulerText);
   
-} 
+}

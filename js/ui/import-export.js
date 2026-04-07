@@ -40,7 +40,6 @@ export function exportGraphToJSON(graph) {
 
     showNotification(`Exported "${graph.name}"`, 'success');
   } catch (error) {
-    console.error('Export error:', error);
     showNotification('Failed to export graph', 'error');
   }
 }
@@ -85,7 +84,6 @@ export async function importGraphFromJSON(file) {
           resolve(null);
         }
       } catch (error) {
-        console.error('Import error:', error);
         showNotification('Invalid JSON file', 'error');
         resolve(null);
       }
@@ -112,7 +110,6 @@ function saveImportedGraph(graph) {
     localStorage.setItem('euler_saved_graphs', JSON.stringify(savedGraphs));
     return true;
   } catch (error) {
-    console.error('Error saving imported graph:', error);
     return false;
   }
 }
@@ -147,7 +144,6 @@ export function exportAllGraphs() {
 
     showNotification(`Exported ${savedGraphs.length} graphs`, 'success');
   } catch (error) {
-    console.error('Export all error:', error);
     showNotification('Failed to export graphs', 'error');
   }
 }
@@ -190,7 +186,6 @@ export async function importAllGraphs(file) {
         showNotification(`Imported ${importCount} graphs`, 'success');
         resolve(importCount);
       } catch (error) {
-        console.error('Import all error:', error);
         showNotification('Invalid backup file', 'error');
         resolve(0);
       }

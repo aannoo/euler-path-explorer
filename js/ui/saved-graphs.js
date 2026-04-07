@@ -62,7 +62,6 @@ export const initializeSavedGraphs = () => {
   }
   
   if (!savedGraphsList) {
-    console.error('Saved graphs list element not found');
     return;
   }
   
@@ -276,7 +275,6 @@ const handleSave = () => {
       showNotification('Failed to save graph', 'error');
     }
   } catch (error) {
-    console.error('Error saving graph:', error);
     showNotification(`Error: ${error.message}`, 'error');
   }
 };
@@ -724,7 +722,6 @@ const attachEventListeners = () => {
             setState('ui.savedGraphs.editingItemId', null);
           }
         } catch (error) {
-          console.error('Error updating graph name:', error);
           showNotification(`Error updating name: ${error.message}`, 'error');
           setState('ui.savedGraphs.editingItemId', null);
         }
@@ -856,7 +853,6 @@ const handleLoadGraph = async (id) => {
         });
         nodeCount = nodes.size || 50;
       } catch (error) {
-        console.warn('Could not calculate node count for loader decision:', error);
         // Fall back to default behavior (full loader)
         nodeCount = 50; // Ensures full loader is used
       }
@@ -942,12 +938,10 @@ const handleLoadGraph = async (id) => {
             showNotification(`Loaded graph "${graph.name}"`, 'success');
           });
         } catch (innerError) {
-          console.error('Error processing graph data:', innerError);
           hideCalcLoader();
           showNotification(`Error: ${innerError.message}`, 'error');
         }
       }).catch((error) => {
-        console.error('Error loading graph:', error);
         showNotification(`Error: ${error.message}`, 'error');
         hideCalcLoader();
       });
@@ -955,7 +949,6 @@ const handleLoadGraph = async (id) => {
       showNotification('Failed to load graph', 'error');
     }
   } catch (error) {
-    console.error('Error loading graph:', error);
     showNotification(`Error: ${error.message}`, 'error');
   }
 };
@@ -1003,7 +996,6 @@ const handleLoadExample = (example) => {
     // Regular example handling
     handleRegularExample(example);
   } catch (error) {
-    console.error('Error loading example:', error);
     showNotification(`Error: ${error.message}`, 'error');
   }
 };
@@ -1042,7 +1034,6 @@ const handleRegularExample = async (example) => {
     });
     nodeCount = nodes.size || 50;
   } catch (error) {
-    console.warn('Could not calculate node count for loader decision:', error);
     nodeCount = 50;
   }
   
@@ -1101,12 +1092,10 @@ const handleRegularExample = async (example) => {
         showNotification(`Loaded example "${example.name}"`, 'success');
       });
     } catch (innerError) {
-      console.error('Error processing example data:', innerError);
       hideCalcLoader();
       showNotification(`Error: ${innerError.message}`, 'error');
     }
   }).catch((error) => {
-    console.error('Error loading example:', error);
     showNotification(`Error: ${error.message}`, 'error');
     hideCalcLoader();
   });
@@ -1142,7 +1131,6 @@ const handleDeleteGraph = (id) => {
       showNotification('Failed to delete graph', 'error');
     }
   } catch (error) {
-    console.error('Error deleting graph:', error);
     showNotification(`Error: ${error.message}`, 'error');
   }
 };
@@ -1175,7 +1163,6 @@ const handleDuplicateGraph = (id) => {
       showNotification('Failed to duplicate graph', 'error');
     }
   } catch (error) {
-    console.error('Error duplicating graph:', error);
     showNotification(`Error: ${error.message}`, 'error');
   }
 };
@@ -1213,6 +1200,8 @@ const updateCurrentGraphSection = () => {
       // Calculate node count from edges (simplified version)
       const nodes = new Set();
       let edgeCount = 0;
+      const liveDirected = state.graph?.directed ?? graph.directed;
+      const liveWeighted = state.graph?.weighted ?? graph.weighted;
       
       if (graph.edges.includes('[') && graph.edges.includes(']')) {
         const edgeMatches = graph.edges.match(/\[([^\]]+)\]/g) || [];
@@ -1223,7 +1212,7 @@ const updateCurrentGraphSection = () => {
           if (parts.length >= 2) {
             nodes.add(parts[0]);
             // For weighted graphs, parts[1] is the target node, otherwise it's the last part
-            const targetNodeIndex = graph.weighted ? 1 : parts.length - 1;
+            const targetNodeIndex = liveWeighted ? 1 : parts.length - 1;
             nodes.add(parts[targetNodeIndex]);
           }
         });
@@ -1232,8 +1221,8 @@ const updateCurrentGraphSection = () => {
       const nodeCount = nodes.size;
       
       // Create property icons
-      const directedIcon = graph.directed ? 'fa-long-arrow-alt-right' : 'fa-exchange-alt';
-      const weightedIcon = graph.weighted ? 'fa-weight-hanging' : 'fa-minus';
+      const directedIcon = liveDirected ? 'fa-long-arrow-alt-right' : 'fa-exchange-alt';
+      const weightedIcon = liveWeighted ? 'fa-weight-hanging' : 'fa-minus';
       
       currentGraphSection.innerHTML = `
         <h3><i class="fas fa-save"></i>Current Graph</h3>
@@ -1242,8 +1231,8 @@ const updateCurrentGraphSection = () => {
           <div class="current-graph-stats">
             <span class="graph-stat"><i class="fas fa-project-diagram"></i> ${nodeCount} nodes</span>
             <span class="graph-stat"><i class="fas fa-link"></i> ${edgeCount} edges</span>
-            <span class="graph-stat"><i class="fas ${directedIcon}"></i> ${graph.directed ? 'Directed' : 'Undirected'}</span>
-            <span class="graph-stat"><i class="fas ${weightedIcon}"></i> ${graph.weighted ? 'Weighted' : 'Unweighted'}</span>
+            <span class="graph-stat"><i class="fas ${directedIcon}"></i> ${liveDirected ? 'Directed' : 'Undirected'}</span>
+            <span class="graph-stat"><i class="fas ${weightedIcon}"></i> ${liveWeighted ? 'Weighted' : 'Unweighted'}</span>
           </div>
         </div>
         <div class="current-graph-actions">
@@ -1342,4 +1331,5 @@ const checkForGraphChanges = () => {
   
   // Always update save button state when graph changes
   updateSaveButtonState();
+  updateCurrentGraphSection();
 }; 

@@ -8,8 +8,7 @@ import { Sigma } from 'sigma';
 import Graph from 'graphology';
 import { setState, getState } from '../core/state.js';
 import { initForceLayout, pauseForceLayout, resumeForceLayout, getForceLayout } from './sigma-layouts.js';
-import { setupSelectionTracking, clearSelection, getSelectedNodes, getSelectedEdges } from './sigma-selection.js';
-import { initPropertyEditing, EDITABLE_NODE_PROPERTIES, EDITABLE_EDGE_PROPERTIES } from './sigma-properties.js';
+import { setupSelectionTracking, clearSelection } from './sigma-selection.js';
 
 // Import and re-export constants from sigma-constants.js (breaks circular dependency)
 export { DEFAULT_NODE_ATTRIBUTES, DEFAULT_EDGE_ATTRIBUTES } from './sigma-constants.js';

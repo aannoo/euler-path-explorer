@@ -45,7 +45,6 @@ export function initializeSavedGraphs() {
   initializeState();
 
   if (!savedGraphsList) {
-    console.error('Saved graphs list element not found');
     return { update: () => {} };
   }
 
@@ -204,7 +203,6 @@ function handleSave() {
       showNotification('Failed to save graph', 'error');
     }
   } catch (error) {
-    console.error('Error saving graph:', error);
     showNotification(`Error: ${error.message}`, 'error');
   }
 }

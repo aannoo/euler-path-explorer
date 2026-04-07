@@ -950,7 +950,6 @@ export class CanvasGestureController {
     const tab = document.getElementById('graph-view-tab');
     if (!tab) {
       if (this.enableDebug) {
-        console.warn('⚠️ graph-view-tab not found for direct event attachment');
       }
       return;
     }
@@ -1166,4 +1165,4 @@ export class CanvasGestureController {
         #FF9800 ${progress * 100}%)`;
     }
   }
-} 
+}

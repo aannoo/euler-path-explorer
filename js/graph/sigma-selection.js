@@ -88,7 +88,6 @@ function setupClickHandlers() {
         // Sync to text input
         syncEdgeListToInput();
       } catch (error) {
-        console.error('Error creating edge:', error);
       }
 
       e.preventSigmaDefault();
@@ -365,7 +364,6 @@ export const deleteEdgeByNodes = (source, target) => {
       return deleteEdge(edgeId);
     }
   } catch (error) {
-    console.error(`Error deleting edge between ${source} and ${target}:`, error);
   }
 
   return false;

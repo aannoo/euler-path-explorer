@@ -40,7 +40,6 @@ export const initializeSigmaGraph = (container = '#cy') => {
   const sigmaResult = SigmaCore.initialize(container, visualFeatures);
   
   if (!sigmaResult) {
-    console.error('Failed to initialize Sigma.js');
     return;
   }
   
@@ -186,7 +185,6 @@ const setupEdgeInput = () => {
         
         // Make sure edges is an array
         if (!Array.isArray(edges)) {
-          console.error('Edges is not an array:', edges);
           throw new Error('Edge parsing did not return an array');
         }
         
@@ -253,7 +251,6 @@ const setupEdgeInput = () => {
               showNotification('Graph updated successfully');
             });
           } catch (error) {
-            console.error('Error calculating:', error);
             showNotification('Error: ' + error.message);
             // Use cancelLoading for immediate cleanup in error state
             cancelLoading();
@@ -261,7 +258,6 @@ const setupEdgeInput = () => {
         });
       }, 1000); // Small delay to let orbital animation start first
     } catch (error) {
-      console.error('Error parsing edges:', error);
       showNotification('Error parsing edges. Check format.');
       // Use cancelLoading for immediate cleanup in error state
       cancelLoading();
@@ -464,7 +460,6 @@ export const parseEdgeInput = (input) => {
     
     return edges;
   } catch (error) {
-    console.error('Error in parseEdgeInput:', error);
     // Provide specific format guidance in the error message
     if (error.message.includes('No valid edges found')) {
       throw new Error('No valid edges found. Format should be: [a,b],[c,d] or [{source:"a",target:"b"}]');
@@ -539,7 +534,6 @@ export const calculateEulerPath = async (showLoader = true) => {
       
       return result;
     } catch (error) {
-      console.error('Error in Euler path calculation:', error);
       showNotification(`Calculation error: ${error.message}`);
       if (showLoader) {
         hideCalcLoader();
@@ -730,7 +724,6 @@ const highlightChinesePostmanPath = (path, duplicatedEdges) => {
       sigmaInstance.refresh();
     }
   } catch (error) {
-    console.error('Error highlighting Chinese Postman path:', error);
   }
 };
 
@@ -804,7 +797,6 @@ const handleAnimation = async () => {
     // Show completion notification
     showNotification('Animation complete!');
   } catch (error) {
-    console.error('Animation error:', error);
     showNotification(`Animation error: ${error.message}`);
     
     // Re-enable button
@@ -829,7 +821,6 @@ const handleExport = async () => {
     // Show success notification
     showNotification('Graph exported successfully!');
   } catch (error) {
-    console.error('Export error:', error);
     showNotification(`Export error: ${error.message}`);
   }
 };
@@ -873,7 +864,6 @@ export const toggleSigmaForceLayout = (enabled) => {
       }
     }
   } catch (error) {
-    console.error('Error toggling force layout:', error);
   }
 };
 
@@ -980,4 +970,4 @@ export const setSigmaSelectedNodeProperties = (properties) => {
 export const setSigmaSelectedEdgeProperties = (properties) => {
   const selectedEdges = SigmaSelection.getEdges();
   SigmaProperties.setBulkEdgeProps(selectedEdges, properties);
-}; 
+};

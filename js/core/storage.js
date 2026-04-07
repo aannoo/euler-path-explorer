@@ -71,7 +71,6 @@ export const getSavedGraphs = () => {
   try {
     return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
   } catch (error) {
-    console.error('Error loading saved graphs:', error);
     return [];
   }
 };
@@ -324,7 +323,6 @@ export const saveCurrentGraph = (name = null) => {
     
     return graph;
   } catch (error) {
-    console.error('Error saving graph:', error);
     return null;
   }
 };
@@ -339,7 +337,6 @@ export const loadGraph = (id) => {
     const savedGraphs = getSavedGraphs();
     return savedGraphs.find(g => g.id === id) || null;
   } catch (error) {
-    console.error('Error loading graph:', error);
     return null;
   }
 };
@@ -356,7 +353,6 @@ export const deleteGraph = (id) => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(newGraphs));
     return true;
   } catch (error) {
-    console.error('Error deleting graph:', error);
     return false;
   }
 };
@@ -401,7 +397,6 @@ export const duplicateGraph = (id) => {
     
     return newGraph;
   } catch (error) {
-    console.error('Error duplicating graph:', error);
     return null;
   }
-}; 
+};

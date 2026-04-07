@@ -299,7 +299,6 @@ function findShortestPath(graph, start, end) {
     
     // Safety check to break if we hit an infinite loop
     if (path.length > Object.keys(graph).length) {
-      console.error('Possible cycle detected in shortest path calculation');
       break;
     }
   }
@@ -488,4 +487,4 @@ export const buildAdjacencyList = (edges, isDirected = false) => {
   });
   
   return graph;
-}; 
+};

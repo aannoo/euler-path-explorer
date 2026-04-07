@@ -215,7 +215,6 @@ export const exportImage = () => {
 
     return dataUrl;
   } catch (error) {
-    console.error('Error exporting image:', error);
     return null;
   }
 };
@@ -284,7 +283,6 @@ export const importJSON = (jsonData) => {
     renderGraph(eulerGraph);
     return true;
   } catch (error) {
-    console.error('Error importing JSON:', error);
     return false;
   }
 };

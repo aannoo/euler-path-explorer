@@ -53,32 +53,12 @@ const EDITABLE_EDGE_PROPERTIES = [
   { name: 'type', type: 'select', label: 'Type', options: ['line', 'arrow', 'dashed'] }
 ];
 
-// Simple color utility for random colors (replacing chroma-js)
-const randomColor = {
-  hex: () => {
-    // Predefined set of visually distinct colors suitable for graph nodes
-    const colors = [
-      '#FF5A1F', // Orange
-      '#FF8F29', // Light Orange
-      '#FFDD00', // Yellow
-      '#00C781', // Green
-      '#4199E1', // Blue
-      '#9B59B6', // Purple
-      '#E74C3C', // Red
-      '#1ABC9C', // Teal
-      '#34495E', // Dark Blue
-    ];
-    return colors[Math.floor(Math.random() * colors.length)];
-  }
-};
-
 // Instance references
 let sigmaInstance = null;
 let graphInstance = null;
 let forceLayout = null;
 let containerElement = null;
 let registeredIntervals = [];
-let lastKnownGoodCameraPosition = { x: 0, y: 0 };
 
 // Track current animation state to prevent overlapping animations
 let currentAnimation = null;
@@ -161,6 +141,23 @@ const updateSigmaEdgeListFromGraph = () => {
 };
 
 /**
+ * Notify the visual editor that selection state changed.
+ * This keeps the visual mode button/UI in sync even if state listeners
+ * are delayed by event ordering.
+ * @private
+ */
+const notifyVisualEditorSelectionChange = () => {
+  if (typeof document === 'undefined') return;
+
+  document.dispatchEvent(new CustomEvent('euler:selection-changed', {
+    detail: {
+      selectedNodes: Array.from(selectedNodes),
+      selectedEdges: Array.from(selectedEdges)
+    }
+  }));
+};
+
+/**
  * Initialize Sigma.js in container
  * @param {string|Element} container - Container element or selector
  * @param {Object} [options] - Sigma.js options
@@ -175,7 +172,6 @@ export const initializeSigma = (container, options = {}) => {
   }
   
   if (!containerElement) {
-    console.error('Sigma container not found');
     return null;
   }
   
@@ -228,7 +224,6 @@ export const initializeSigma = (container, options = {}) => {
 
     return sigmaInstance;
   } catch (error) {
-    console.error('Error initializing Sigma:', error);
     return null;
   }
 };
@@ -387,7 +382,6 @@ export function initForceLayout() {
       }
     }, 3000);
   } catch (error) {
-    console.error('Error initializing force layout:', error);
     forceLayout = null;
   }
 }
@@ -581,6 +575,7 @@ function initVisualCreation() {
       clearSelection();
       setState('ui.selectedNodes', []);
       setState('ui.selectedEdges', []);
+      notifyVisualEditorSelectionChange();
       sigmaInstance.refresh();
       
       // Sync back to text input
@@ -638,6 +633,7 @@ function initDeletionFunctionality() {
         clearSelection();
         setState('ui.selectedNodes', []);
         setState('ui.selectedEdges', []);
+        notifyVisualEditorSelectionChange();
         
         // Refresh visualization
         sigmaInstance.refresh();
@@ -650,7 +646,6 @@ function initDeletionFunctionality() {
         setState('ui.edgeListNeedsUpdate', Date.now());
         
       } catch (error) {
-        console.error('Error creating edge:', error);
       }
       
       // Prevent further processing
@@ -694,6 +689,7 @@ function initDeletionFunctionality() {
     // Notify state change
     setState('ui.selectedNodes', Array.from(selectedNodes));
     setState('ui.selectedEdges', Array.from(selectedEdges));
+    notifyVisualEditorSelectionChange();
     
     // Prevent further propagation to allow drag and drop to work correctly
     e.preventSigmaDefault();
@@ -748,6 +744,7 @@ function initDeletionFunctionality() {
     // Notify state change
     setState('ui.selectedNodes', Array.from(selectedNodes));
     setState('ui.selectedEdges', Array.from(selectedEdges));
+    notifyVisualEditorSelectionChange();
     
     // Prevent default to avoid camera movement
     e.preventSigmaDefault();
@@ -769,6 +766,7 @@ function initDeletionFunctionality() {
       // Notify state change
       setState('ui.selectedNodes', []);
       setState('ui.selectedEdges', []);
+      notifyVisualEditorSelectionChange();
     }
   });
   
@@ -848,6 +846,7 @@ export function deleteSelectedElements() {
   // Notify state change
   setState('ui.selectedNodes', []);
   setState('ui.selectedEdges', []);
+  notifyVisualEditorSelectionChange();
   
   // Refresh the visualization
   if (sigmaInstance) {
@@ -870,6 +869,7 @@ export const deleteNode = (nodeId) => {
     if (selectedNodes.has(nodeId)) {
       selectedNodes.delete(nodeId);
       setState('ui.selectedNodes', Array.from(selectedNodes));
+      notifyVisualEditorSelectionChange();
     }
     
     // Refresh the visualization
@@ -898,6 +898,7 @@ export const deleteEdge = (edgeId) => {
     if (selectedEdges.has(edgeId)) {
       selectedEdges.delete(edgeId);
       setState('ui.selectedEdges', Array.from(selectedEdges));
+      notifyVisualEditorSelectionChange();
     }
     
     // Refresh the visualization
@@ -938,7 +939,6 @@ export const deleteEdgeByNodes = (source, target) => {
       return deleteEdge(edgeId);
     }
   } catch (error) {
-    console.error(`Error deleting edge between ${source} and ${target}:`, error);
   }
   
   return false;
@@ -1059,7 +1059,6 @@ export const setElementProperties = (id, properties, type) => {
     
     return true;
   } catch (error) {
-    console.error(`Error setting ${type} properties for ${id}:`, error);
     return false;
   }
 };
@@ -1096,7 +1095,6 @@ export const setBulkElementProperties = (ids, properties, type) => {
         });
         success++;
       } catch (error) {
-        console.error(`Error setting bulk ${type} properties for ${id}:`, error);
         failed++;
       }
     } else {
@@ -1122,7 +1120,6 @@ export const setBulkElementProperties = (ids, properties, type) => {
  */
 export const convertToGraphology = (eulerGraph) => {
   if (!eulerGraph) {
-    console.error('Invalid graph model provided');
     return { nodes: [], edges: [] };
   }
   
@@ -1157,7 +1154,6 @@ export const convertToGraphology = (eulerGraph) => {
 
     return { nodes, edges };
   } catch (error) {
-    console.error('Error converting graph model:', error);
     return { nodes: [], edges: [] };
   }
 };
@@ -1169,7 +1165,6 @@ export const convertToGraphology = (eulerGraph) => {
  */
 export const renderGraph = (eulerGraph, fit = true) => {
   if (!graphInstance || !sigmaInstance || !eulerGraph) {
-    console.error('Cannot render graph: required instances not available');
     return;
   }
   
@@ -1195,7 +1190,6 @@ export const renderGraph = (eulerGraph, fit = true) => {
           y: node.y || (Math.random() * 10 - 5)
         });
       } catch (nodeError) {
-        console.error(`Error adding node ${node.id}:`, nodeError);
       }
     });
     
@@ -1214,10 +1208,8 @@ export const renderGraph = (eulerGraph, fit = true) => {
             weight: edge.weight || 1
           });
         } else {
-          console.warn(`Cannot create edge: source or target node missing (${edge.source} → ${edge.target})`);
         }
       } catch (edgeError) {
-        console.error(`Error adding edge from ${edge.source} to ${edge.target}:`, edgeError);
       }
     });
     
@@ -1259,7 +1251,6 @@ export const renderGraph = (eulerGraph, fit = true) => {
     setTimeout(enforceCameraBoundaries, 200);
   }, 350); // Wait for reset animation to complete
         } catch (error) {
-          console.warn('Camera reset error:', error);
         }
       }, 100);
     }
@@ -1281,7 +1272,6 @@ export const renderGraph = (eulerGraph, fit = true) => {
       initForceLayout();
     }
   } catch (error) {
-    console.error('Error rendering graph:', error);
   }
 };
 
@@ -1578,7 +1568,6 @@ export const animatePath = (path, delay = 1000) => {
           easing: 'cubicOut'
         });
       } catch (err) {
-      console.error("Camera animation error:", err);
     }
     
     // Start the animation after camera reset
@@ -1697,7 +1686,6 @@ export const exportImage = () => {
       backgroundColor: '#0F172A', // Match the app background
     });
   } catch (error) {
-    console.error("Export error:", error);
     return Promise.reject(error);
   }
 };
@@ -1763,7 +1751,6 @@ export const enforceCameraBoundaries = () => {
     
     return false;
   } catch (e) {
-    console.error('[CAMERA-BOUNDS] Error checking visibility:', e);
     return false;
   }
 };
@@ -1787,7 +1774,6 @@ export const destroySigma = () => {
         sigmaInstance.off("cameraUpdated"); // Remove all handlers for this event
       }
     } catch (e) {
-      console.warn('Error removing boundary handler:', e);
     }
     delete window._boundaryHandler;
   }
@@ -1804,7 +1790,6 @@ export const destroySigma = () => {
         forceLayout.worker.terminate();
       }
     } catch (e) {
-      console.warn('Error terminating force layout:', e);
     }
     forceLayout = null;
   }
@@ -1884,7 +1869,6 @@ export const destroySigma = () => {
     sigmaInstance.clear();
     sigmaInstance.kill();
   } catch (e) {
-    console.warn('Error during Sigma disposal', e);
   }
   sigmaInstance = null;
   
@@ -1893,7 +1877,6 @@ export const destroySigma = () => {
     try {
       graphInstance.clear();
     } catch (e) {
-      console.warn('Error clearing graph instance', e);
     }
     graphInstance = null;
   }
@@ -1903,7 +1886,6 @@ export const destroySigma = () => {
     try {
       containerElement.innerHTML = '';
     } catch (e) {
-      console.warn('Error clearing container', e);
     }
     containerElement = null;
   }
@@ -1980,9 +1962,6 @@ function findEdgeId(source, target, directed = null) {
   return edgeId;
 }
 
-// Create debounced version of findEdgeId for performance optimization
-const findEdgeIdDebounced = debounce(findEdgeId, 50);
-
 /**
  * Update selection state in both local Sets and global state
  * This is a centralized function to maintain consistent selection state
@@ -2020,6 +1999,7 @@ export function updateSelectionState(nodeSet, edgeSet) {
   Object.entries(stateUpdates).forEach(([key, value]) => {
     setState(key, value);
   });
+  notifyVisualEditorSelectionChange();
   
   // Update visual appearance of selected elements
   updateSelectionVisuals();
@@ -2088,7 +2068,7 @@ function updateSelectionVisuals() {
   if (sigmaInstance) {
     sigmaInstance.refresh();
   }
-} 
+}
 
 // Legacy functions using the new consolidated functions
 export const getNodeProperties = (nodeId) => getElementProperties(nodeId, 'node');
@@ -2122,7 +2102,6 @@ export const getEditableEdgeProperties = () => {
  */
 function setupGraphControlListeners() {
   if (typeof subscribe !== 'function') {
-    console.warn('State management not available for graph controls');
     return;
   }
 
@@ -2151,7 +2130,6 @@ function setupGraphControlListeners() {
  */
 function handleGraphControlAction(action) {
   if (!sigmaInstance) {
-    console.warn('Sigma instance not available for control action:', action);
     return;
   }
 
@@ -2228,7 +2206,6 @@ function handleGraphControlAction(action) {
         if (currentPath && Array.isArray(currentPath)) {
           animatePath(currentPath);
         } else {
-          console.warn('No path available to animate');
         }
         break;
       
@@ -2237,9 +2214,7 @@ function handleGraphControlAction(action) {
         break;
       
       default:
-        console.warn('Unknown graph control action:', action);
     }
   } catch (error) {
-    console.error('Error handling graph control action:', action, error);
   }
-} 
+}

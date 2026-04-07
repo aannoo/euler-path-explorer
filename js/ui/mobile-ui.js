@@ -25,7 +25,6 @@ export function initializeMobileInterface() {
   graphControls = $('#graph-controls');
 
   if (!contentLayer) {
-    console.error('Content layer not found for mobile interface');
     return () => {};
   }
 

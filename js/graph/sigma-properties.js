@@ -69,7 +69,6 @@ export const getElementProperties = (id, type) => {
       return graphInstance.getEdgeAttributes(id);
     }
   } catch (error) {
-    console.error(`Error getting ${type} properties for ${id}:`, error);
   }
 
   return null;
@@ -106,7 +105,6 @@ export const setElementProperties = (id, properties, type) => {
       return true;
     }
   } catch (error) {
-    console.error(`Error setting ${type} properties for ${id}:`, error);
   }
 
   return false;
