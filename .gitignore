@@ -22,9 +22,10 @@ node_modules/.vite/
 _archive/
 playwright-report/
 test-results/
-**/.claude/settings.local.json
 
-# Beads / Dolt files (added by bd init)
-.dolt/
-*.db
-.beads-credential-key
+# Local tool configs (IDE, MCP, beads)
+.claude/
+.cursor/
+.beads/
+.mcp.json
+*.code-workspace
