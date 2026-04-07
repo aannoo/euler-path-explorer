@@ -11,6 +11,7 @@ import { deleteSelectedElements, getGraph } from '../graph/sigma-adapter.js';
 let isVisualMode = false;
 let originalTextValue = ''; // Store original text when entering visual mode
 let buttonClickHandler = null; // Store button handler for cleanup
+let selectionChangeHandler = null; // Listen for graph selection updates
 
 /**
  * Initialize visual editor functionality
@@ -45,6 +46,21 @@ export const initVisualEditor = () => {
       updateButtonContent();
     }
   });
+
+  subscribe('ui.selectedEdges', () => {
+    if (isVisualMode) {
+      updateButtonContent();
+    }
+  });
+
+  if (!selectionChangeHandler) {
+    selectionChangeHandler = () => {
+      if (isVisualMode) {
+        updateButtonContent();
+      }
+    };
+    document.addEventListener('euler:selection-changed', selectionChangeHandler);
+  }
   
 };
 
@@ -132,21 +148,29 @@ const updateButtonContent = () => {
   if (!button) return;
   
   const selectedNodes = getState('ui.selectedNodes') || [];
+  const selectedEdges = getState('ui.selectedEdges') || [];
   
-  if (selectedNodes.length === 0) {
+  if (selectedNodes.length === 0 && selectedEdges.length === 0) {
     // No selection: show instruction
     button.innerHTML = '<i class="fas fa-mouse-pointer"></i> SELECT NODE TO BEGIN';
     button.disabled = true;
     button.style.opacity = '0.6';
-  } else if (selectedNodes.length === 1) {
+  } else if (selectedNodes.length === 1 && selectedEdges.length === 0) {
     // One node selected: show selected node name and delete option
     const selectedNodeId = selectedNodes[0];
     button.innerHTML = `<span>"${selectedNodeId}"</span> | <i class="fas fa-trash"></i> DELETE`;
     button.disabled = false;
     button.style.opacity = '1';
   } else {
-    // Multiple nodes selected: show delete option
-    button.innerHTML = `<span>${selectedNodes.length} SELECTED</span> | <i class="fas fa-trash"></i> DELETE`;
+    // Multiple selections: show delete option
+    const parts = [];
+    if (selectedNodes.length > 0) {
+      parts.push(`${selectedNodes.length} NODE${selectedNodes.length === 1 ? '' : 'S'}`);
+    }
+    if (selectedEdges.length > 0) {
+      parts.push(`${selectedEdges.length} EDGE${selectedEdges.length === 1 ? '' : 'S'}`);
+    }
+    button.innerHTML = `<span>${parts.join(' / ')}</span> | <i class="fas fa-trash"></i> DELETE`;
     button.disabled = false;
     button.style.opacity = '1';
   }
