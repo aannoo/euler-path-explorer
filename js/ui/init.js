@@ -14,6 +14,7 @@ import {
 import { initializeSavedGraphs } from './saved-graphs.js';
 import { initializeEulerToggles } from './euler-toggles.js';
 import { initVisualEditor } from './visual-editor.js';
+import { setupSidebarToggle } from './desktop-ui.js';
 
 // ========== PERFORMANCE: RAF THROTTLE UTILITY ==========
 
@@ -614,11 +615,14 @@ window.forceNormal = function() {
 export const initializeUI = () => {
   // Initialize canvas gesture interface
   initializeCanvasGestureInterface();
-  
+
+  // Wire EULER title click → sidebar collapse/expand
+  setupSidebarToggle();
+
   // Set up mobile support
   setupMobileSupport();
-  
-  // Set up graph controls
+
+  // Set up graph controls (mobile)
   setupGraphModeControls();
   setupDesktopControls();
   
@@ -719,19 +723,29 @@ export function showNotification(message, type = 'info', duration = 3000) {
     setupMobileNotification(banner, message, type);
   } else {
     setupDesktopNotification(banner, message, type);
+    flashTitleArea(true);
   }
-  
+
   // Auto-hide after duration
   notificationTimeout = setTimeout(() => {
     hideNotification(banner, isMobile);
+    if (!isMobile) flashTitleArea(false);
     notificationTimeout = null;
   }, duration);
 }
 
 function setupMobileNotification(banner, message, type) {
-  banner.textContent = message;
-  
-  // Add type class for mobile styling (previously missing)
+  // Build icon + text structure (safe — message is always internal string)
+  const iconName = getNotificationIcon(type);
+  const icon = document.createElement('i');
+  icon.className = `fas fa-${iconName}`;
+  icon.style.marginRight = '8px';
+  const text = document.createElement('span');
+  text.textContent = message;
+  banner.innerHTML = '';
+  banner.appendChild(icon);
+  banner.appendChild(text);
+
   banner.classList.remove('success', 'error', 'warning', 'info');
   banner.classList.add(type);
   banner.classList.add('show');
@@ -758,6 +772,13 @@ function setupDesktopNotification(banner, message, type) {
 
 function hideNotification(banner, isMobile) {
   banner.classList.remove(isMobile ? 'show' : 'active');
+}
+
+function flashTitleArea(on) {
+  const titleArea = document.getElementById('euler-logo');
+  if (titleArea) {
+    titleArea.classList.toggle('notification-active', on);
+  }
 }
 
 function getNotificationIcon(type) {

@@ -46,11 +46,6 @@ body {
     display: none !important;
   }
   
-  /* Desktop: Show title area */
-  .title-notification-container {
-    display: block;
-  }
-  
   /* Desktop: Show desktop toggles */
   .euler-toggles-container {
     display: flex;
@@ -170,51 +165,20 @@ body {
   
   /* ========== DESKTOP SIDEBAR COLLAPSE ========== */
 
-  /* Sidebar toggle button */
-  .desktop-sidebar-toggle {
-    position: absolute;
-    top: 50%;
-    right: -16px;
-    transform: translateY(-50%);
-    width: 32px;
-    height: 64px;
-    background: var(--dark-color-2);
-    border: 2px solid var(--primary-color);
-    border-left: none;
-    border-radius: 0 8px 8px 0;
-    color: var(--text-primary);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    z-index: 150;
-    transition: all 0.3s ease;
-  }
-
-  .desktop-sidebar-toggle:hover {
-    background: var(--primary-color);
-    color: var(--dark-color-1);
-  }
-
-  .desktop-sidebar-toggle i {
-    transition: transform 0.3s ease;
-  }
-
-  /* Collapsed state */
+  /* Collapsed state — 60px strip showing only Euler portrait + section icons */
   .content-layer.collapsed {
     width: 60px !important;
   }
 
-  .content-layer.collapsed ~ .graph-layer {
-    width: calc(100% - 60px) !important;
+  /* graph-layer width on collapse is handled via JS (applyCollapsedGraphWidth)
+     because graph-layer precedes content-layer in the DOM and ~ can't reach it */
+
+  /* Hide text/notification inside title area, keep portrait visible */
+  .content-layer.collapsed #eulerTextContainer,
+  .content-layer.collapsed .desktop-notification {
+    display: none;
   }
 
-  .content-layer.collapsed .desktop-sidebar-toggle i {
-    transform: rotate(180deg);
-  }
-
-  .content-layer.collapsed .title-notification-container,
   .content-layer.collapsed .section-content,
   .content-layer.collapsed .section-title,
   .content-layer.collapsed .section-actions,
@@ -368,10 +332,7 @@ body {
     overflow-x: hidden;
   }
 
-  /* Hide desktop sidebar toggle on mobile */
-  .desktop-sidebar-toggle {
-    display: none !important;
-  }
+
 }
 
 /* Remove ALL hover states on mobile to prevent weird behavior during dragging */
@@ -448,10 +409,7 @@ body {
 @media (max-width: 768px) {
   /* Mobile: Layered interface */
   
-  /* Hide Euler logo/title area on mobile */
-  .title-notification-container {
-    display: none;
-  }
+  /* Title area visible on mobile — styles in branding.css */
   
   /* Mobile: Hide desktop toggles */
   .euler-toggles-container {

@@ -40,13 +40,22 @@ export function showNotification(message, type = 'info', duration = 3000) {
     setupMobileNotification(banner, message, type);
   } else {
     setupDesktopNotification(banner, message, type);
+    flashTitleArea(true);
   }
 
   // Auto-hide after duration
   notificationTimeout = setTimeout(() => {
     hideNotification(banner, isMobile);
+    if (!isMobile) flashTitleArea(false);
     notificationTimeout = null;
   }, duration);
+}
+
+function flashTitleArea(active) {
+  const titleArea = document.getElementById('euler-logo');
+  if (titleArea) {
+    titleArea.classList.toggle('notification-active', active);
+  }
 }
 
 /**
@@ -54,7 +63,16 @@ export function showNotification(message, type = 'info', duration = 3000) {
  * @private
  */
 function setupMobileNotification(banner, message, type) {
-  banner.textContent = message;
+  const iconName = getNotificationIcon(type);
+  const icon = document.createElement('i');
+  icon.className = `fas fa-${iconName}`;
+  icon.style.marginRight = '8px';
+  const text = document.createElement('span');
+  text.textContent = message;
+  banner.innerHTML = '';
+  banner.appendChild(icon);
+  banner.appendChild(text);
+
   banner.classList.remove('success', 'error', 'warning', 'info');
   banner.classList.add(type);
   banner.classList.add('show');

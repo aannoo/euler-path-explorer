@@ -213,6 +213,7 @@ export function cleanupDesktopResize() {
   if (textFitter) {
     textFitter.disconnectAll();
     textFitter = null;
+    delete window._eulerTextFitter;
   }
   
   document.body.style.cursor = '';
@@ -220,32 +221,24 @@ export function cleanupDesktopResize() {
   isResizing = false;
 }
 function initTextFitter() {
+  // balanced: fills both width and height — CTF uses fontWidth then scaleX to close the gap
+  // Wide scaleX range: distortion is intentional, edge-to-edge fill
   textFitter = new CoolTextFit({
-    // Fit to height first, then stretch width to better fill horizontal space
-    mode: 'height',
-    textBounds: 'ink-box'
+    mode: 'height',       // fill height first, then stretch width via fontWidth + scaleX
+    textBounds: 'ink-box',
+    alignment: 'left',    // scaleX expands rightward, not from center
+    scaleX: { min: 0.5, max: 4 },
+    waitForFonts: true
   });
-  
-  setTimeout(() => fitEulerText(), 100); //this may not appropriate, cooltextfit has observe so it would be automatically doing this. adding additional stuff here could be bad.
+  // Expose for cross-module refit (e.g. after sidebar toggle)
+  window._eulerTextFitter = textFitter;
+  // fit() registers the element with CTF's ResizeObserver and triggers first fit
+  fitEulerText();
 }
 
 function fitEulerText() {
   const eulerText = document.getElementById('eulerText');
-  const eulerTextContainer = document.getElementById('eulerTextContainer');
-  
-  if (!eulerText || !eulerTextContainer || !textFitter) {
-    return;
-  }
-  
+  if (!eulerText || !textFitter) return;
+  // Let CTF handle everything: fontWidth → scaleX → transforms on its wrapper span
   textFitter.fit(eulerText);
-
-  // Stretch horizontally to use available title space more completely.
-  const textWidth = eulerText.scrollWidth;
-  const containerWidth = eulerTextContainer.clientWidth;
-  if (textWidth > 0 && containerWidth > 0) {
-    const rawScale = (containerWidth / textWidth) * 0.985;
-    const scaleX = Math.max(0.9, Math.min(1.6, rawScale));
-    eulerText.style.transformOrigin = 'left center';
-    eulerText.style.transform = `scaleX(${scaleX})`;
-  }
 }

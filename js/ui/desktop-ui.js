@@ -58,60 +58,72 @@ export function initializeDesktopInterface() {
 }
 
 /**
- * Set up desktop sidebar toggle functionality
+ * Set up desktop sidebar toggle — clicking the EULER title collapses/expands
  */
-function setupSidebarToggle() {
-  const toggleBtn = $('#desktop-sidebar-toggle');
-  if (!toggleBtn || !contentLayer) return;
-
-  const updateToggleA11y = (isCollapsed) => {
-    const label = isCollapsed ? 'Expand sidebar' : 'Collapse sidebar';
-    toggleBtn.title = label;
-    toggleBtn.setAttribute('aria-label', label);
-    toggleBtn.setAttribute('aria-expanded', String(!isCollapsed));
-  };
+export function setupSidebarToggle() {
+  const layer = contentLayer || $('#content-layer');
+  if (!layer) return;
+  contentLayer = layer;
 
   // Restore collapsed state from localStorage
   const isCollapsed = localStorage.getItem('euler_sidebar_collapsed') === 'true';
   if (isCollapsed) {
-    contentLayer.classList.add('collapsed');
+    layer.classList.add('collapsed');
+    // Sync graph layer — CSS sibling selector can't reach it (graph-layer precedes content-layer in DOM)
+    applyCollapsedGraphWidth(true);
   }
-  updateToggleA11y(isCollapsed);
 
-  on(toggleBtn, 'click', () => {
-    toggleSidebar();
-  });
+  // Wire EULER logo click to toggle
+  const eulerLogo = $('#euler-logo');
+  if (eulerLogo) {
+    on(eulerLogo, 'click', () => toggleSidebar());
+  }
+}
+
+/**
+ * Apply/remove collapsed width on graph-layer and resize handle via JS.
+ * The CSS `.content-layer.collapsed ~ .graph-layer` selector can't work because
+ * graph-layer appears before content-layer in the DOM.
+ */
+function applyCollapsedGraphWidth(collapsed) {
+  const graphLayer = document.querySelector('.graph-layer');
+  const resizeHandle = document.getElementById('desktop-resize-handle');
+  if (graphLayer) {
+    graphLayer.style.width = collapsed ? 'calc(100% - 60px)' : '';
+  }
+  if (resizeHandle) {
+    resizeHandle.style.left = collapsed ? '60px' : '';
+  }
 }
 
 /**
  * Toggle sidebar collapsed state
  */
 function toggleSidebar() {
-  if (!contentLayer) return;
+  const layer = contentLayer || $('#content-layer');
+  if (!layer) return;
+  contentLayer = layer;
 
-  const isCollapsed = contentLayer.classList.toggle('collapsed');
-  const toggleBtn = $('#desktop-sidebar-toggle');
-
-  // Update button title
-  if (toggleBtn) {
-    const label = isCollapsed ? 'Expand sidebar' : 'Collapse sidebar';
-    toggleBtn.title = label;
-    toggleBtn.setAttribute('aria-label', label);
-    toggleBtn.setAttribute('aria-expanded', String(!isCollapsed));
-  }
-
-  // Persist state
+  const isCollapsed = layer.classList.toggle('collapsed');
   localStorage.setItem('euler_sidebar_collapsed', isCollapsed);
-
-  // Update state
   setState('ui.sidebarCollapsed', isCollapsed);
 
-  // Trigger sigma refresh after transition
+  // Animate graph layer width (CSS transition on content-layer handles content side)
+  const graphLayer = document.querySelector('.graph-layer');
+  const resizeHandle = document.getElementById('desktop-resize-handle');
+  const TRANSITION = 'width 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+  if (graphLayer) graphLayer.style.transition = TRANSITION;
+  if (resizeHandle) resizeHandle.style.transition = 'left 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+  applyCollapsedGraphWidth(isCollapsed);
+
   setTimeout(() => {
+    if (graphLayer) graphLayer.style.transition = '';
+    if (resizeHandle) resizeHandle.style.transition = '';
     const sigma = SigmaCore.getInstance();
-    if (sigma) {
-      sigma.refresh();
-    }
+    if (sigma) sigma.refresh();
+    // Refit EULER text to new container width
+    const eulerText = document.getElementById('eulerText');
+    if (eulerText && window._eulerTextFitter) window._eulerTextFitter.fit(eulerText);
   }, 350);
 }
 

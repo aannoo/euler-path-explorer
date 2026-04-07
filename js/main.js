@@ -301,13 +301,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initDesktopResize();
   cleanupFunctions.push(cleanupDesktopResize);
   
-  // Display initialization message
-  showNotification('Application initialized successfully', 'success');
-  
-  // Test DOM selectors
-  const eulerLogo = $('#euler-logo');
-  
-  // Test multiple selectors
+  // No startup notification — it covered the EULER title click target for 3s
+
+  // Tab buttons (legacy support)
   const tabButtons = $$('.sidebar-tab');
   
   // Subscribe to state changes
