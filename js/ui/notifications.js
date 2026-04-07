@@ -27,6 +27,8 @@ export function showNotification(message, type = 'info', duration = 3000) {
     return;
   }
 
+  ensureNotificationAccessibility(banner);
+
   // Clear any existing timeout
   if (notificationTimeout) {
     clearTimeout(notificationTimeout);
@@ -75,6 +77,16 @@ function setupDesktopNotification(banner, message, type) {
   banner.classList.add(type);
   icon.className = `notification-icon fas fa-${getNotificationIcon(type)}`;
   banner.classList.add('active');
+}
+
+/**
+ * Ensure notification banner is announced by assistive tech
+ * @private
+ */
+function ensureNotificationAccessibility(banner) {
+  banner.setAttribute('role', 'alert');
+  banner.setAttribute('aria-live', 'assertive');
+  banner.setAttribute('aria-atomic', 'true');
 }
 
 /**

@@ -66,28 +66,28 @@
       
       <!-- Simple desktop graph controls - bottom right corner -->
       <div id="desktop-graph-controls" class="desktop-graph-controls">
-        <button class="btn btn-secondary desktop-control-btn" id="desktop-zoom-in" title="Zoom In">
+        <button class="btn btn-secondary desktop-control-btn" id="desktop-zoom-in" title="Zoom In" aria-label="Zoom in">
           <i class="fas fa-search-plus"></i>
         </button>
-        <button class="btn btn-secondary desktop-control-btn" id="desktop-zoom-out" title="Zoom Out">
+        <button class="btn btn-secondary desktop-control-btn" id="desktop-zoom-out" title="Zoom Out" aria-label="Zoom out">
           <i class="fas fa-search-minus"></i>
         </button>
-        <button class="btn btn-secondary desktop-control-btn" id="desktop-fit" title="Fit to Screen">
+        <button class="btn btn-secondary desktop-control-btn" id="desktop-fit" title="Fit to Screen" aria-label="Fit graph to screen">
           <i class="fas fa-expand-arrows-alt"></i>
         </button>
-        <button class="btn btn-secondary desktop-control-btn" id="desktop-layout-circle" title="Circle Layout">
+        <button class="btn btn-secondary desktop-control-btn" id="desktop-layout-circle" title="Circle Layout" aria-label="Circle layout">
           <i class="fas fa-circle"></i>
         </button>
-        <button class="btn btn-secondary desktop-control-btn" id="desktop-layout-grid" title="Grid Layout">
+        <button class="btn btn-secondary desktop-control-btn" id="desktop-layout-grid" title="Grid Layout" aria-label="Grid layout">
           <i class="fas fa-th"></i>
         </button>
-        <button class="btn btn-secondary desktop-control-btn" id="desktop-layout-random" title="Random Layout">
+        <button class="btn btn-secondary desktop-control-btn" id="desktop-layout-random" title="Random Layout" aria-label="Random layout">
           <i class="fas fa-random"></i>
         </button>
-        <button class="btn btn-secondary desktop-control-btn" id="desktop-reset" title="Reset View">
+        <button class="btn btn-secondary desktop-control-btn" id="desktop-reset" title="Reset View" aria-label="Reset view">
           <i class="fas fa-undo"></i>
         </button>
-        <button class="btn btn-secondary desktop-control-btn" id="desktop-animate" title="Animate Path">
+        <button class="btn btn-secondary desktop-control-btn" id="desktop-animate" title="Animate Path" aria-label="Animate path">
           <i class="fas fa-play"></i>
         </button>
       </div>
@@ -123,7 +123,7 @@
     <!-- CONTENT LAYER (Foreground - Slides Up/Down) -->
     <div class="content-layer" id="content-layer">
       <!-- Mobile Notification Banner -->
-      <div id="mobile-notification-banner" class="notification-banner mobile-notification">
+      <div id="mobile-notification-banner" class="notification-banner mobile-notification" role="alert" aria-live="assertive" aria-atomic="true">
         <!-- Mobile notification content will be set via JavaScript -->
       </div>
       
@@ -136,7 +136,7 @@
           </div>
         </div>
         <!-- Desktop Notification Banner -->
-        <div id="desktop-notification-banner" class="notification-banner desktop-notification">
+        <div id="desktop-notification-banner" class="notification-banner desktop-notification" role="alert" aria-live="assertive" aria-atomic="true">
           <div class="notification-content">
             <i class="notification-icon"></i>
             <span class="notification-text"></span>
@@ -174,13 +174,13 @@
       </style>
 
       <!-- Desktop Sidebar Toggle Button -->
-      <button id="desktop-sidebar-toggle" class="desktop-sidebar-toggle" title="Collapse sidebar">
+      <button id="desktop-sidebar-toggle" class="desktop-sidebar-toggle" title="Collapse sidebar" aria-label="Toggle sidebar" aria-controls="content-layer">
         <i class="fas fa-chevron-left"></i>
       </button>
 
       <!-- INPUT SECTION -->
       <section class="content-section" id="input-section">
-        <div class="section-header sticky-header" data-section="input">
+        <div class="section-header sticky-header" data-section="input" tabindex="0" role="button">
           <div class="section-icon">
             <i class="fas fa-edit"></i>
           </div>
@@ -287,7 +287,7 @@
       
       <!-- RESULTS SECTION -->
       <section class="content-section" id="results-section">
-        <div class="section-header sticky-header" data-section="results">
+        <div class="section-header sticky-header" data-section="results" tabindex="0" role="button">
           <div class="section-icon">
             <i class="fas fa-chart-line"></i>
           </div>
@@ -298,7 +298,7 @@
         </div>
         
         <div class="section-content">
-          <div id="result" class="hidden">
+          <div id="result" class="hidden" aria-live="polite" aria-atomic="true" role="status">
             <h3 id="result-title"></h3>
             <p id="result-path" class="path-display"></p>
             <p id="result-summary"></p>
@@ -326,7 +326,7 @@
       
       <!-- SAVED SECTION -->
       <section class="content-section" id="saved-section">
-        <div class="section-header sticky-header" data-section="saved">
+        <div class="section-header sticky-header" data-section="saved" tabindex="0" role="button">
           <div class="section-icon">
             <i class="fas fa-save"></i>
           </div>
@@ -355,7 +355,7 @@
       </section>
       
       <!-- GRAPH VIEW TAB - back inside content-layer to move with content -->
-      <div class="graph-view-tab" id="graph-view-tab">
+      <div class="graph-view-tab" id="graph-view-tab" tabindex="0" role="button">
         <i class="fas fa-arrow-up"></i> GRAPH VIEW <i class="fas fa-arrow-up"></i>
       </div>
       

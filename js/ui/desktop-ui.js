@@ -64,12 +64,19 @@ function setupSidebarToggle() {
   const toggleBtn = $('#desktop-sidebar-toggle');
   if (!toggleBtn || !contentLayer) return;
 
+  const updateToggleA11y = (isCollapsed) => {
+    const label = isCollapsed ? 'Expand sidebar' : 'Collapse sidebar';
+    toggleBtn.title = label;
+    toggleBtn.setAttribute('aria-label', label);
+    toggleBtn.setAttribute('aria-expanded', String(!isCollapsed));
+  };
+
   // Restore collapsed state from localStorage
   const isCollapsed = localStorage.getItem('euler_sidebar_collapsed') === 'true';
   if (isCollapsed) {
     contentLayer.classList.add('collapsed');
-    toggleBtn.title = 'Expand sidebar';
   }
+  updateToggleA11y(isCollapsed);
 
   on(toggleBtn, 'click', () => {
     toggleSidebar();
@@ -87,7 +94,10 @@ function toggleSidebar() {
 
   // Update button title
   if (toggleBtn) {
-    toggleBtn.title = isCollapsed ? 'Expand sidebar' : 'Collapse sidebar';
+    const label = isCollapsed ? 'Expand sidebar' : 'Collapse sidebar';
+    toggleBtn.title = label;
+    toggleBtn.setAttribute('aria-label', label);
+    toggleBtn.setAttribute('aria-expanded', String(!isCollapsed));
   }
 
   // Persist state
@@ -214,6 +224,13 @@ export function setupSectionNavigation() {
     on(header, 'click', () => {
       const section = header.getAttribute('data-section');
       scrollToSection(section);
+    });
+
+    on(header, 'keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        header.click();
+      }
     });
   });
 }

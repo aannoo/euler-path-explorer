@@ -113,6 +113,13 @@ function setupSectionNavigation() {
       const section = header.getAttribute('data-section');
       scrollToSection(section);
     });
+
+    on(header, 'keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        header.click();
+      }
+    });
   });
 }
 
@@ -145,6 +152,13 @@ function setupGraphViewTabHandlers() {
       e.stopPropagation();
       toggleContentLayer();
     } else {
+    }
+  });
+
+  on(graphViewTab, 'keydown', (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      graphViewTab.click();
     }
   });
   

@@ -103,7 +103,7 @@ body {
   
   .section-header:hover {
     background: var(--dark-color-3);
-    color: var(--primary-color);
+    color: var(--dark-color-1);
   }
   
   .section-content {
@@ -377,7 +377,7 @@ body {
 @media (min-width: 769px) {
   .graph-view-tab:hover {
     background: var(--secondary-color);
-    color: var(--primary-color);
+    color: var(--dark-color-1);
     box-shadow: 0 -6px 25px rgba(0, 0, 0, 0.4);
   }
 
@@ -390,7 +390,8 @@ body {
   }
 }
 
-.graph-view-tab:focus {
+.graph-view-tab:focus,
+.graph-view-tab:focus-visible {
   outline: 2px solid var(--primary-color);
   outline-offset: -2px;
 }
@@ -619,7 +620,7 @@ body {
   
   .section-header:hover {
     background: var(--dark-color-3);
-    color: var(--primary-color);
+    color: var(--dark-color-1);
   }
   
   .section-content {
@@ -737,8 +738,11 @@ body {
 
 /* Focus styles for keyboard navigation */
 .section-header:focus,
+.section-header:focus-visible,
 .graph-view-tab:focus,
-.graph-mode-tab:focus {
+.graph-view-tab:focus-visible,
+.graph-mode-tab:focus,
+.graph-mode-tab:focus-visible {
   outline: 2px solid var(--primary-color);
   outline-offset: 2px;
 }
