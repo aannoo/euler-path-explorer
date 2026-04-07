@@ -131,9 +131,9 @@ function updateTabForMode(mode) {
   if (!graphViewTab) return;
 
   if (mode === 'retracted') {
-    graphViewTab.innerHTML = '<i class="fas fa-arrow-down"></i> CONTENT VIEW <i class="fas fa-arrow-down"></i>';
+    graphViewTab.innerHTML = '<i class="fas fa-arrow-down"></i> Content View <i class="fas fa-arrow-down"></i>';
   } else {
-    graphViewTab.innerHTML = '<i class="fas fa-arrow-up"></i> GRAPH VIEW <i class="fas fa-arrow-up"></i>';
+    graphViewTab.innerHTML = '<i class="fas fa-arrow-up"></i> Graph View <i class="fas fa-arrow-up"></i>';
   }
 }
 

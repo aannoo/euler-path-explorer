@@ -5,6 +5,7 @@
 import { $, $$ } from '../utils/dom.js';
 import { on } from '../utils/events.js';
 import { getState, setState, subscribe } from '../core/state.js';
+import { updateCurrentGraphSection } from './saved-graphs.js';
 
 /**
  * Initialize EULER toggle switches
@@ -108,6 +109,8 @@ export const initializeEulerToggles = () => {
     
     // Then update the state (pendingDirected instead of directly updating directed)
     setState('graph.pendingDirected', newState);
+    setState('graph.directed', newState);
+    updateCurrentGraphSection();
   });
   
   on(weightedToggle, 'click', () => {
@@ -131,6 +134,8 @@ export const initializeEulerToggles = () => {
     
     // Then update the state
     setState('graph.pendingWeighted', newState);
+    setState('graph.weighted', newState);
+    updateCurrentGraphSection();
   });
   
   // Set up state subscriptions

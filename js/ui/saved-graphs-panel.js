@@ -414,11 +414,11 @@ function updateSaveButtonState() {
     saveButton.style.display = hasEdges ? 'block' : 'none';
 
     if (currentGraphId && isModified) {
-      saveButton.innerHTML = '<i class="fas fa-save"></i> UPDATE GRAPH';
+      saveButton.innerHTML = '<i class="fas fa-save"></i> Update Graph';
     } else if (currentGraphId) {
-      saveButton.innerHTML = '<i class="fas fa-save"></i> SAVE GRAPH';
+      saveButton.innerHTML = '<i class="fas fa-save"></i> Save Graph';
     } else {
-      saveButton.innerHTML = '<i class="fas fa-save"></i> SAVE NEW GRAPH';
+      saveButton.innerHTML = '<i class="fas fa-save"></i> Save New Graph';
     }
   }
 }

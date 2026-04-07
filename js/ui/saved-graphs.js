@@ -192,11 +192,11 @@ const updateSaveButtonState = () => {
     
     // Update button text based on state
     if (currentGraphId && isModified) {
-      saveButton.innerHTML = '<i class="fas fa-save"></i> UPDATE GRAPH';
+      saveButton.innerHTML = '<i class="fas fa-save"></i> Update Graph';
     } else if (currentGraphId) {
-      saveButton.innerHTML = '<i class="fas fa-save"></i> SAVE GRAPH';
+      saveButton.innerHTML = '<i class="fas fa-save"></i> Save Graph';
     } else {
-      saveButton.innerHTML = '<i class="fas fa-save"></i> SAVE NEW GRAPH';
+      saveButton.innerHTML = '<i class="fas fa-save"></i> Save New Graph';
     }
   }
   
@@ -399,8 +399,8 @@ const createSavedItemHTML = (graph) => {
         <div class="saved-graph-actions">
           <div class="confirmation-message">Are you sure you want to delete this graph?</div>
           <div class="action-buttons">
-            <button class="btn btn-secondary btn-saved-action cancel-delete-btn"><i class="fas fa-times"></i> CANCEL</button>
-            <button class="btn btn-warning btn-saved-action confirm-delete-btn"><i class="fas fa-trash"></i> DELETE</button>
+            <button class="btn btn-secondary btn-saved-action cancel-delete-btn"><i class="fas fa-times"></i> Cancel</button>
+            <button class="btn btn-warning btn-saved-action confirm-delete-btn"><i class="fas fa-trash"></i> Delete</button>
           </div>
         </div>
       `;
@@ -408,8 +408,8 @@ const createSavedItemHTML = (graph) => {
       actionsHTML = `
         <div class="saved-graph-actions">
           <div class="action-buttons">
-            <button class="btn btn-secondary btn-saved-action duplicate-btn"><i class="fas fa-copy"></i> DUPLICATE</button>
-            <button class="btn btn-secondary btn-saved-action remove-btn"><i class="fas fa-trash"></i> REMOVE</button>
+            <button class="btn btn-secondary btn-saved-action duplicate-btn"><i class="fas fa-copy"></i> Duplicate</button>
+            <button class="btn btn-secondary btn-saved-action remove-btn"><i class="fas fa-trash"></i> Remove</button>
           </div>
         </div>
       `;
@@ -1173,7 +1173,7 @@ const handleDuplicateGraph = (id) => {
 /**
  * Update current graph section
  */
-const updateCurrentGraphSection = () => {
+export const updateCurrentGraphSection = () => {
   if (!currentGraphSection) {
     currentGraphSection = $('.save-form');
     if (!currentGraphSection) return;
@@ -1193,7 +1193,7 @@ const updateCurrentGraphSection = () => {
     currentGraphSection.innerHTML = `
       <h3><i class="fas fa-project-diagram"></i>Current Graph</h3>
       <p class="current-graph-message">Create or select a graph to begin</p>
-      <button id="save" class="btn btn-primary btn-edge-action" style="display: none;"><i class="fas fa-save"></i> SAVE NEW GRAPH</button>
+      <button id="save" class="btn btn-primary btn-edge-action" style="display: none;"><i class="fas fa-save"></i> Save New Graph</button>
     `;
   } else if (currentGraphId) {
     // Has a current saved graph
@@ -1239,8 +1239,8 @@ const updateCurrentGraphSection = () => {
           </div>
         </div>
         <div class="current-graph-actions">
-          <button id="view-graph" class="btn btn-secondary btn-small" data-id="${graph.id}">VIEW DETAILS</button>
-          <button id="save" class="btn btn-primary btn-edge-action"><i class="fas fa-save"></i> SAVE GRAPH</button>
+          <button id="view-graph" class="btn btn-secondary btn-small" data-id="${graph.id}">View Details</button>
+          <button id="save" class="btn btn-primary btn-edge-action"><i class="fas fa-save"></i> Save Graph</button>
         </div>
       `;
       
@@ -1278,7 +1278,7 @@ const updateCurrentGraphSection = () => {
       currentGraphSection.innerHTML = `
         <h3><i class="fas fa-project-diagram"></i>Current Graph</h3>
         <p class="current-graph-message">New unsaved graph</p>
-        <button id="save" class="btn btn-primary btn-edge-action"><i class="fas fa-save"></i> SAVE NEW GRAPH</button>
+        <button id="save" class="btn btn-primary btn-edge-action"><i class="fas fa-save"></i> Save New Graph</button>
       `;
     }
   } else {
@@ -1286,7 +1286,7 @@ const updateCurrentGraphSection = () => {
     currentGraphSection.innerHTML = `
       <h3><i class="fas fa-project-diagram"></i>Current Graph</h3>
       <p class="current-graph-message">New unsaved graph</p>
-      <button id="save" class="btn btn-primary btn-edge-action"><i class="fas fa-save"></i> SAVE NEW GRAPH</button>
+      <button id="save" class="btn btn-primary btn-edge-action"><i class="fas fa-save"></i> Save New Graph</button>
     `;
   }
   
