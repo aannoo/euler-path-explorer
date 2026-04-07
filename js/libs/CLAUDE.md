@@ -4,13 +4,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Libs Module Overview
 
-Contains symlinked local development libraries.
+This directory only keeps local guidance files now. Runtime code should import published packages directly.
 
-### cool-text-fit.es.js
-- **What**: Text fitting library symlinked from `~/Dev/ctf/cool-text-fit/`
+### cool-text-fit
+- **What**: Text fitting library now installed from npm
 - **Used by**: `ui/desktop-resize.js` for responsive text when resizing panels
-- **Import**: `import CoolTextFit from '../libs/cool-text-fit.es.js'`
-- **Source docs**: See `~/Dev/ctf/cool-text-fit/CLAUDE.md` for full architecture
+- **Import**: `import CoolTextFit from 'cool-text-fit'`
+- **API**: `new CoolTextFit({...})`, `ctf.fit(element)`, `ctf.disconnectAll()`, `ctf.cleanup()`
 
 ### API Reference
 ```javascript
@@ -35,4 +35,4 @@ ctf.disconnectAll();
 ```
 
 ### cool-text-fit.es.js.backup
-- Original version backup (644 lines)
+- Removed after the npm package migration

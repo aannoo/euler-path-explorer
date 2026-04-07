@@ -3,7 +3,7 @@
  * Shows preview during drag, only updates layout on drop for maximum performance
  */
 
-import CoolTextFit from '../libs/cool-text-fit.es.js';
+import CoolTextFit from 'cool-text-fit';
 
 let isResizing = false;
 let startX = 0;
