@@ -17,3 +17,8 @@ dist/
 *.txt
 .playwright-mcp/
 node_modules/.vite/
+
+# Beads / Dolt files (added by bd init)
+.dolt/
+*.db
+.beads-credential-key
