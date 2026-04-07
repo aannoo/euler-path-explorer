@@ -624,7 +624,8 @@ export const initializeUI = () => {
   
   // Set up window resize handler
   // PERFORMANCE FIX: Use RAF-throttled resize to prevent excessive calls
-  window.addEventListener('resize', throttledResize(handleResize));
+  const throttledResizeHandler = throttledResize(handleResize);
+  window.addEventListener('resize', throttledResizeHandler);
   
   // Set up explanation toggle in results panel
   const explanationToggle = createExplanationToggle(
@@ -685,7 +686,7 @@ export const initializeUI = () => {
   
   // Return cleanup function
   return () => {
-    window.removeEventListener('resize', handleResize);
+    window.removeEventListener('resize', throttledResizeHandler);
     if (explanationToggle) explanationToggle();
     if (eulerTogglesCleanup) eulerTogglesCleanup();
   };
