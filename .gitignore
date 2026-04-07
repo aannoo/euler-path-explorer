@@ -18,6 +18,12 @@ dist/
 .playwright-mcp/
 node_modules/.vite/
 
+# Dev artifacts
+_archive/
+playwright-report/
+test-results/
+**/.claude/settings.local.json
+
 # Beads / Dolt files (added by bd init)
 .dolt/
 *.db

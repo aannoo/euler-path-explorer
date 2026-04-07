@@ -17,9 +17,6 @@ Key files: ARCHITECTURE.md and CLAUDE.md files in each folder:
 - /js/utils/CLAUDE.md
 - /css/CLAUDE.md
 
-**Technical debt and issues are tracked in `/supposed-issues.md`**
-
-
 ## Commands
 
 ### Development
