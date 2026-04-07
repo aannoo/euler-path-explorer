@@ -173,7 +173,6 @@ body {
     linear-gradient(180deg, #121212 0%, #0a0a0a 100%);
   margin: 0;
   overflow-x: hidden;
-  background-image: none;
 }
 
 /* ========== Typography ========== */
@@ -226,7 +225,7 @@ h1, h2, h3, h4, h5, h6 {
   margin-bottom: 0;
   font-weight: var(--font-weight-semibold);
   color: var(--text-primary);
-  text-transform: uppercase; /* Consistent with the design guide */
+  text-transform: none;
   line-height: var(--line-height-tight);
 }
 
@@ -1896,6 +1895,7 @@ body {
   position: relative;
   border-left-width: var(--section-border-width);
   transform: translateY(-1px);
+  transition: all 0.2s ease;
 }
 
 .btn:focus {
@@ -1960,7 +1960,7 @@ body {
   font-weight: var(--font-weight-bold);
   font-size: calc(var(--font-size-md) * 1.1);
   line-height: var(--line-height-tight);
-  text-transform: uppercase;
+  text-transform: none;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2150,7 +2150,7 @@ body {
   margin-bottom: 0;
   padding: var(--spacing-3) var(--spacing-3);
   display: block;
-  text-transform: uppercase;
+  text-transform: none;
   letter-spacing: var(--letter-spacing-wider);
   font-size: var(--font-size-sm);
   color: var(--light-color);
@@ -2329,7 +2329,7 @@ textarea:disabled {
 .toggle-label {
   font-size: 14px;
   font-weight: 600;
-  text-transform: uppercase;
+  text-transform: none;
   letter-spacing: 0.05em;
   margin-bottom: 10px;
 }
@@ -2411,7 +2411,7 @@ input:checked + .toggle-slider::before {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  text-transform: uppercase;
+  text-transform: none;
   transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -3351,7 +3351,7 @@ textarea.form-input:focus {
   align-items: center;
   gap: var(--spacing-2);
   font-weight: var(--font-weight-bold);
-  text-transform: uppercase;
+  text-transform: none;
   letter-spacing: var(--letter-spacing-wider);
   font-size: var(--font-size-base);
   color: var(--text-primary);
@@ -3417,7 +3417,7 @@ textarea.form-input:focus {
   margin-bottom: var(--spacing-1);
   font-size: var(--font-size-md);
   letter-spacing: var(--letter-spacing-wide);
-  text-transform: uppercase;
+  text-transform: none;
   padding: 4px 0;
   border-bottom: 1px solid transparent;
   transition: border-bottom-color var(--transition-fast);
@@ -3439,7 +3439,7 @@ textarea.form-input:focus {
   margin-bottom: var(--spacing-1);
   display: none;
   letter-spacing: var(--letter-spacing-wide);
-  text-transform: uppercase;
+  text-transform: none;
   border-bottom: 1px solid var(--focus-outline-color);
 }
 
@@ -3560,7 +3560,7 @@ textarea.form-input:focus {
   gap: var(--spacing-2);
   cursor: pointer;
   position: relative;
-  text-transform: uppercase;
+  text-transform: none;
   letter-spacing: var(--letter-spacing-wider);
   font-size: var(--font-size-base);
   border-top: 1px solid var(rbga(var(--dark-color-4), 0.80));
@@ -3613,7 +3613,7 @@ textarea.form-input:focus {
   align-items: center;
   gap: var(--spacing-2);
   font-weight: var(--font-weight-bold);
-  text-transform: uppercase;
+  text-transform: none;
   letter-spacing: var(--letter-spacing-wider);
   font-size: var(--font-size-lg);
   color: var(--text-primary);
@@ -3643,7 +3643,7 @@ textarea.form-input:focus {
   color: var(--text-primary);
   font-size: var(--font-size-md);
   margin-bottom: var(--spacing-2);
-  text-transform: uppercase;
+  text-transform: none;
   letter-spacing: var(--letter-spacing-wide);
 }
 
@@ -3680,7 +3680,7 @@ textarea.form-input:focus {
 /* Save button with arrow - Match add-edge styling */
 #save {
   /* Use the shared btn-edge-action class */
-  text-transform: uppercase;
+  text-transform: none;
   letter-spacing: var(--letter-spacing-wide);
   font-weight: var(--font-weight-bold);
 }
@@ -4329,7 +4329,7 @@ path {
   text-align: center;
   font-size: 14px;
   font-weight: 700;
-  text-transform: uppercase;
+  text-transform: none;
   letter-spacing: 1px;
   color: var(--text-secondary);
   transition: opacity 0.02s ease;

@@ -155,14 +155,17 @@ export const initializeSavedGraphs = () => {
   // Listen for graph data changes
   subscribe('graph.edges', () => {
     checkForGraphChanges();
+    updateCurrentGraphSection();
   });
   
   subscribe('graph.directed', () => {
     checkForGraphChanges();
+    updateCurrentGraphSection();
   });
   
   subscribe('graph.weighted', () => {
     checkForGraphChanges();
+    updateCurrentGraphSection();
   });
   
   // Return update function for external use

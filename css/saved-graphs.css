@@ -25,7 +25,7 @@
   align-items: center;
   gap: var(--spacing-2);
   font-weight: var(--font-weight-bold);
-  text-transform: uppercase;
+  text-transform: none;
   letter-spacing: var(--letter-spacing-wider);
   font-size: var(--font-size-base);
   color: var(--text-primary);
@@ -91,7 +91,7 @@
   margin-bottom: var(--spacing-1);
   font-size: var(--font-size-md);
   letter-spacing: var(--letter-spacing-wide);
-  text-transform: uppercase;
+  text-transform: none;
   padding: 4px 0;
   border-bottom: 1px solid transparent;
   transition: border-bottom-color var(--transition-fast);
@@ -113,7 +113,7 @@
   margin-bottom: var(--spacing-1);
   display: none;
   letter-spacing: var(--letter-spacing-wide);
-  text-transform: uppercase;
+  text-transform: none;
   border-bottom: 1px solid var(--focus-outline-color);
 }
 
@@ -234,7 +234,7 @@
   gap: var(--spacing-2);
   cursor: pointer;
   position: relative;
-  text-transform: uppercase;
+  text-transform: none;
   letter-spacing: var(--letter-spacing-wider);
   font-size: var(--font-size-base);
   border-top: 1px solid var(rbga(var(--dark-color-4), 0.80));
@@ -287,7 +287,7 @@
   align-items: center;
   gap: var(--spacing-2);
   font-weight: var(--font-weight-bold);
-  text-transform: uppercase;
+  text-transform: none;
   letter-spacing: var(--letter-spacing-wider);
   font-size: var(--font-size-lg);
   color: var(--text-primary);
@@ -317,7 +317,7 @@
   color: var(--text-primary);
   font-size: var(--font-size-md);
   margin-bottom: var(--spacing-2);
-  text-transform: uppercase;
+  text-transform: none;
   letter-spacing: var(--letter-spacing-wide);
 }
 
@@ -354,7 +354,7 @@
 /* Save button with arrow - Match add-edge styling */
 #save {
   /* Use the shared btn-edge-action class */
-  text-transform: uppercase;
+  text-transform: none;
   letter-spacing: var(--letter-spacing-wide);
   font-weight: var(--font-weight-bold);
 }

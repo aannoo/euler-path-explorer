@@ -52,6 +52,7 @@
   position: relative;
   border-left-width: var(--section-border-width);
   transform: translateY(-1px);
+  transition: all 0.2s ease;
 }
 
 .btn:focus {

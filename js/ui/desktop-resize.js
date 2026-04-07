@@ -212,7 +212,6 @@ export function cleanupDesktopResize() {
   // Clean up text fitter
   if (textFitter) {
     textFitter.disconnectAll();
-    textFitter.cleanup();
     textFitter = null;
   }
   

@@ -193,7 +193,7 @@
   text-align: center;
   font-size: 14px;
   font-weight: 700;
-  text-transform: uppercase;
+  text-transform: none;
   letter-spacing: 1px;
   color: var(--text-secondary);
   transition: opacity 0.02s ease;

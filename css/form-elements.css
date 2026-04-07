@@ -11,7 +11,7 @@
   margin-bottom: 0;
   padding: var(--spacing-3) var(--spacing-3);
   display: block;
-  text-transform: uppercase;
+  text-transform: none;
   letter-spacing: var(--letter-spacing-wider);
   font-size: var(--font-size-sm);
   color: var(--light-color);
@@ -190,7 +190,7 @@ textarea:disabled {
 .toggle-label {
   font-size: 14px;
   font-weight: 600;
-  text-transform: uppercase;
+  text-transform: none;
   letter-spacing: 0.05em;
   margin-bottom: 10px;
 }
@@ -272,7 +272,7 @@ input:checked + .toggle-slider::before {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  text-transform: uppercase;
+  text-transform: none;
   transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
 }
 

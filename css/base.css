@@ -171,7 +171,6 @@ body {
   background: var(--dark-color-1);
   margin: 0;
   overflow-x: hidden;
-  background-image: none;
 }
 
 /* ========== Typography ========== */
@@ -224,7 +223,7 @@ h1, h2, h3, h4, h5, h6 {
   margin-bottom: 0;
   font-weight: var(--font-weight-semibold);
   color: var(--text-primary);
-  text-transform: uppercase; /* Consistent with the design guide */
+  text-transform: none;
   line-height: var(--line-height-tight);
 }
 
@@ -282,7 +281,7 @@ a:hover {
 .ui-label {
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
-  text-transform: uppercase;
+  text-transform: none;
   letter-spacing: var(--letter-spacing-wider);
 }
 

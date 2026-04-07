@@ -82,9 +82,9 @@ function initializeCanvasGestureInterface() {
         // Apply CSS classes to content-layer element
         const contentLayer = $('#content-layer');
         if (contentLayer) {
-          contentLayer.classList.remove('mobile-retracted', 'split-view');
+          contentLayer.classList.remove('retracted', 'split-view');
           if (mode === 'retracted') {
-            contentLayer.classList.add('mobile-retracted');
+            contentLayer.classList.add('retracted');
           } else if (mode === 'split') {
             contentLayer.classList.add('split-view');
           }
@@ -510,9 +510,9 @@ function handleResize() {
           // Apply CSS classes to content-layer element
           const contentLayer = $('#content-layer');
           if (contentLayer) {
-            contentLayer.classList.remove('mobile-retracted', 'split-view');
+            contentLayer.classList.remove('retracted', 'split-view');
             if (mode === 'retracted') {
-              contentLayer.classList.add('mobile-retracted');
+              contentLayer.classList.add('retracted');
             } else if (mode === 'split') {
               contentLayer.classList.add('split-view');
             }

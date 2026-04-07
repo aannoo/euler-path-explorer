@@ -213,9 +213,10 @@ const updateEdgeListDisplay = () => {
  */
 const handleButtonClick = () => {
   const selectedNodes = getState('ui.selectedNodes') || [];
+  const selectedEdges = getState('ui.selectedEdges') || [];
   
-  if (selectedNodes.length > 0) {
-    // Delete selected nodes using the correct function from sigma-adapter
+  if (selectedNodes.length > 0 || selectedEdges.length > 0) {
+    // Delete the current selection using the graph adapter
     deleteSelectedElements();
     // Sync the edge list display after deletion
     updateEdgeListDisplay();

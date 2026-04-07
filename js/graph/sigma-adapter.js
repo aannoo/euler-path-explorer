@@ -66,6 +66,7 @@ let currentAnimation = null;
 // Track selected elements
 let selectedNodes = new Set();
 let selectedEdges = new Set();
+let suppressNextStageClear = false;
 
 // Global event listener management
 let globalEventListenersAdded = false;
@@ -617,6 +618,10 @@ function initDeletionFunctionality() {
     const isMultiSelect = (e.original && (e.original.ctrlKey || e.original.metaKey)) || 
                           (e.event && (e.event.ctrlKey || e.event.metaKey)) || 
                           (e.ctrlKey || e.metaKey);
+    suppressNextStageClear = true;
+    setTimeout(() => {
+      suppressNextStageClear = false;
+    }, 0);
     
     // STEP 3: Visual mode edge creation - if in visual mode and one node already selected
     if (!isMultiSelect && selectedNodes.size === 1 && !selectedNodes.has(nodeId)) {
@@ -711,6 +716,10 @@ function initDeletionFunctionality() {
     const isMultiSelect = (e.original && (e.original.ctrlKey || e.original.metaKey)) || 
                           (e.event && (e.event.ctrlKey || e.event.metaKey)) || 
                           (e.ctrlKey || e.metaKey);
+    suppressNextStageClear = true;
+    setTimeout(() => {
+      suppressNextStageClear = false;
+    }, 0);
     
     // Handle selection with Ctrl key for multiple selection
     if (isMultiSelect) {
@@ -758,6 +767,11 @@ function initDeletionFunctionality() {
     const isMultiSelect = (e.original && (e.original.ctrlKey || e.original.metaKey)) || 
                           (e.event && (e.event.ctrlKey || e.event.metaKey)) || 
                           (e.ctrlKey || e.metaKey);
+    
+    if (suppressNextStageClear) {
+      suppressNextStageClear = false;
+      return;
+    }
     
     // Only clear selection if not in visual creation mode and not holding Ctrl
     if (!isMultiSelect) {

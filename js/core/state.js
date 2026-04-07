@@ -14,7 +14,23 @@ const state = {
     sidebarExpanded: true,
     activeTab: 'input',
     explanationVisible: false,
-    editorMode: 'text'
+    editorMode: 'text',
+    selectedNodes: [],
+    selectedEdges: [],
+    propertyEditing: {
+      active: false,
+      selectedNodes: [],
+      selectedEdges: [],
+      editableNodeProperties: [],
+      editableEdgeProperties: []
+    },
+    savedGraphs: {
+      activeItemId: null,
+      editingItemId: null,
+      confirmingDeleteId: null,
+      isModified: false,
+      currentGraphId: null
+    }
   },
   animation: {
     inProgress: false,
