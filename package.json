@@ -14,13 +14,12 @@
     "preview": "vite preview",
     "serve": "http-server -p 8000"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["euler", "graph-theory", "visualization", "euler-path", "chinese-postman", "sigma.js"],
+  "author": "anno",
   "license": "ISC",
   "type": "module",
   "dependencies": {
     "@sigma/export-image": "^3.0.0",
-    "chroma-js": "^3.1.2",
     "cool-text-fit": "^1.0.3",
     "events": "^3.3.0",
     "graphology": "^0.26.0",
