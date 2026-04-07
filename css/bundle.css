@@ -319,6 +319,23 @@ a:hover {
   }
 }
 
+/* Shared graph background so mobile viewports inherit the grid */
+.graph-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  background:
+    radial-gradient(circle at center, rgba(255, 90, 31, 0.14) 0%, rgba(255, 90, 31, 0.04) 22%, transparent 55%),
+    linear-gradient(0deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    radial-gradient(circle at center, #171717 0%, #0a0a0a 100%);
+  background-size: 100% 100%, 28px 28px, 28px 28px, cover;
+  background-position: center;
+}
+
 /* ========== Helper Classes ========== */
 /* Helper classes moved to utility.css */
 
