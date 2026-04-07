@@ -247,17 +247,6 @@ export const destroySigma = () => {
     debugDiv.remove();
   }
 
-  if (window._boundaryHandler) {
-    try {
-      if (sigmaInstance && typeof sigmaInstance.off === 'function') {
-        sigmaInstance.off("cameraUpdated");
-      }
-    } catch (e) {
-      // Boundary handler removal error - continue
-    }
-    delete window._boundaryHandler;
-  }
-
   // Get and cleanup force layout
   const forceLayout = getForceLayout();
   if (forceLayout) {
@@ -265,9 +254,6 @@ export const destroySigma = () => {
       forceLayout.stop();
       if (forceLayout.kill && typeof forceLayout.kill === 'function') {
         forceLayout.kill();
-      }
-      if (forceLayout.worker) {
-        forceLayout.worker.terminate();
       }
     } catch (e) {
       // Force layout termination error - continue
@@ -366,13 +352,11 @@ function handleGraphControlAction(action) {
       try {
         switch (action) {
           case 'zoom-in':
-            const camera = sigmaInstance.getCamera();
-            camera.animatedZoom({ ratio: camera.ratio / 4, duration: 300 });
+            sigmaInstance.getCamera().animatedZoom({ factor: 4, duration: 300 });
             break;
 
           case 'zoom-out':
-            const camera2 = sigmaInstance.getCamera();
-            camera2.animatedZoom({ ratio: camera2.ratio * 4, duration: 300 });
+            sigmaInstance.getCamera().animatedUnzoom({ factor: 4, duration: 300 });
             break;
 
           case 'fit':

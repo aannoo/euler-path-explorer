@@ -46,11 +46,9 @@ export function initForceLayout(graph) {
     forceLayout = new ForceSupervisor(graph, {
       isNodeFixed: (_, attr) => attr.highlighted || attr.fixed,
       settings: {
-        springLength: 80,
-        springCoeff: 0.0008,
+        attraction: 0.0008,
         gravity: 0.0001,
-        theta: 0.8,
-        dragCoeff: 0.02
+        inertia: 0.98
       }
     });
     forceLayout.start();
@@ -109,9 +107,6 @@ export const destroyForceLayout = () => {
       forceLayout.stop();
       if (forceLayout.kill && typeof forceLayout.kill === 'function') {
         forceLayout.kill();
-      }
-      if (forceLayout.worker) {
-        forceLayout.worker.terminate();
       }
     } catch (e) {
       // Force layout termination error - continue

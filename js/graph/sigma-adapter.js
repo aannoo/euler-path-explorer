@@ -366,11 +366,9 @@ export function initForceLayout() {
         });
       },
       settings: {
-        springLength: 80,
-        springCoeff: 0.0008,
+        attraction: 0.0008,
         gravity: 0.0001,
-        theta: 0.8,
-        dragCoeff: 0.02
+        inertia: 0.98
       }
     });
     forceLayout.start();
@@ -1781,27 +1779,12 @@ export const destroySigma = () => {
     debugDiv.remove();
   }
   
-  // Clean up boundary handler
-  if (window._boundaryHandler) {
-    try {
-      if (sigmaInstance && typeof sigmaInstance.off === 'function') {
-        sigmaInstance.off("cameraUpdated"); // Remove all handlers for this event
-      }
-    } catch (e) {
-    }
-    delete window._boundaryHandler;
-  }
-  
   // Properly terminate force layout
   if (forceLayout) {
     try {
       forceLayout.stop();
       if (forceLayout.kill && typeof forceLayout.kill === 'function') {
         forceLayout.kill();
-      }
-      // Ensure the worker is terminated
-      if (forceLayout.worker) {
-        forceLayout.worker.terminate();
       }
     } catch (e) {
     }
@@ -1847,7 +1830,7 @@ export const destroySigma = () => {
       'clickNode', 'rightClickNode', 'downNode', 'enterNode', 'leaveNode',
       'clickEdge', 'rightClickEdge', 'downEdge', 'enterEdge', 'leaveEdge',
       'clickStage', 'rightClickStage', 'downStage', 'doubleClickStage',
-      'wheel', 'cameraUpdated'
+      'wheel'
     ];
     
     // Remove all registered events
@@ -2151,15 +2134,11 @@ function handleGraphControlAction(action) {
   try {
     switch (action) {
       case 'zoom-in':
-        const camera = sigmaInstance.getCamera();
-        // Much more dramatic zoom in - divide ratio by 4
-        camera.animatedZoom({ ratio: camera.ratio / 4, duration: 300 });
+        sigmaInstance.getCamera().animatedZoom({ factor: 4, duration: 300 });
         break;
       
       case 'zoom-out':
-        const camera2 = sigmaInstance.getCamera();
-        // Much more dramatic zoom out - multiply ratio by 4  
-        camera2.animatedZoom({ ratio: camera2.ratio * 4, duration: 300 });
+        sigmaInstance.getCamera().animatedUnzoom({ factor: 4, duration: 300 });
         break;
       
       case 'fit':
