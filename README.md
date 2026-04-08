@@ -4,6 +4,8 @@ EULER is a browser-based graph theory explorer for building graphs, visualizing 
 
 It is built around the classic Euler path problem and the broader idea of making graph behavior easier to see, test, and understand in the browser.
 
+Live site: https://aannoo.github.io/euler-path-explorer/
+
 ## Quick Start
 
 ```bash
