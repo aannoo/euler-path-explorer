@@ -9,12 +9,14 @@ import { on } from '../utils/events.js';
 import { setState, getState } from '../core/state.js';
 import { CanvasGestureController } from '../utils/canvas-gesture.js';
 import { SigmaCore } from '../graph/sigma-facade.js';
+import CoolTextFit from 'cool-text-fit';
 
 // Module state
 let contentLayer = null;
 let graphControls = null;
 let resizeHandler = null;
 let canvasGesture = null;
+let collapsedFitter = null;
 
 /**
  * RAF-throttled resize handler factory
@@ -71,6 +73,7 @@ export function setupSidebarToggle() {
     layer.classList.add('collapsed');
     // Sync graph layer — CSS sibling selector can't reach it (graph-layer precedes content-layer in DOM)
     applyCollapsedGraphWidth(true);
+    scheduleCollapsedEulerTextFit(600);
   }
 
   // Wire EULER logo click to toggle
@@ -78,22 +81,118 @@ export function setupSidebarToggle() {
   if (eulerLogo) {
     on(eulerLogo, 'click', () => toggleSidebar());
   }
+
+  // Wire collapsed vertical label click to expand
+  const collapsedLabel = document.querySelector('.sidebar-euler-label');
+  if (collapsedLabel) {
+    on(collapsedLabel, 'click', () => toggleSidebar());
+  }
+
+  prepareCollapsedEulerLayout();
+  scheduleCollapsedEulerTextFit(0);
 }
 
 /**
  * Apply/remove collapsed width on graph-layer and resize handle via JS.
  * The CSS `.content-layer.collapsed ~ .graph-layer` selector can't work because
  * graph-layer appears before content-layer in the DOM.
+ *
+ * When uncollapsing, we must restore the graph-layer to complement the content-layer's
+ * current inline width (which may have been set by the resize handle prior to collapse).
+ * Clearing to '' would fall back to the CSS 65% default, causing a layout desync if
+ * the content-layer still has a custom resize percentage (e.g. 30% + 65% = 95%).
  */
 function applyCollapsedGraphWidth(collapsed) {
   const graphLayer = document.querySelector('.graph-layer');
+  const contentLayer = document.querySelector('.content-layer');
   const resizeHandle = document.getElementById('desktop-resize-handle');
-  if (graphLayer) {
-    graphLayer.style.width = collapsed ? 'calc(100% - 60px)' : '';
+
+  if (collapsed) {
+    if (graphLayer) graphLayer.style.width = 'calc(100% - 60px)';
+    if (resizeHandle) resizeHandle.style.left = '60px';
+  } else {
+    // If the content-layer has a custom inline width from a prior resize, restore
+    // the complementary width on the graph-layer and resize handle position.
+    const inlineWidth = contentLayer ? contentLayer.style.width : '';
+    if (inlineWidth) {
+      const pct = parseFloat(inlineWidth);
+      if (!isNaN(pct) && pct > 0) {
+        if (graphLayer) graphLayer.style.width = `${100 - pct}%`;
+        if (resizeHandle) resizeHandle.style.left = `${pct}%`;
+        return;
+      }
+    }
+    // No custom resize — revert to CSS defaults
+    if (graphLayer) graphLayer.style.width = '';
+    if (resizeHandle) resizeHandle.style.left = '';
   }
-  if (resizeHandle) {
-    resizeHandle.style.left = collapsed ? '60px' : '';
+}
+
+function scheduleCollapsedEulerTextFit(delay = 0) {
+  window.setTimeout(() => fitCollapsedEulerText(), delay);
+}
+
+function prepareCollapsedEulerLayout() {
+  const label = document.querySelector('.sidebar-euler-label');
+  const rotated = document.querySelector('.sidebar-euler-label-rotated');
+  const measure = document.querySelector('.sidebar-euler-measure');
+
+  if (!label || !rotated || !measure || window.innerWidth <= 768) return;
+
+  const stripHeight = Math.max(window.innerHeight - 80, 0);
+
+  label.style.position = 'fixed';
+  label.style.top = '80px';
+  label.style.left = '0';
+  label.style.width = '60px';
+  label.style.height = `${stripHeight}px`;
+
+  rotated.style.width = `${stripHeight}px`;
+  rotated.style.height = '60px';
+  rotated.style.transform = 'rotate(90deg) translateY(-60px)';
+  rotated.style.transformOrigin = '0 0';
+
+  measure.style.position = 'fixed';
+  measure.style.top = '-9999px';
+  measure.style.left = '0';
+  measure.style.width = `${stripHeight}px`;
+  measure.style.height = '60px';
+}
+
+function fitCollapsedEulerText() {
+  const layer = contentLayer || $('#content-layer');
+  const measureText = document.getElementById('eulerCollapsedTextMeasure');
+  const displayText = document.getElementById('eulerCollapsedTextDisplay');
+
+  if (!layer || !measureText || !displayText || window.innerWidth <= 768) return;
+
+  prepareCollapsedEulerLayout();
+
+  if (!collapsedFitter) {
+    collapsedFitter = new CoolTextFit({
+      mode: 'height',
+      textBounds: 'ink-box',
+      alignment: 'center',
+      scaleX: { min: 0.8, max: 2.4 },
+      letterSpacing: { max: 18 },
+      waitForFonts: true,
+      observe: false
+    });
   }
+
+  layer.classList.remove('collapsed-label-ready');
+  collapsedFitter.fit(measureText);
+
+  const syncCollapsedDisplay = () => {
+    displayText.style.cssText = measureText.style.cssText;
+    displayText.innerHTML = measureText.innerHTML;
+    layer.classList.add('collapsed-label-ready');
+  };
+
+  // Fit into the hidden measure box first, then copy the final wrapper markup
+  // into the visible rotated strip so the user never sees the fitting steps.
+  window.setTimeout(syncCollapsedDisplay, 100);
+  window.setTimeout(syncCollapsedDisplay, 450);
 }
 
 /**
@@ -105,6 +204,7 @@ function toggleSidebar() {
   contentLayer = layer;
 
   const isCollapsed = layer.classList.toggle('collapsed');
+  layer.classList.remove('collapsed-label-ready');
   localStorage.setItem('euler_sidebar_collapsed', isCollapsed);
   setState('ui.sidebarCollapsed', isCollapsed);
 
@@ -121,9 +221,12 @@ function toggleSidebar() {
     if (resizeHandle) resizeHandle.style.transition = '';
     const sigma = SigmaCore.getInstance();
     if (sigma) sigma.refresh();
-    // Refit EULER text to new container width
+    // Refit expanded EULER text to new container width
     const eulerText = document.getElementById('eulerText');
     if (eulerText && window._eulerTextFitter) window._eulerTextFitter.fit(eulerText);
+    if (isCollapsed) {
+      scheduleCollapsedEulerTextFit(0);
+    }
   }, 350);
 }
 
@@ -223,6 +326,10 @@ function handleResize() {
     }
 
     setState('ui.contentMode', 'desktop');
+
+    // Refit collapsed EULER label on resize (width: calc(100dvh-80px) changes with viewport height)
+    prepareCollapsedEulerLayout();
+    scheduleCollapsedEulerTextFit(0);
   }
 }
 

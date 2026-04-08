@@ -221,12 +221,11 @@ export function cleanupDesktopResize() {
   isResizing = false;
 }
 function initTextFitter() {
-  // balanced: fills both width and height — CTF uses fontWidth then scaleX to close the gap
-  // Wide scaleX range: distortion is intentional, edge-to-edge fill
+  // Fill the title box aggressively — ink-box plus wide scaleX is intentional here.
   textFitter = new CoolTextFit({
-    mode: 'height',       // fill height first, then stretch width via fontWidth + scaleX
+    mode: 'height',
     textBounds: 'ink-box',
-    alignment: 'left',    // scaleX expands rightward, not from center
+    alignment: 'left',
     scaleX: { min: 0.5, max: 4 },
     waitForFonts: true
   });
